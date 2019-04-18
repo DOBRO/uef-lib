@@ -77,8 +77,8 @@ replace_chars(B0, Chars, ToChar) ->
 
 
 %% split/2
-%% Splits binary with delimiter and returns list
-%% Примеры:
+%% Splits binary with delimiter and returns list of binary chunks
+%% Examples:
 %% split(<<".www.google.com.">>, <<".">>) -> [<<>>,<<"www">>,<<"google">>,<<"com">>,<<>>]
 %% split(<<"www.google.com">>, <<".">>) -> [<<"www">>,<<"google">>,<<"com">>]
 %% split(<<"www.google.com">>, <<"A">>) -> [<<"www.google.com">>]
