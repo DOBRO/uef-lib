@@ -1,0 +1,8 @@
+{application, uef, [
+	{description, "Useful Erlang Functions Library"},
+	{vsn, "0.0.0"},
+	{modules, []},
+	{registered, []},
+	{applications, [kernel, stdlib]},
+	{env, []}
+]}.
