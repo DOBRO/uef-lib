@@ -148,9 +148,52 @@ Examples:
 <hr/>
 <br/>
 
-
 ### Module `uef_encode`
-coming soon...
+<hr/>
+
+#### *uef_encode:html_encode_bin(Html) -> EncodedBinary.*
+`uef_encode:html_encode_bin/1` takes argument `Html`, replaces some unsafe symbols with their appropriate HTML entities and returns binary.
+
+Examples:
+```erlang
+> uef_encode:html_encode_bin("<>&©\n™").
+<<"&lt;&gt;&amp;&copy;<br/>&trade;">>
+
+> uef_encode:html_encode_bin("♦±Σ").
+<<"&#9830;&plusmn;&Sigma;">>
+```
+
+<hr/>
+
+#### *uef_encode:html_encode_list(Html) -> EncodedList.*
+`uef_encode:html_encode_bin/1` works as `uef_encode:html_encode_bin/1` but returns list of binaries.
+
+Examples:
+```erlang
+> uef_encode:html_encode_list("<>&©\n™").
+[<<"&lt;">>,<<"&gt;">>,<<"&amp;">>,<<"&copy;">>,<<"<br/>">>,<<"&trade;">>]
+
+> uef_encode:html_encode_list("♦±Σ").
+[<<"&#9830;">>,<<"&plusmn;">>,<<"&Sigma;">>]
+```
+
+<hr/>
+
+#### *uef_encode:win_to_utf8(Binary1251) -> BinaryUtf8.*
+`uef_encode:win_to_utf8/1` converts cp1251 binary to utf-8 binary.
+
+Example:
+```erlang
+file_1251_to_utf8() ->
+    File1251 = "1251.txt", 
+    FileUtf8 = "utf8.txt",
+    {ok, Bin1251} = file:read_file(File1251),
+    BinUtf8 = uef_encode:win_to_utf8(Bin1251), %converting
+    file:write_file(FileUtf8, BinUtf8).
+```
+
+<hr/>
+<br/>
 
 ### Module `uef_file`
 coming soon...

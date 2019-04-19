@@ -111,7 +111,7 @@ html_encode_char(C) -> C.
 %% win_to_utf8/2
 win_to_utf8(<<C:8, Rest/binary>>, Acc) ->
 	U = case C of
-		16#00 -> 16#0000;	%% NULL
+		16#00 -> 16#0000; %% NULL
 		16#01 -> 16#0001; %% START OF HEADING
 		16#02 -> 16#0002; %% START OF TEXT
 		16#03 -> 16#0003; %% END OF TEXT
