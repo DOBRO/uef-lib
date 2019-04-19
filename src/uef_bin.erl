@@ -97,8 +97,8 @@ split(B, <<>>, _) -> [B];
 split(B, Splitter, Option) ->
 	List = do_split(B, {erlang:bit_size(Splitter), Splitter}, []),
 	case Option of
-		undefined -> List;
-		trim_all -> lists:filter(fun(<<>>) -> false; (_) -> true end, List)
+		trim_all -> lists:filter(fun(<<>>) -> false; (_) -> true end, List);
+		_ -> List
 	end.
 
 %% do_split/3
