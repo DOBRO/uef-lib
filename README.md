@@ -125,9 +125,29 @@ Examples:
 ```
 
 <hr/>
+<br/>
 
 ### Module `uef_crypt`
-coming soon...
+<hr/>
+
+#### *uef_crypt:md5_hex(IoData) -> Binary.*
+`uef_crypt:md5_hex/1` returns binary (`Binary`) in hexadecimal form of md5 hash of the argument `IoData`.
+
+Examples:
+```erlang
+> uef_crypt:md5_hex("abcd").
+<<"e2fc714c4727ee9395f324cd2e7f331f">>
+
+> uef_crypt:md5_hex(<<"привет"/utf8>>).
+<<"608333adc72f545078ede3aad71bfe74">>
+
+> uef_crypt:md5_hex(["how", ["is", ["it"]], "going", $?]).
+<<"eb89df06495cef83e3ec185aefe81d0e">>
+```
+
+<hr/>
+<br/>
+
 
 ### Module `uef_encode`
 coming soon...
