@@ -308,7 +308,95 @@ Examples:
 
 ### Module `uef_lists`
 
-coming soon...
+---
+
+#### *uef_lists:split_list_into_chunks/2*
+
+`uef_lists:split_list_into_chunks(List, MaxLen) -> [List1, List2, ..., ListN].`
+
+Splits `List` into list of lists `[List1, List2, ..., ListN]` where `List1, List2, ..., ListN` are lists with maximum `MaxLen` elements.
+
+Examples:
+
+```erlang
+> uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 1).
+[[1],[2],[3],[4],[5],[6],[7],[8]]
+
+> uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 2).
+[[1,2],[3,4],[5,6],[7,8]]
+
+> uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 3).
+[[1,2,3],[4,5,6],[7,8]]
+
+> uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 4).
+[[1,2,3,4],[5,6,7,8]]
+
+> uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 8).
+[[1,2,3,4,5,6,7,8]]
+
+> uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 9).
+[[1,2,3,4,5,6,7,8]]
+
+> uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 99).
+[[1,2,3,4,5,6,7,8]]
+```
+
+---
+
+#### *uef_lists:lists_to_list_of_tuples/2*
+
+`uef_lists:lists_to_list_of_tuples(List1, List2) -> List3.`
+
+Transforms two lists into one list of two-tuples, where the first element of each tuple is taken from the first list and the second element is taken from the second list one by one.
+
+Examples:
+
+```erlang
+> uef_lists:lists_to_list_of_tuples([a,b,c], [1,2]).
+[{a,1},{a,2},{b,1},{b,2},{c,1},{c,2}]
+
+> uef_lists:lists_to_list_of_tuples([a,b,c], [1,2,3]).
+[{a,1},{a,2},{a,3},{b,1},{b,2},{b,3},{c,1},{c,2},{c,3}]
+
+```
+
+---
+
+#### *uef_lists:lists_to_list_of_tuples/3*
+
+`uef_lists:lists_to_list_of_tuples(List1, List2, List3) -> List4.`
+
+Transforms three lists into one list of three-tuples, where the first element of each tuple is taken from the first list, the second element is taken from the second list one by one, and the third element is taken from the third list one by one.
+
+Examples:
+
+```erlang
+> uef_lists:lists_to_list_of_tuples([a1,b1], [a2,b2], [a3,b3]).
+[{a1,a2,a3},
+ {a1,a2,b3},
+ {a1,b2,a3},
+ {a1,b2,b3},
+ {b1,a2,a3},
+ {b1,a2,b3},
+ {b1,b2,a3},
+ {b1,b2,b3}]
+
+> uef_lists:lists_to_list_of_tuples([a1,b1], [a2,b2,c2], [a3,b3]).
+[{a1,a2,a3},
+ {a1,a2,b3},
+ {a1,b2,a3},
+ {a1,b2,b3},
+ {a1,c2,a3},
+ {a1,c2,b3},
+ {b1,a2,a3},
+ {b1,a2,b3},
+ {b1,b2,a3},
+ {b1,b2,b3},
+ {b1,c2,a3},
+ {b1,c2,b3}]
+```
+
+---
 
 ### Module `uef_num`
 
