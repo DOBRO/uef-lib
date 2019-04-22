@@ -3,7 +3,6 @@
 -export([binary_join/2, split/2, split/3]).
 -export([replace/3, replace_chars/3]).
 -export([random_latin_binary/2, random_binary_from_chars/2]).
--export([qq/2]).
 -export([numeric_prefix/1]).
 
 -type split_option() :: undefined | trim_all.
@@ -119,14 +118,6 @@ do_split(B, {BitSize, Splitter}, List) ->
 			end,
 			do_split(Rest, {BitSize, Splitter}, List2)
 	end.
-
-
-%% qq/2
--spec qq(binary(), [{binary(), binary()}]) -> binary().
-qq(Bin, []) -> Bin;
-qq(Bin, [{Key, Val} | Tail]) ->
-	qq(replace(Bin, <<"{{",Key/bits,"}}">>, Val), Tail).
-
 
 %% numeric_prefix/1
 %% Leaves only digits wich are at the beginning and removes the rest. Examles:
