@@ -4,14 +4,14 @@ uef-lib is a Useful Erlang Functions Library. It can be used in OTP applications
 
 ## Modules
 
-* **uef_bin** - for binaries.
-* **uef_crypt** - some crypto functions.
-* **uef_encode** - working with encodings.
-* **uef_file** - working with files.
-* **uef_format** - formatting numbers.
-* **uef_lists** - lists transformations.
-* **uef_num** - helpful functions for numbers.
-* **uef_time** - date/time functions.
+* **[uef_bin](#module-uef_bin)** - for binaries.
+* **[uef_crypt](#module-uef_crypt)** - some crypto functions.
+* **[uef_encode](#module-uef_encode)** - working with encodings.
+* **[uef_file](#module-uef_file)** - working with files.
+* **[uef_format](#module-uef_format)** - formatting numbers.
+* **[uef_lists](#module-uef_lists)** - lists transformations.
+* **[uef_num](#module-uef_num)** - helpful functions for numbers.
+* **[uef_time](#module-uef_time)** - date/time functions.
 
 ## Documentation
 
