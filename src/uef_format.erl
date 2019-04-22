@@ -18,10 +18,23 @@ format_price(Price, Delimiter) when is_list(Delimiter) ->
 format_price(Price, Delimiter) when is_integer(Price) ->
 	format_price(erlang:float(Price), Delimiter);
 format_price(Price, Delimiter) when is_float(Price) ->
-	BinPrice = erlang:float_to_binary(Price, [{decimals, 2}]),
-	case Price < 1000 of
-		true -> BinPrice;
-		false -> format_bin_price(BinPrice, Delimiter)
+	PosPrice = case Price < 0 of
+		false -> Price;
+		true  -> Price * -1
+	end,
+	BinPrice = erlang:float_to_binary(PosPrice, [{decimals, 2}]),
+	case PosPrice < 1000 of
+		true ->
+			case Price < 0 of
+				false -> BinPrice;
+				true  -> <<"-", BinPrice/binary>>
+			end;
+		false ->
+			FormattedPrice = format_bin_price(BinPrice, Delimiter),
+			case Price < 0 of
+				false -> FormattedPrice;
+				true  -> <<"-", FormattedPrice/binary>>
+			end
 	end.
 
 %% format_bin_price/2
