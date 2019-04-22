@@ -483,3 +483,7 @@ Examples:
 ```
 
 ---
+
+## Contributing
+
+You are welcome :)
