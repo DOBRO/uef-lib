@@ -400,7 +400,33 @@ Examples:
 
 ### Module `uef_num`
 
-coming soon...
+---
+
+#### *uef_num:round_number/2*
+
+`uef_num:round_number(Number, Precision) -> Float.`
+
+Rounds the number to the specified precision.
+
+Examples:
+
+```erlang
+> uef_num:round_number(10, 2).
+10.0
+
+> uef_num:round_number(123.786, 2).
+123.79
+```
+
+---
+
+#### *uef_num:round_price/1*
+
+`uef_num:round_price(Number) -> Float.`
+
+Rounds the number to the precision of **2**. The same as `uef_num:round_number(Number, 2)`.
+
+---
 
 ### Module `uef_time`
 
