@@ -4,14 +4,14 @@ uef-lib is a Useful Erlang Functions Library. It can be used in OTP applications
 
 ## Modules
 
-- **uef_bin** - for binaries.
-- **uef_crypt** - some crypto functions.
-- **uef_encode** - working with encodings.
-- **uef_file** - working with files.
-- **uef_format** - formatting numbers.
-- **uef_lists** - lists transformations.
-- **uef_num** - helpful functions for numbers.
-- **uef_time** - date/time functions.
+* **uef_bin** - for binaries.
+* **uef_crypt** - some crypto functions.
+* **uef_encode** - working with encodings.
+* **uef_file** - working with files.
+* **uef_format** - formatting numbers.
+* **uef_lists** - lists transformations.
+* **uef_num** - helpful functions for numbers.
+* **uef_time** - date/time functions.
 
 ## Documentation
 
@@ -19,9 +19,11 @@ uef-lib is a Useful Erlang Functions Library. It can be used in OTP applications
 
 ---
 
-#### *uef_bin:binary_join(ListOfBinaries, Separator) -> Binary.*
+#### *uef_bin:binary_join/2*
 
-`uef_bin:binary_join/2` joins a list of binaries with separator into a single binary. Returns binary.
+`uef_bin:binary_join(ListOfBinaries, Separator) -> Binary.`
+
+Joins a list of binaries with separator into a single binary. Returns binary.
 
 Example:
 
@@ -32,9 +34,11 @@ Example:
 
 ---
 
-#### *uef_bin:split(Binary, Splitter) -> ListOfBinaries.*
+#### *uef_bin:split/2*
 
-`uef_bin:split/2` splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as [binary:split/2](http://erlang.org/doc/man/binary.html#split-2) but is more performant in simple cases.
+`uef_bin:split(Binary, Splitter) -> ListOfBinaries.`
+
+Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as [binary:split/2](http://erlang.org/doc/man/binary.html#split-2) but is more performant in simple cases.
 
 Examples:
 
@@ -51,9 +55,11 @@ Examples:
 
 ---
 
-#### *uef_bin:split(Binary, Splitter, 'trim_all') -> ListOfBinaries.*
+#### *uef_bin:split/3*
 
-`uef_bin:split/3` splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as `uef_bin:split/2` but removes all epmty (`<<>>`) chunks. It can be used in simple cases instead of  [binary:split/3](http://erlang.org/doc/man/binary.html#split-3) for the reason that it's more performant.
+`uef_bin:split(Binary, Splitter, 'trim_all') -> ListOfBinaries.`
+
+Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as `uef_bin:split/2` but removes all epmty (`<<>>`) chunks. It can be used in simple cases instead of  [binary:split/3](http://erlang.org/doc/man/binary.html#split-3) for the reason that it's more performant.
 
 Example:
 
@@ -64,9 +70,11 @@ Example:
 
 ---
 
-#### *uef_bin:replace(Binary1, Chars, OtherChars) -> Binary2.*
+#### *uef_bin:replace/3*
 
-`uef_bin:replace/3` replaces chars (`Chars`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`). Works as [binary:replace/3](http://erlang.org/doc/man/binary.html#replace-3) but more permormant and can be used in simple cases.
+`uef_bin:replace(Binary1, Chars, OtherChars) -> Binary2.`
+
+Replaces chars (`Chars`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`). Works as [binary:replace/3](http://erlang.org/doc/man/binary.html#replace-3) but more permormant and can be used in simple cases.
 
 Examples:
 
@@ -80,9 +88,11 @@ Examples:
 
 ---
 
-#### *uef_bin:replace_chars(Binary1, ListOfCharsToReplace, OtherChars) -> Binary2.*
+#### *uef_bin:replace_chars/3*
 
-`uef_bin:replace_chars/3` replaces chars inluded in list (`ListOfCharsToReplace`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`).
+`uef_bin:replace_chars(Binary1, ListOfCharsToReplace, OtherChars) -> Binary2.`
+
+Replaces chars inluded in list (`ListOfCharsToReplace`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`).
 
 Examples:
 
@@ -96,9 +106,11 @@ uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>).
 
 ---
 
-#### *uef_bin:random_latin_binary(Length, CaseFlag) -> RandomLatinBinary.*
+#### *uef_bin:random_latin_binary/2*
 
-`uef_bin:random_latin_binary/2` generates and returns a binary of size `Length` which consists of latins [a-z], [A-Z] or [a-zA-Z]. The second argument `CaseFlag` corresponds to a letter case, an atom `'lower'`, `'upper'` or `'any'`.
+`uef_bin:random_latin_binary(Length, CaseFlag) -> RandomLatinBinary.`
+
+Generates and returns a binary of size `Length` which consists of latins [a-z], [A-Z] or [a-zA-Z]. The second argument `CaseFlag` corresponds to a letter case, an atom `'lower'`, `'upper'` or `'any'`.
 
 Examples:
 
@@ -115,9 +127,11 @@ Examples:
 
 ---
 
-#### *uef_bin:random_binary_from_chars(Length, Chars) -> RandomCharsBinary.*
+#### *uef_bin:random_binary_from_chars/2*
 
-`uef_bin:random_binary_from_chars/2` generates and returns a binary of size `Length` which consists of the given characters `Chars`.
+`uef_bin:random_binary_from_chars(Length, Chars) -> RandomCharsBinary.`
+
+Generates and returns a binary of size `Length` which consists of the given characters `Chars`.
 
 Example:
 
@@ -128,9 +142,11 @@ Example:
 
 ---
 
-#### *uef_bin:numeric_prefix(Binary) -> DigitsOnlyOrEmptyBinary.*
+#### *uef_bin:numeric_prefix/1*
 
-`uef_bin:numeric_prefix/1` returns new binary (`DigitsOnlyBinary`) which consists of digits [0-9] wich are at the beginning in the given binary (`Binary`). If `Binary` does not begin with digit, this function returns empty binary (`<<>>`).
+`uef_bin:numeric_prefix(Binary) -> DigitsOnlyOrEmptyBinary.`
+
+Returns new binary (`DigitsOnlyBinary`) which consists of digits [0-9] wich are at the beginning in the given binary (`Binary`). If `Binary` does not begin with digit, this function returns empty binary (`<<>>`).
 
 Examples:
 
@@ -148,9 +164,11 @@ Examples:
 
 ---
 
-#### *uef_crypt:md5_hex(IoData) -> Binary.*
+#### *uef_crypt:md5_hex/1*
 
-`uef_crypt:md5_hex/1` returns binary (`Binary`) in hexadecimal form of md5 hash of the argument `IoData`.
+`uef_crypt:md5_hex(IoData) -> Binary.`
+
+Returns binary (`Binary`) in hexadecimal form of md5 hash of the argument `IoData`.
 
 Examples:
 
@@ -171,9 +189,11 @@ Examples:
 
 ---
 
-#### *uef_encode:html_encode_bin(Html) -> EncodedBinary.*
+#### *uef_encode:html_encode_bin/1*
 
-`uef_encode:html_encode_bin/1` takes argument `Html`, replaces some unsafe symbols with their appropriate HTML entities and returns binary.
+`uef_encode:html_encode_bin(Html) -> EncodedBinary.`
+
+Takes argument `Html`, replaces some unsafe symbols with their appropriate HTML entities and returns binary.
 
 Examples:
 
@@ -187,9 +207,11 @@ Examples:
 
 ---
 
-#### *uef_encode:html_encode_list(Html) -> EncodedList.*
+#### *uef_encode:html_encode_list/1*
 
-`uef_encode:html_encode_bin/1` works as `uef_encode:html_encode_bin/1` but returns list of binaries.
+`uef_encode:html_encode_list(Html) -> EncodedList.`
+
+Works as `uef_encode:html_encode_bin/1` but returns list of binaries.
 
 Examples:
 
@@ -203,9 +225,11 @@ Examples:
 
 ---
 
-#### *uef_encode:win_to_utf8(Binary1251) -> BinaryUtf8.*
+#### *uef_encode:win_to_utf8/1*
 
-`uef_encode:win_to_utf8/1` converts cp1251 binary to utf-8 binary.
+`uef_encode:win_to_utf8(Binary1251) -> BinaryUtf8.`
+
+Converts cp1251 binary to utf-8 binary.
 
 Example:
 
