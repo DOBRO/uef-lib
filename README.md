@@ -430,4 +430,56 @@ Rounds the number to the precision of **2**. The same as `uef_num:round_number(N
 
 ### Module `uef_time`
 
-coming soon...
+---
+
+#### *uef_time:days_diff/1*
+
+`uef_time:days_diff(Date) -> Days.`
+
+Returns the difference ***in days*** between `Date` and the current local date provided by function [erlang:localtime()](http://erlang.org/doc/man/erlang.html#localtime-0). `Date` must be of type `calendar:date()` (`{Year, Month, Day}`).
+
+---
+
+#### *uef_time:days_diff/2*
+
+`uef_time:days_diff(Date1, Date2) -> Days.`
+
+Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `Date2` must be of type `calendar:date()` (`{Year, Month, Day}`).
+
+Examples:
+
+```erlang
+> uef_time:days_diff({1999, 1, 31}, {2019, 12, 31}).
+7639
+
+> uef_time:days_diff({2019, 12, 31}, {1999, 1, 31}).
+-7639
+```
+
+---
+
+#### *uef_time:seconds_diff/1*
+
+`uef_time:seconds_diff(DateTime) -> Seconds.`
+
+Returns the difference ***in seconds*** between `Date` and the current local time provided by function [erlang:localtime()](http://erlang.org/doc/man/erlang.html#localtime-0). `DateTime` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`).
+
+---
+
+#### *uef_time:seconds_diff/2*
+
+`uef_time:seconds_diff(DateTime1, DateTime2) -> Seconds.`
+
+Returns the difference ***in seconds*** between `DateTime2` and `DateTime1`.  `DateTime1` and `DateTime2` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`).
+
+Examples:
+
+```erlang
+> uef_time:seconds_diff({{1999, 1, 31}, {0, 0, 0}}, {{2019, 12, 31}, {0, 0, 0}}).
+660009600
+
+> uef_time:seconds_diff({{2019, 12, 31}, {0, 0, 0}}, {{1999, 1, 31}, {0, 0, 0}}).
+-660009600
+```
+
+---
