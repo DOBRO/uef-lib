@@ -268,7 +268,43 @@ Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, wher
 
 ### Module `uef_format`
 
-coming soon...
+---
+
+#### *uef_format:format_price/1*
+
+`uef_format:format_price(Number) -> Binary.`
+
+This is the same as: `uef_format:format_price(Number, " ")` where the second argument is `whitespace character`.
+
+Example:
+
+```erlang
+> uef_format:format_price(1000).
+<<"1 000.00">>
+```
+
+---
+
+#### *uef_format:format_price/2*
+
+`uef_format:format_price(Number, ThousandsSep) -> Binary.`
+
+Formats a number `Number` by adding `ThousandsSep` between each set of 3 digits to the left of the decimal point and rounding to the precision of **2**. Returns `binary()`.
+
+Examples:
+
+```erlang
+> uef_format:format_price(1000, " ").
+<<"1 000.00">>
+
+> uef_format:format_price(10000, ",").
+<<"10,000.00">>
+
+> uef_format:format_price(10000.87687, " ").
+<<"10 000.88">>
+```
+
+---
 
 ### Module `uef_lists`
 
