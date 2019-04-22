@@ -229,7 +229,7 @@ Examples:
 
 `uef_encode:win_to_utf8(Binary1251) -> BinaryUtf8.`
 
-Converts cp1251 binary to utf-8 binary.
+Converts *cp1251* binary to *utf-8* binary.
 
 Example:
 
@@ -246,7 +246,25 @@ file_1251_to_utf8() ->
 
 ### Module `uef_file`
 
-coming soon...
+---
+
+#### *uef_file:read_file_info_fast/1*
+
+`uef_file:read_file_info_fast(Filename) -> {ok, FileInfo} | {error, Reason}.`
+
+Retrieves information about **local** file. Returns `{ok, FileInfo}` if successful, otherwise `{error, Reason}`. Works as [file:read_file_info/2](http://erlang.org/doc/man/file.html#read_file_info-2) but optimized for **local** files. This is a wrapper of:
+
+`file:read_file_info(Filename, [raw, {time, posix}])`.
+
+---
+
+#### *uef_file:read_file_fast/1*
+
+`uef_file:read_file_fast(Filename) -> {ok, BinaryData} | {error, Reason}.`
+
+Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, where `BinaryData` is a binary data object that contains the contents of `Filename`, or `{error, Reason}` if an error occurs. This function is optimized for reading contents of **local** files, as no Erlang process is used. It calls [file:open/2](http://erlang.org/doc/man/file.html#open-2) with options `[read, raw, binary]`.
+
+---
 
 ### Module `uef_format`
 
