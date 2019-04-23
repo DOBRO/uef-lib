@@ -2,6 +2,8 @@
 
 *uef-lib* is a Useful Erlang Functions Library. It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
 
+See how to [build](#build) and [test](#test-and-dialyze).
+
 ## Modules
 
 * **[uef_bin](#module-uef_bin)** - for binaries.
@@ -483,6 +485,42 @@ Examples:
 ```
 
 ---
+
+## Build
+
+### Build with GNU `make`
+
+```bash
+make
+```
+
+### Build with `rebar3`
+
+```bash
+rebar3 compile
+```
+
+## Test and dialyze
+
+### Test/dialyze with GNU `make`
+
+```bash
+make test
+```
+
+```bash
+make dialyzer
+```
+
+### Test/dialyze with `rebar3`
+
+```bash
+rebar3 eunit
+```
+
+```bash
+rebar3 dialyzer
+```
 
 ## Contributing
 
