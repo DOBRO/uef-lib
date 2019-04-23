@@ -9,8 +9,7 @@ uef_bin_test_() ->
 		test_split(),
 		test_replace(),
 		test_replace_chars()
-	]
-
+	].
 
 test_numeric_prefix() ->
 	Fun = fun uef_bin:numeric_prefix/1,
