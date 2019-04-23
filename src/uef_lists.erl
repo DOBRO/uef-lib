@@ -17,6 +17,7 @@ split_list_into_chunks(List,Len) ->
 
 %% lists_to_list_of_tuples/2
 %% lists_to_list_of_tuples([a,b,c], [1,2]) -> [{a,1},{a,2},{b,1},{b,2},{c,1},{c,2}]
+-spec lists_to_list_of_tuples(list(), list()) -> [tuple()].
 lists_to_list_of_tuples(List1, List2) ->
 	List = lists:foldl(
 		fun(Elem1, Acc1) ->
@@ -34,6 +35,7 @@ lists_to_list_of_tuples(List1, List2) ->
 %% lists_to_list_of_tuples/3
 %% lists_to_list_of_tuples([a1,b1,c1], [a2,b2,c2], [a3,b3,c3]) ->
 %% [{a1,a2,a3},{a1,a2,b3}, {a1,a2,c3},{a1,b2,a3},{a1,b2,b3}, ...]
+-spec lists_to_list_of_tuples(list(), list(), list()) -> [tuple()].
 lists_to_list_of_tuples(List1, List2, List3) ->
 	List = lists:foldl(
 		fun(Elem1, Acc1) ->

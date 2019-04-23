@@ -1,6 +1,6 @@
 # uef-lib
 
-uef-lib is a Useful Erlang Functions Library. It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
+*uef-lib* is a Useful Erlang Functions Library. It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
 
 ## Modules
 
