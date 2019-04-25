@@ -7,7 +7,7 @@
 round_price(Price) -> round_number(Price, 2).
 
 %% round_number/2
--spec round_number(number(), non_neg_integer()) -> float().
+-spec round_number(number(), integer()) -> float().
 round_number(Number, Precision) ->
 	P = math:pow(10, Precision),
 	erlang:round(Number * P) / P.
