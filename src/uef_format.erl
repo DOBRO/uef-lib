@@ -1,62 +1,161 @@
 -module(uef_format).
 
--export([format_price/1, format_price/2]).
+-export([format_number/2, format_number/3]).
+-export([format_price/1, format_price/2, format_price/3]).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% API
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-define(DEFAULT_PRICE_PRECISION, 2).
+-define(ADD_TRAILING_ZEROES, false).
+-define(THOUSANDS_SEP, <<"">>).
+-define(DECIMAL_POINT, <<".">>).
+-define(CURRENCY_POSITION, left).
+-define(CURRENCY_SEP, <<" ">>).
 
+%%%------------------------------------------------------------------------------
+%%%   Types
+%%%------------------------------------------------------------------------------
+
+-type formatted_number() :: binary().
+-type precision() :: integer().
+-type number_format_erl_type() :: binary | string.
+-type format_number_opts() :: #{
+	trailing => boolean(),
+	thousands_sep => binary() | string(),
+	decimal_point => binary() | string(),
+	cur_symbol => binary() | string(),
+	cur_pos => left | right,
+	cur_sep => binary() | string(),
+	erl_type => number_format_erl_type()
+}.
+
+%%%------------------------------------------------------------------------------
+%%%   API
+%%%------------------------------------------------------------------------------
+
+%% format_number/2
+-spec format_number(number(), precision()) -> formatted_number().
+format_number(Number, Precision) ->
+	format_number(Number, Precision, #{}).
+
+%% format_number/3
+-spec format_number(number(), precision(), format_number_opts()) -> formatted_number().
+format_number(Number, Precision, Opts) when is_integer(Number) ->
+	format_number(erlang:float(Number), Precision, Opts);
+format_number(Number, Precision, Opts) when is_float(Number) ->
+	RoundedNumber = uef_num:round_number(Number, Precision),
+	format_number_1(RoundedNumber, Precision, Opts).
 
 %% format_price/1
--spec format_price(Price:: number()) -> binary().
-format_price(Price) -> format_price(Price, <<" ">>).
+-spec format_price(number()) -> formatted_number().
+format_price(Price) ->
+	format_price(Price, ?DEFAULT_PRICE_PRECISION).
 
 %% format_price/2
--spec format_price(Price :: number(), Delimiter :: binary() | string()) -> binary().
-format_price(Price, Delimiter) when is_list(Delimiter) ->
-	format_price(Price, erlang:list_to_binary(Delimiter));
-format_price(Price, Delimiter) when is_integer(Price) ->
-	format_price(erlang:float(Price), Delimiter);
-format_price(Price, Delimiter) when is_float(Price) ->
-	PosPrice = case Price < 0 of
-		false -> Price;
-		true  -> Price * -1
+-spec format_price(number(), precision()) -> formatted_number().
+format_price(Price, Precision) ->
+	format_price(Price, Precision, binary).
+
+%% format_price/3
+-spec format_price(number(), precision(), number_format_erl_type() | format_number_opts()) -> formatted_number().
+format_price(Price, Precision, Opts) when is_map(Opts) ->
+	% Set trailing zeroes to 'true' for price formatting by default
+	case maps:find(trailing, Opts) of
+		{ok, _} -> format_number(Price, Precision, Opts); % do not change if specified
+		error -> format_number(Price, Precision, Opts#{trailing => true})
+	end;
+format_price(Price, Precision, ErlType) -> % erl_type (not a map())
+	format_price(Price, Precision, #{erl_type => ErlType}).
+
+
+%%%------------------------------------------------------------------------------
+%%%   Internal functions
+%%%------------------------------------------------------------------------------
+
+%% format_number_1/3
+-spec format_number_1(number(), precision(), format_number_opts()) -> formatted_number().
+format_number_1(Number, Precision, Opts) ->
+	Decimals = case Precision > 0 of
+		true  -> Precision;
+		false -> 0
 	end,
-	BinPrice = erlang:float_to_binary(PosPrice, [{decimals, 2}]),
-	case PosPrice < 1000 of
-		true ->
-			case Price < 0 of
-				false -> BinPrice;
-				true  -> <<"-", BinPrice/binary>>
-			end;
-		false ->
-			FormattedPrice = format_bin_price(BinPrice, Delimiter),
-			case Price < 0 of
-				false -> FormattedPrice;
-				true  -> <<"-", FormattedPrice/binary>>
-			end
+	PositiveNumber = case Number < 0 of
+		false -> Number;
+		true  -> erlang:abs(Number)
+	end,
+	AddTrailingZeroes = Precision > 0 andalso maps:get(trailing, Opts, ?ADD_TRAILING_ZEROES) =:= true,
+	FloatToBinaryOpts = case AddTrailingZeroes of
+		true  -> [{decimals, Decimals}];
+		false -> [{decimals, Decimals}, compact]
+	end,
+	BinNum = erlang:float_to_binary(PositiveNumber, FloatToBinaryOpts),
+	{IntegerPart, DecimalPart} = case uef_bin:split(BinNum, <<".">>) of
+		[I, D] -> {I, D}; % ex: <<"12.345">> -> [<<"12">>, <<"345">>]
+		[I] -> {I, <<>>} % ex: <<"12345">> -> [<<"12345">>] (when Precision < 1)
+	end,
+	HeadSize = erlang:byte_size(IntegerPart) rem 3,
+	<<Head:HeadSize/binary, IntRest/binary>> = IntegerPart, % ex: <<"12", "345678">> = <<"12345678">>
+	ThousandParts = split_thousands(IntRest), % ex: <<"345678">> -> [<<"345">>, <<678>>]
+	AllIntegerParts = case HeadSize > 0 of
+		true  -> [Head|ThousandParts];
+		false -> ThousandParts
+	end,
+	ThousandsSep = maybe_to_binary(maps:get(thousands_sep, Opts, ?THOUSANDS_SEP)),
+	% Join with thousands separator
+	FormattedIntegerPart = <<(uef_bin:binary_join(AllIntegerParts, ThousandsSep))/binary>>,
+	PositiveFormattedNumber = case DecimalPart of
+		<<>> ->
+			FormattedIntegerPart;
+		_    ->
+			DecimalPoint = maybe_to_binary(maps:get(decimal_point, Opts, ?DECIMAL_POINT)),
+			<<FormattedIntegerPart/binary, DecimalPoint/binary, DecimalPart/binary>>
+	end,
+	% Insert "-" before if negative
+	FormattedNumber1 = case Number < 0 of
+		false -> PositiveFormattedNumber;
+		true  -> <<"-", PositiveFormattedNumber/binary>>
+	end,
+	% Format with remaining options
+	RemainingOpts = maps:without([trailing, thousands_sep, decimal_point], Opts),
+	format_number_2([currency, erl_type], FormattedNumber1, RemainingOpts).
+
+
+%% format_number_2/3
+-spec format_number_2(list(), binary(), map()) -> formatted_number().
+format_number_2([], FmtNum, _) ->
+	FmtNum;
+format_number_2([currency|Tail], FmtNum, #{cur_symbol := CurSymbol0} = Opts) -> % currency
+	CurSymbol = maybe_to_binary(CurSymbol0),
+	CurSep = maybe_to_binary(maps:get(cur_sep, Opts, ?CURRENCY_SEP)),
+	FmtNum2 = case maps:get(cur_pos, Opts, ?CURRENCY_POSITION) of
+		left -> <<CurSymbol/binary, CurSep/binary, FmtNum/binary>>;
+		_ -> <<FmtNum/binary, CurSep/binary, CurSymbol/binary>>
+	end,
+	format_number_2(Tail, FmtNum2, Opts);
+format_number_2([erl_type|Tail], FmtNum, #{erl_type := string} = Opts)  -> % erl_type
+	FmtNum2 = erlang:binary_to_list(FmtNum),
+	format_number_2(Tail, FmtNum2, Opts);
+format_number_2([_|Tail], FmtNum, Opts) -> % other
+	format_number_2(Tail, FmtNum, Opts).
+
+
+%% maybe_to_binary/1
+-spec maybe_to_binary(term()) -> binary() | no_return().
+maybe_to_binary(Sep) ->
+	case Sep of
+		_ when is_binary(Sep) -> Sep;
+		_ when is_list(Sep) -> erlang:list_to_binary(Sep);
+		_ -> erlang:error(badarg)
 	end.
 
-%% format_bin_price/2
--spec format_bin_price(binary(), binary()) -> binary().
-format_bin_price(BinPrice, Delimiter) ->
-	[Bi, Bf] = uef_bin:split(BinPrice, <<".">>),
-	Nparts = byte_size(Bi) div 3,
-	{Bi1, Bi2} = lists:foldl(
-		fun(N, {B, Acc}) ->
-			{B1, B2} = erlang:split_binary(B, byte_size(B) - 3),
-			Acc2 = case N =:= 1 of
-				true  -> B2;
-				false -> << B2/binary, Delimiter/binary, Acc/binary >>
-			end,
-			{B1, Acc2}
-		end,
-		{Bi, <<>>},
-		lists:seq(1, Nparts)
-	),
-	case byte_size(Bi1) > 0 of
-		true  -> << Bi1/binary, Delimiter/binary, Bi2/binary, ".", Bf/binary >>;
-		false -> << Bi2/binary, ".", Bf/binary >>
-	end.
 
+%% split_thousands/1
+-spec split_thousands(binary()) -> [binary()].
+split_thousands(Bin) ->
+	split_thousands(Bin, []).
 
+%% split_thousands/2
+-spec split_thousands(binary(), [binary()]) -> [binary()].
+split_thousands(<<>>, List) ->
+	lists:reverse(List);
+split_thousands(Bin, List) ->
+	<<B:3/binary, Rest/binary>> = Bin,
+	split_thousands(Rest, [B | List]).
