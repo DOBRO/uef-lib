@@ -346,7 +346,7 @@ Decimals :: non_neg_integer().
 
 `uef_format:format_price(Number) -> FormattedPrice.`
 
-*Coming soon...*
+*Docs coming soon...*
 
 ---
 
@@ -354,7 +354,7 @@ Decimals :: non_neg_integer().
 
 `uef_format:format_price(Number, Precision) -> FormattedPrice.`
 
-*Coming soon...*
+*Docs coming soon...*
 
 ---
 
@@ -362,7 +362,7 @@ Decimals :: non_neg_integer().
 
 `uef_format:format_price(Number, Precision, CurrencySymbol_OR_Options) -> FormattedPrice.`
 
-*Coming soon...*
+*Docs coming soon...*
 
 ---
 
