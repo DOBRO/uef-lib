@@ -42,7 +42,7 @@ format_number(Number, Precision, Decimals, Opts) when is_integer(Number) ->
 	format_number(erlang:float(Number), Precision, Decimals, Opts);
 format_number(Number, Precision, Decimals, Opts) when is_float(Number) ->
 	RoundedNumber = uef_num:round_number(Number, Precision), % round to Precision before formatting
-	format_number_1(RoundedNumber, Decimals, Opts).
+	do_format_number(RoundedNumber, Decimals, Opts).
 
 %% format_price/1
 -spec format_price(number()) -> formatted_number().
@@ -68,9 +68,9 @@ format_price(_, _, Other) ->
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
 
-%% format_number_1/3
--spec format_number_1(number(), decimals(), format_number_opts()) -> formatted_number().
-format_number_1(Number, Decimals, Opts) ->
+%% do_format_number/3
+-spec do_format_number(number(), decimals(), format_number_opts()) -> formatted_number().
+do_format_number(Number, Decimals, Opts) ->
 	PositiveNumber = case Number < 0 of
 		false -> Number;
 		true  -> erlang:abs(Number)
@@ -102,29 +102,25 @@ format_number_1(Number, Decimals, Opts) ->
 		false -> PositiveFormattedNumber;
 		true  -> <<"-", PositiveFormattedNumber/binary>>
 	end,
-	% Format with remaining options
-	RemainingOpts = maps:without([thousands_sep, decimal_point], Opts),
-	format_number_2([currency, erl_type], FormattedNumber1, RemainingOpts).
+	% Format with currency options
+	FormattedWithCurrency = format_number_with_currency(FormattedNumber1, Opts),
+	% erl_type must be the last step
+	case maps:find(erl_type, Opts) of
+		{ok, string} -> erlang:binary_to_list(FormattedWithCurrency);
+		_ -> FormattedWithCurrency
+	end.
 
-
-%% format_number_2/3
--spec format_number_2(list(), binary(), map()) -> formatted_number().
-format_number_2([], FmtNum, _) ->
-	FmtNum;
-format_number_2([currency|Tail], FmtNum, #{cur_symbol := CurSymbol0} = Opts) -> % currency
+%% format_number_with_currency/2
+-spec format_number_with_currency(binary(), map()) -> binary().
+format_number_with_currency(FmtNum, #{cur_symbol := CurSymbol0} = Opts) ->
 	CurSymbol = maybe_to_binary(CurSymbol0),
 	CurSep = maybe_to_binary(maps:get(cur_sep, Opts, ?CURRENCY_SEP)),
-	FmtNum2 = case maps:get(cur_pos, Opts, ?CURRENCY_POSITION) of
+	case maps:get(cur_pos, Opts, ?CURRENCY_POSITION) of
 		left -> <<CurSymbol/binary, CurSep/binary, FmtNum/binary>>;
 		_ -> <<FmtNum/binary, CurSep/binary, CurSymbol/binary>>
-	end,
-	format_number_2(Tail, FmtNum2, Opts);
-format_number_2([erl_type|Tail], FmtNum, #{erl_type := string} = Opts)  -> % erl_type
-	FmtNum2 = erlang:binary_to_list(FmtNum),
-	format_number_2(Tail, FmtNum2, Opts);
-format_number_2([_|Tail], FmtNum, Opts) -> % skip any other case
-	format_number_2(Tail, FmtNum, Opts).
-
+	end;
+format_number_with_currency(FmtNum, _) ->
+	FmtNum.
 
 %% maybe_to_binary/1
 -spec maybe_to_binary(term()) -> binary() | no_return().
