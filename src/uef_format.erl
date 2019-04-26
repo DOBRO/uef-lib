@@ -58,8 +58,10 @@ format_price(Price, Precision) ->
 -spec format_price(number(), precision(), number_format_erl_type() | format_number_opts()) -> formatted_number().
 format_price(Price, Precision, Opts) when is_map(Opts) ->
 	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, Opts);
-format_price(Price, Precision, CurSymbol) -> % Currency symbol (not a map())
-	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, #{cur_symbol => CurSymbol}).
+format_price(Price, Precision, CurSymbol) when is_binary(CurSymbol) orelse is_list(CurSymbol) ->
+	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, #{cur_symbol => CurSymbol});
+format_price(_, _, Other) ->
+	erlang:error({badarg, Other}).
 
 
 %%%------------------------------------------------------------------------------
