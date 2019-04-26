@@ -31,12 +31,12 @@
 %%%   API
 %%%------------------------------------------------------------------------------
 
-%% format_number/2
+%% format_number/3
 -spec format_number(number(), precision(), decimals()) -> formatted_number().
 format_number(Number, Precision, Decimals) ->
 	format_number(Number, Precision, Decimals, #{}).
 
-%% format_number/3
+%% format_number/4
 -spec format_number(number(), precision(), decimals(), format_number_opts()) -> formatted_number().
 format_number(Number, Precision, Decimals, Opts) when is_integer(Number) ->
 	format_number(erlang:float(Number), Precision, Decimals, Opts);

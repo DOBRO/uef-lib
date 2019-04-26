@@ -1,6 +1,6 @@
 # uef-lib
 
-*uef-lib* is a Useful Erlang Functions Library. It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
+*uef-lib* is a **U**seful **E**rlang **F**unctions **Lib**rary. It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
 
 See how to [build](#build) and [test](#test-and-dialyze).
 
@@ -272,39 +272,67 @@ Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, wher
 
 ---
 
-#### *uef_format:format_price/1*
+#### *uef_format:format_number/3*
 
-`uef_format:format_price(Number) -> Binary.`
+`uef_format:format_number(Number, Precision, Decimals) -> FormattedNumber.`
 
-This is the same as: `uef_format:format_price(Number, " ")` where the second argument is `whitespace character`.
+The same as `uef_format:format_number/4` with `#{}` as forth argument. See [uef_format:format_number/4](#uef_format:format_number/4) docs.
 
-Example:
+---
+
+#### *uef_format:format_number/4*
+
+`uef_format:format_number(Number, Precision, Decimals, Options) -> FormattedNumber.`
+
+Formats `Number` by adding thousands separator between each set of 3 digits to the left of the decimal point, substituting for the decimal point, and rounding to the specified `Precision`. Function returns a value of type `binary()` (by default) or `string()`, it depends on the value of option `erl_type`.
+
+`Options` is a map:
 
 ```erlang
-> uef_format:format_price(1000).
-<<"1 000.00">>
+#{
+    trailing => boolean(),
+    thousands_sep => binary() | string(),
+    decimal_point => binary() | string(),
+    cur_symbol => binary() | string(),
+    cur_pos => left | right, % atom()
+    cur_sep => binary() | string(),
+    erl_type => 'binary' | 'string' % atom()
+}
 ```
+
+Examples:
+
+```erlang
+> uef_format:format_number(1234567890.4567, 2, #{}). % defaults
+<<"1234567890.46">>
+
+> uef_format:format_number(1234567890.45, 4, #{trailing => true, thousands_sep => ","}).
+<<"1,234,567,890.4500">>
+```
+
+---
+
+#### *uef_format:format_price/1*
+
+`uef_format:format_price(Number) -> FormattedPrice.`
+
+Coming soon...
 
 ---
 
 #### *uef_format:format_price/2*
 
-`uef_format:format_price(Number, ThousandsSep) -> Binary.`
+`uef_format:format_price(Number, Precision) -> FormattedPrice.`
 
-Formats a number `Number` by adding `ThousandsSep` between each set of 3 digits to the left of the decimal point and rounding to the precision of **2**. Returns `binary()`.
+Coming soon...
 
-Examples:
+---
 
-```erlang
-> uef_format:format_price(1000, " ").
-<<"1 000.00">>
+#### *uef_format:format_price/3*
 
-> uef_format:format_price(10000, ",").
-<<"10,000.00">>
+`uef_format:format_price(Number, Precision, CurrencySymbol_OR_Options) -> FormattedPrice.`
 
-> uef_format:format_price(10000.87687, " ").
-<<"10 000.88">>
-```
+Coming soon...
 
 ---
 
@@ -359,7 +387,6 @@ Examples:
 
 > uef_lists:lists_to_list_of_tuples([a,b,c], [1,2,3]).
 [{a,1},{a,2},{a,3},{b,1},{b,2},{b,3},{c,1},{c,2},{c,3}]
-
 ```
 
 ---
