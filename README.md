@@ -305,6 +305,7 @@ Formats `Number` by adding thousands separator between each set of 3 digits to t
 ***Types:***
 
 ```erlang
+FormattedNumber :: binary().
 Number :: number().
 Precision :: integer().
 Decimals :: non_neg_integer().
