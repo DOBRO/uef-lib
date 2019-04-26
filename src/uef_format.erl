@@ -1,14 +1,14 @@
 -module(uef_format).
 
--export([format_number/2, format_number/3]).
+-export([format_number/3, format_number/4]).
 -export([format_price/1, format_price/2, format_price/3]).
 
 -define(DEFAULT_PRICE_PRECISION, 2).
--define(ADD_TRAILING_ZEROES, false).
+-define(DEFAULT_PRICE_DECIMALS, 2).
 -define(THOUSANDS_SEP, <<"">>).
 -define(DECIMAL_POINT, <<".">>).
 -define(CURRENCY_POSITION, left).
--define(CURRENCY_SEP, <<" ">>).
+-define(CURRENCY_SEP, <<"">>).
 
 %%%------------------------------------------------------------------------------
 %%%   Types
@@ -16,9 +16,9 @@
 
 -type formatted_number() :: binary().
 -type precision() :: integer().
+-type decimals() :: non_neg_integer().
 -type number_format_erl_type() :: binary | string.
 -type format_number_opts() :: #{
-	trailing => boolean(),
 	thousands_sep => binary() | string(),
 	decimal_point => binary() | string(),
 	cur_symbol => binary() | string(),
@@ -32,17 +32,17 @@
 %%%------------------------------------------------------------------------------
 
 %% format_number/2
--spec format_number(number(), precision()) -> formatted_number().
-format_number(Number, Precision) ->
-	format_number(Number, Precision, #{}).
+-spec format_number(number(), precision(), decimals()) -> formatted_number().
+format_number(Number, Precision, Decimals) ->
+	format_number(Number, Precision, Decimals, #{}).
 
 %% format_number/3
--spec format_number(number(), precision(), format_number_opts()) -> formatted_number().
-format_number(Number, Precision, Opts) when is_integer(Number) ->
-	format_number(erlang:float(Number), Precision, Opts);
-format_number(Number, Precision, Opts) when is_float(Number) ->
-	RoundedNumber = uef_num:round_number(Number, Precision),
-	format_number_1(RoundedNumber, Precision, Opts).
+-spec format_number(number(), precision(), decimals(), format_number_opts()) -> formatted_number().
+format_number(Number, Precision, Decimals, Opts) when is_integer(Number) ->
+	format_number(erlang:float(Number), Precision, Decimals, Opts);
+format_number(Number, Precision, Decimals, Opts) when is_float(Number) ->
+	RoundedNumber = uef_num:round_number(Number, Precision), % round to Precision before formatting
+	format_number_1(RoundedNumber, Decimals, Opts).
 
 %% format_price/1
 -spec format_price(number()) -> formatted_number().
@@ -57,13 +57,9 @@ format_price(Price, Precision) ->
 %% format_price/3
 -spec format_price(number(), precision(), number_format_erl_type() | format_number_opts()) -> formatted_number().
 format_price(Price, Precision, Opts) when is_map(Opts) ->
-	% Set trailing zeroes to 'true' for price formatting by default
-	case maps:find(trailing, Opts) of
-		{ok, _} -> format_number(Price, Precision, Opts); % do not change if specified
-		error -> format_number(Price, Precision, Opts#{trailing => true})
-	end;
+	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, Opts);
 format_price(Price, Precision, ErlType) -> % erl_type (not a map())
-	format_price(Price, Precision, #{erl_type => ErlType}).
+	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, #{erl_type => ErlType}).
 
 
 %%%------------------------------------------------------------------------------
@@ -71,22 +67,13 @@ format_price(Price, Precision, ErlType) -> % erl_type (not a map())
 %%%------------------------------------------------------------------------------
 
 %% format_number_1/3
--spec format_number_1(number(), precision(), format_number_opts()) -> formatted_number().
-format_number_1(Number, Precision, Opts) ->
-	Decimals = case Precision > 0 of
-		true  -> Precision;
-		false -> 0
-	end,
+-spec format_number_1(number(), decimals(), format_number_opts()) -> formatted_number().
+format_number_1(Number, Decimals, Opts) ->
 	PositiveNumber = case Number < 0 of
 		false -> Number;
 		true  -> erlang:abs(Number)
 	end,
-	AddTrailingZeroes = Precision > 0 andalso maps:get(trailing, Opts, ?ADD_TRAILING_ZEROES) =:= true,
-	FloatToBinaryOpts = case AddTrailingZeroes of
-		true  -> [{decimals, Decimals}];
-		false -> [{decimals, Decimals}, compact]
-	end,
-	BinNum = erlang:float_to_binary(PositiveNumber, FloatToBinaryOpts),
+	BinNum = erlang:float_to_binary(PositiveNumber, [{decimals, Decimals}]),
 	{IntegerPart, DecimalPart} = case uef_bin:split(BinNum, <<".">>) of
 		[I, D] -> {I, D}; % ex: <<"12.345">> -> [<<"12">>, <<"345">>]
 		[I] -> {I, <<>>} % ex: <<"12345">> -> [<<"12345">>] (when Precision < 1)
@@ -108,13 +95,13 @@ format_number_1(Number, Precision, Opts) ->
 			DecimalPoint = maybe_to_binary(maps:get(decimal_point, Opts, ?DECIMAL_POINT)),
 			<<FormattedIntegerPart/binary, DecimalPoint/binary, DecimalPart/binary>>
 	end,
-	% Insert "-" before if negative
+	% Insert "-" before number if negative
 	FormattedNumber1 = case Number < 0 of
 		false -> PositiveFormattedNumber;
 		true  -> <<"-", PositiveFormattedNumber/binary>>
 	end,
 	% Format with remaining options
-	RemainingOpts = maps:without([trailing, thousands_sep, decimal_point], Opts),
+	RemainingOpts = maps:without([thousands_sep, decimal_point], Opts),
 	format_number_2([currency, erl_type], FormattedNumber1, RemainingOpts).
 
 
@@ -133,7 +120,7 @@ format_number_2([currency|Tail], FmtNum, #{cur_symbol := CurSymbol0} = Opts) -> 
 format_number_2([erl_type|Tail], FmtNum, #{erl_type := string} = Opts)  -> % erl_type
 	FmtNum2 = erlang:binary_to_list(FmtNum),
 	format_number_2(Tail, FmtNum2, Opts);
-format_number_2([_|Tail], FmtNum, Opts) -> % other
+format_number_2([_|Tail], FmtNum, Opts) -> % skip any other case
 	format_number_2(Tail, FmtNum, Opts).
 
 
