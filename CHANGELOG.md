@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New function `uef_format:format_number/2,3`. Supports custom precision, trailing zeroes, thousands separator, decimal point, currency symbols, currency position (left, right) and can return a value in custom Erlang type (`binary()` or `string()`).
+- New function `uef_format:format_number/3,4`. Supports custom precision, number of decimal digits, thousands separator, decimal point, currency symbols, currency position (left, right) and can return a value in custom Erlang type (`binary()` or `string()`).
 
 - New function `uef_format:format_price/3` based on `uef_format:format_number/3`.
 
