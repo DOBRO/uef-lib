@@ -17,14 +17,12 @@
 -type formatted_number() :: binary().
 -type precision() :: integer().
 -type decimals() :: non_neg_integer().
--type number_format_erl_type() :: binary | string.
 -type format_number_opts() :: #{
 	thousands_sep => binary() | string(),
 	decimal_point => binary() | string(),
 	cur_symbol => binary() | string(),
 	cur_pos => left | right,
-	cur_sep => binary() | string(),
-	erl_type => number_format_erl_type()
+	cur_sep => binary() | string()
 }.
 
 %%%------------------------------------------------------------------------------
@@ -103,12 +101,7 @@ do_format_number(Number, Decimals, Opts) ->
 		true  -> <<"-", PositiveFormattedNumber/binary>>
 	end,
 	% Format with currency options
-	FormattedWithCurrency = format_number_with_currency(FormattedNumber1, Opts),
-	% erl_type must be the last step
-	case maps:find(erl_type, Opts) of
-		{ok, string} -> erlang:binary_to_list(FormattedWithCurrency);
-		_ -> FormattedWithCurrency
-	end.
+	format_number_with_currency(FormattedNumber1, Opts).
 
 %% format_number_with_currency/2
 -spec format_number_with_currency(binary(), map()) -> binary().
