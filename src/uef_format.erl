@@ -52,14 +52,14 @@ format_price(Price) ->
 %% format_price/2
 -spec format_price(number(), precision()) -> formatted_number().
 format_price(Price, Precision) ->
-	format_price(Price, Precision, binary).
+	format_price(Price, Precision, #{}).
 
 %% format_price/3
 -spec format_price(number(), precision(), number_format_erl_type() | format_number_opts()) -> formatted_number().
 format_price(Price, Precision, Opts) when is_map(Opts) ->
 	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, Opts);
-format_price(Price, Precision, ErlType) -> % erl_type (not a map())
-	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, #{erl_type => ErlType}).
+format_price(Price, Precision, CurSymbol) -> % Currency symbol (not a map())
+	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, #{cur_symbol => CurSymbol}).
 
 
 %%%------------------------------------------------------------------------------
