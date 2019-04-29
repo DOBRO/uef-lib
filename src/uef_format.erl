@@ -39,7 +39,11 @@ format_number(Number, Precision, Decimals) ->
 format_number(Number, Precision, Decimals, Opts) when is_integer(Number) ->
 	format_number(erlang:float(Number), Precision, Decimals, Opts);
 format_number(Number, Precision, Decimals, Opts) when is_float(Number) ->
-	RoundedNumber = uef_num:round_number(Number, Precision), % round to Precision before formatting
+	Precision2 = case Precision > 0 andalso Decimals < Precision of
+		true  -> Decimals;
+		false -> Precision
+	end,
+	RoundedNumber = uef_num:round_number(Number, Precision2), % round to Precision2 before formatting
 	do_format_number(RoundedNumber, Decimals, Opts).
 
 %% format_price/1
