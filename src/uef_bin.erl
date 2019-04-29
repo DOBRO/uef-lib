@@ -1,6 +1,7 @@
 -module(uef_bin).
 
 -export([binary_join/2, split/2, split/3]).
+-export([reverse/1]).
 -export([replace/3, replace_chars/3]).
 -export([random_latin_binary/2, random_binary_from_chars/2]).
 -export([numeric_prefix/1]).
@@ -11,6 +12,10 @@
 
 
 -type split_option() :: undefined | trim_all.
+
+%%%------------------------------------------------------------------------------
+%%%   API
+%%%------------------------------------------------------------------------------
 
 %% binary_join/2
 %% Examle:
@@ -23,63 +28,6 @@ binary_join([Head|Tail], Sep) ->
 		<<Acc/binary, Sep/binary, Value/binary>>
 	end, Head, Tail).
 
-%% random_latin_binary/2
--spec random_latin_binary(Length :: pos_integer(), CaseFlag :: lower | upper | any) -> binary().
-random_latin_binary(Length, CaseFlag) ->
-	Chars = case CaseFlag of
-		lower -> <<"abcdefghijklmnopqrstuvwxyz0123456789">>;
-		upper -> <<"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">>;
-		any -> <<"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">>
-	end,
-	random_binary_from_chars(Length, Chars).
-
-%% random_binary_from_chars/2
--spec random_binary_from_chars(Length :: pos_integer(), Chars :: binary()) -> binary().
-random_binary_from_chars(Length, Chars) ->
-	Bsize = erlang:byte_size(Chars),
-	lists:foldl(
-		fun(_, Acc) ->
-			RndChar = binary:at(Chars, rand:uniform(Bsize)-1),
-			<< Acc/binary, RndChar >>
-		end,
-		<<>>,
-		lists:seq(1, Length)
-	).
-
-%% replace/3
-%% Replaces chars with other chars in binary. Examples:
-%% replace(<<"abcdefgbc">>, <<"bc">>, <<"ZZ">>) -> <<"aZZdefgZZ">>
-%% replace(<<"abcdefgbc">>, <<$d>>, <<"ZZ">>) -> <<"abcZZefgbc">>
--spec replace(binary(), binary(), binary()) -> binary().
-replace(<<>>, _, _) -> <<>>;
-replace(B, <<>>, _) -> B;
-replace(B, C1, C2) ->
-	replace(B, {erlang:bit_size(C1), C1}, C2, <<>>).
-
-%% replace/4
--spec replace(binary(), {pos_integer(), binary()}, binary(), binary()) -> binary().
-replace(B, {BitSize, C1}, C2, Acc) ->
-	case B of
-		<<>> ->
-			Acc;
-		<<C1:BitSize/bits, Rest/bits>> ->
-			replace(Rest, {BitSize, C1}, C2, <<Acc/bits, C2/bits>>); % replacement
-		<<C, Rest/bits>> ->
-			replace(Rest, {BitSize, C1}, C2, <<Acc/bits, C>>)
-	end.
-
-%% replace_chars/3
-%% Replaces chars inluded in list with other chars. Examples:
-%% replace_chars(<<"..www.google.com.">>, [<<".">>], <<>>) -> <<"wwwgooglecom">>
-%% replace_chars(<<"..www.google.com.">>, [<<".">>, <<"w">>], <<>>) -> <<"googlecom">>
--spec replace_chars(binary(), [binary()], binary()) -> binary().
-replace_chars(B0, [], _) -> B0;
-replace_chars(B0, Chars, ToChar) ->
-	lists:foldl(fun(Ch, B) ->
-		replace(B, Ch, ToChar)
-	end, B0, Chars).
-
-
 %% split/2
 %% Splits binary with delimiter and returns list of binary chunks
 %% Examples:
@@ -89,6 +37,7 @@ replace_chars(B0, Chars, ToChar) ->
 -spec split(binary(), binary()) -> [binary()].
 split(B, Splitter) ->
 	split(B, Splitter, undefined).
+
 
 %% split/3
 %% The same as split/2 but with option.
@@ -103,6 +52,86 @@ split(B, Splitter, Option) ->
 	case Option of
 		trim_all -> lists:filter(fun(<<>>) -> false; (_) -> true end, List);
 		_ -> List
+	end.
+
+%% reverse/1
+%% Returns reversed binary
+-spec reverse(binary()) -> binary().
+reverse(B) ->
+	S = erlang:bit_size(B),
+	<<R:S/integer-little>> = B,
+	<<R:S/integer-big>>.
+
+
+%% replace/3
+%% Replaces chars with other chars in binary. Examples:
+%% replace(<<"abcdefgbc">>, <<"bc">>, <<"ZZ">>) -> <<"aZZdefgZZ">>
+%% replace(<<"abcdefgbc">>, <<$d>>, <<"ZZ">>) -> <<"abcZZefgbc">>
+-spec replace(binary(), binary(), binary()) -> binary().
+replace(<<>>, _, _) -> <<>>;
+replace(B, <<>>, _) -> B;
+replace(B, C1, C2) ->
+	replace(B, {erlang:bit_size(C1), C1}, C2, <<>>).
+
+
+%% replace_chars/3
+%% Replaces chars inluded in list with other chars. Examples:
+%% replace_chars(<<"..www.google.com.">>, [<<".">>], <<>>) -> <<"wwwgooglecom">>
+%% replace_chars(<<"..www.google.com.">>, [<<".">>, <<"w">>], <<>>) -> <<"googlecom">>
+-spec replace_chars(binary(), [binary()], binary()) -> binary().
+replace_chars(B0, [], _) -> B0;
+replace_chars(B0, Chars, ToChar) ->
+	lists:foldl(fun(Ch, B) ->
+		replace(B, Ch, ToChar)
+	end, B0, Chars).
+
+
+%% random_latin_binary/2
+-spec random_latin_binary(Length :: pos_integer(), CaseFlag :: lower | upper | any) -> binary().
+random_latin_binary(Length, CaseFlag) ->
+	Chars = case CaseFlag of
+		lower -> <<"abcdefghijklmnopqrstuvwxyz0123456789">>;
+		upper -> <<"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">>;
+		any -> <<"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">>
+	end,
+	random_binary_from_chars(Length, Chars).
+
+
+%% random_binary_from_chars/2
+-spec random_binary_from_chars(Length :: pos_integer(), Chars :: binary()) -> binary().
+random_binary_from_chars(Length, Chars) ->
+	Bsize = erlang:byte_size(Chars),
+	lists:foldl(
+		fun(_, Acc) ->
+			RndChar = binary:at(Chars, rand:uniform(Bsize)-1),
+			<< Acc/binary, RndChar >>
+		end,
+		<<>>,
+		lists:seq(1, Length)
+	).
+
+
+%% numeric_prefix/1
+%% Leaves only digits wich are at the beginning and removes the rest. Examles:
+%% numeric_prefix(<<"3456sld1knskjd">>) -> <<"3456">>.
+%% numeric_prefix(<<"ddd3456sld1knskjd">>) -> <<>>.
+-spec numeric_prefix(binary()) -> binary().
+numeric_prefix(B) -> numeric_prefix(B, <<>>).
+
+%%%------------------------------------------------------------------------------
+%%%   Internal functions
+%%%------------------------------------------------------------------------------
+
+%% replace/4
+-spec replace(binary(), {pos_integer(), binary()}, binary(), binary()) -> binary().
+replace(B, {BitSize, C1}, C2, Acc) ->
+	case B of
+		<<>> ->
+			Acc;
+		<<C1:BitSize/bits, Rest/bits>> ->
+			replace(Rest, {BitSize, C1}, C2, <<Acc/bits, C2/bits>>); % replacement
+		<<C, Rest/bits>> ->
+			replace(Rest, {BitSize, C1}, C2, <<Acc/bits, C>>)
 	end.
 
 %% do_split/3
@@ -124,12 +153,6 @@ do_split(B, {BitSize, Splitter}, List) ->
 			do_split(Rest, {BitSize, Splitter}, List2)
 	end.
 
-%% numeric_prefix/1
-%% Leaves only digits wich are at the beginning and removes the rest. Examles:
-%% numeric_prefix(<<"3456sld1knskjd">>) -> <<"3456">>.
-%% numeric_prefix(<<"ddd3456sld1knskjd">>) -> <<>>.
--spec numeric_prefix(binary()) -> binary().
-numeric_prefix(B) -> numeric_prefix(B, <<>>).
 
 %% numeric_prefix/2
 -spec numeric_prefix(binary(), binary()) -> binary().
@@ -183,6 +206,19 @@ replace_chars_test_() ->
 	[
 	?_assertEqual(<<"wwwexamplecom">>, replace_chars(<<"..www.example.com.">>, [<<".">>], <<>>)),
 	?_assertEqual(<<"examplecom">>, replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>))
+	].
+
+reverse_test_() ->
+	[
+	?_assertEqual(<<5,4,3,2,1>>, reverse(<<1,2,3,4,5>>)),
+	?_assertEqual(<<"HGFEDCBA">>, reverse(<<"ABCDEFGH">>)),
+	?_assertEqual(<<>>, reverse(<<>>)),
+	?_assertEqual(<<0>>, reverse(<<0>>)),
+	?_assertEqual(<<"0">>, reverse(<<"0">>)),
+	?_assertEqual(<<1>>, reverse(<<1>>)),
+	?_assertEqual(<<"1">>, reverse(<<"1">>)),
+	?_assertEqual(<<0, 0, 0>>, reverse(<<0, 0, 0>>)),
+	?_assertEqual(<<"ВБА">>, reverse(<<"АБВ">>))
 	].
 
 -endif. % end of tests
