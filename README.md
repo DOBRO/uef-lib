@@ -27,7 +27,7 @@ See how to [build](#build) and [test](#test-and-dialyze).
 
 Joins a list of binaries with separator into a single binary. Returns binary.
 
-***Example:***
+**Example:**
 
 ```erlang
 > uef_bin:binary_join([<<"www">>, <<"example">>, <<"com">>], <<".">>).
@@ -42,7 +42,7 @@ Joins a list of binaries with separator into a single binary. Returns binary.
 
 Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as [binary:split/2](http://erlang.org/doc/man/binary.html#split-2) but is more performant in simple cases.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_bin:split(<<".www.example.com.">>, <<".">>).
@@ -63,7 +63,7 @@ Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Wor
 
 Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as `uef_bin:split/2` but removes all epmty (`<<>>`) chunks. It can be used in simple cases instead of  [binary:split/3](http://erlang.org/doc/man/binary.html#split-3) for the reason that it's more performant.
 
-***Example:***
+**Example:**
 
 ```erlang
 > uef_bin:split(<<"..www.example.com.">>, <<".">>, trim_all).
@@ -78,7 +78,7 @@ Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Wor
 
 Replaces chars (`Chars`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`). Works as [binary:replace/3](http://erlang.org/doc/man/binary.html#replace-3) but more permormant and can be used in simple cases.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_bin:replace(<<"abcdefgbc">>, <<"bc">>, <<"ZZ">>).
@@ -96,7 +96,7 @@ Replaces chars (`Chars`) with other chars (`OtherChars`) in a binary (`Binary1`)
 
 Replaces chars inluded in list (`ListOfCharsToReplace`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`).
 
-***Examples:***
+**Examples:**
 
 ```erlang
 uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>], <<>>).
@@ -114,7 +114,7 @@ uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>).
 
 Generates and returns a binary of size `Length` which consists of latins [a-z], [A-Z] or [a-zA-Z]. The second argument `CaseFlag` corresponds to a letter case, an atom `'lower'`, `'upper'` or `'any'`.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_bin:random_latin_binary(10, lower).
@@ -135,7 +135,7 @@ Generates and returns a binary of size `Length` which consists of latins [a-z], 
 
 Generates and returns a binary of size `Length` which consists of the given characters `Chars`.
 
-***Example:***
+**Example:**
 
 ```erlang
 > uef_bin:random_binary_from_chars(16, <<"ErlangForever">>).
@@ -150,7 +150,7 @@ Generates and returns a binary of size `Length` which consists of the given char
 
 Returns new binary (`DigitsOnlyBinary`) which consists of digits [0-9] wich are at the beginning in the given binary (`Binary`). If `Binary` does not begin with digit, this function returns empty binary (`<<>>`).
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_bin:numeric_prefix(<<"3456sld1knskjd">>).
@@ -172,7 +172,7 @@ Returns new binary (`DigitsOnlyBinary`) which consists of digits [0-9] wich are 
 
 Returns binary (`Binary`) in hexadecimal form of md5 hash of the argument `IoData`.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_crypt:md5_hex("abcd").
@@ -197,7 +197,7 @@ Returns binary (`Binary`) in hexadecimal form of md5 hash of the argument `IoDat
 
 Takes argument `Html`, replaces some unsafe symbols with their appropriate HTML entities and returns binary.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_encode:html_encode_bin("<>&©\n™").
@@ -215,7 +215,7 @@ Takes argument `Html`, replaces some unsafe symbols with their appropriate HTML 
 
 Works as `uef_encode:html_encode_bin/1` but returns list of binaries.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_encode:html_encode_list("<>&©\n™").
@@ -233,7 +233,7 @@ Works as `uef_encode:html_encode_bin/1` but returns list of binaries.
 
 Converts *cp1251* binary to *utf-8* binary.
 
-***Example:***
+**Example:**
 
 ```erlang
 file_1251_to_utf8() ->
@@ -276,9 +276,9 @@ Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, wher
 
 `uef_format:format_number(Number, Precision, Decimals) -> FormattedNumber.`
 
-The same as `uef_format:format_number/4` with `#{}` as forth argument. See [uef_format:format_number/4](#uef_format:format_number/4) docs.
+The same as `uef_format:format_number/4` with `#{}` as the forth argument. See [uef_format:format_number/4](#uef_format:format_number/4) docs.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_format:format_number(199.4567, 2, 3).
@@ -300,15 +300,15 @@ The same as `uef_format:format_number/4` with `#{}` as forth argument. See [uef_
 
 `uef_format:format_number(Number, Precision, Decimals, Options) -> FormattedNumber.`
 
-Formats `Number` by adding thousands separator between each set of 3 digits to the left of the decimal point, substituting `Decimals` for the decimal point, and rounding to the specified `Precision`. Returns **binary** value.
+Formats `Number` by adding thousands separator between each set of 3 digits to the left of the decimal point, substituting `Decimals` for the decimal point, and rounding to the specified `Precision`. Returns a **binary** value.
 
-***Types:***
+**Types:**
 
 ```erlang
-FormattedNumber :: binary().
 Number :: number().
 Precision :: integer().
 Decimals :: non_neg_integer().
+FormattedNumber :: binary().
 ```
 
 `Options` is a map:
@@ -323,7 +323,9 @@ Decimals :: non_neg_integer().
 }
 ```
 
-***Examples:***
+**Note:** to get maximum performance use **binary** values for options `thousands_sep`, `decimal_point`, `cur_symbol` and `cur_sep` instead of strings.
+
+**Examples:**
 
 ```erlang
 > uef_format:format_number(1234567890.4567, 2, 2, #{}).
@@ -338,6 +340,22 @@ Decimals :: non_neg_integer().
     cur_sep => " ", % whitespace
     cur_pos => right}).
 <<"1,234,567,890.46 USD">>
+
+> uef_format:format_number(1234567890.4567, 2, 4, #{
+    thousands_sep => ",",
+    decimal_point => "==",
+    cur_symbol => "USD",
+    cur_sep => " ",
+    cur_pos => left}).
+<<"USD 1,234,567,890==4600">>
+
+> uef_format:format_number(1234567890.4567, 2, 4, #{
+    thousands_sep => <<",">>, % binary()
+    decimal_point => <<".">>, % binary()
+    cur_symbol => <<"USD">>, % binary()
+    cur_sep => <<" ">>, % binary()
+    cur_pos => left}).
+<<"USD 1,234,567,890.4600">>
 ```
 
 ---
@@ -346,7 +364,19 @@ Decimals :: non_neg_integer().
 
 `uef_format:format_price(Number) -> FormattedPrice.`
 
-*Docs coming soon...*
+Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a precision of `2` and decimal digits of `2`.
+
+The same as `uef_format:format_price/2` with a precision of `2` as the second argument. See [uef_format:format_price/2](#uef_format:format_price/2) docs.
+
+**Examples:**
+
+```erlang
+> uef_format:format_price(199).
+<<"199.00">>
+
+> uef_format:format_price(199.9876).
+<<"199.99">>
+```
 
 ---
 
@@ -354,7 +384,16 @@ Decimals :: non_neg_integer().
 
 `uef_format:format_price(Number, Precision) -> FormattedPrice.`
 
-*Docs coming soon...*
+Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a specified precision as the second argument and decimal digits of `2`.
+
+The same as `uef_format:format_price/3` with `#{}` as the third argument. See [uef_format:format_price/3](#uef_format:format_price/3) docs.
+
+**Example:**
+
+```erlang
+> uef_format:format_price(1999.9876, 4).
+<<"1999.99">>
+```
 
 ---
 
@@ -362,7 +401,51 @@ Decimals :: non_neg_integer().
 
 `uef_format:format_price(Number, Precision, CurrencySymbol_OR_Options) -> FormattedPrice.`
 
-*Docs coming soon...*
+Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a specified precision as the second argument, decimal digits of `2`, and with currency symbol (or options) as the third argument.
+
+If `CurrencySymbol_OR_Options` is a `map` the functions works as [uef_format:format_number/4](#uef_format:format_number/4) with decimal digits of `2` as the third argument and with options as the forth one.
+
+If `CurrencySymbol_OR_Options` is a `binary` or a `string`, the corresponding currency symbol is added to the left.
+
+**Examples:**
+
+```erlang
+> uef_format:format_price(1000.8767, 4, #{}).
+<<"1000.88">>
+
+
+> uef_format:format_price(1000.8767, 4, #{
+    thousands_sep => ",",
+    cur_symbol => "USD",
+    cur_sep => " ",
+    cur_pos => right}).
+<<"1,000.88 USD">>
+
+
+> uef_format:format_price(1000.8767, 4, #{
+    thousands_sep => ",",
+    cur_symbol => <<"руб."/utf8>>,
+    cur_sep => " ",
+    cur_pos => right}).
+<<49,44,48,48,48,46,56,56,32,209,128,209,131,208,177,46>> % <<"1,000.88 руб."/utf8>>.
+
+
+> uef_format:format_price(1000.8767, 4, "$").
+<<"$1000.88">>
+
+
+> uef_format:format_price(99.999, 2, "$").
+<<"$100.00">>
+
+
+> uef_format:format_price(99.99, 2, "$").
+<<"$99.99">>
+
+
+> uef_format:format_price(99.99, 2, <<"€"/utf8>>).
+<<226,130,172,57,57,46,57,57>> % <<"€99.99"/utf8>>
+
+```
 
 ---
 
@@ -376,7 +459,7 @@ Decimals :: non_neg_integer().
 
 Splits `List` into list of lists `[List1, List2, ..., ListN]` where `List1, List2, ..., ListN` are lists with maximum `MaxLen` elements.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 1).
@@ -409,7 +492,7 @@ Splits `List` into list of lists `[List1, List2, ..., ListN]` where `List1, List
 
 Transforms two lists into one list of two-tuples, where the first element of each tuple is taken from the first list and the second element is taken from the second list one by one.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_lists:lists_to_list_of_tuples([a,b,c], [1,2]).
@@ -427,7 +510,7 @@ Transforms two lists into one list of two-tuples, where the first element of eac
 
 Transforms three lists into one list of three-tuples, where the first element of each tuple is taken from the first list, the second element is taken from the second list one by one, and the third element is taken from the third list one by one.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_lists:lists_to_list_of_tuples([a1,b1], [a2,b2], [a3,b3]).
@@ -467,7 +550,7 @@ Transforms three lists into one list of three-tuples, where the first element of
 
 Rounds the number to the specified precision.
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_num:round_number(10, 2).
@@ -505,7 +588,7 @@ Returns the difference ***in days*** between `Date` and the current local date p
 
 Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `Date2` must be of type `calendar:date()` (`{Year, Month, Day}`).
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_time:days_diff({1999, 1, 31}, {2019, 12, 31}).
@@ -531,7 +614,7 @@ Returns the difference ***in seconds*** between `Date` and the current local tim
 
 Returns the difference ***in seconds*** between `DateTime2` and `DateTime1`.  `DateTime1` and `DateTime2` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`).
 
-***Examples:***
+**Examples:**
 
 ```erlang
 > uef_time:seconds_diff({{1999, 1, 31}, {0, 0, 0}}, {{2019, 12, 31}, {0, 0, 0}}).
