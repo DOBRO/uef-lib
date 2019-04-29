@@ -36,6 +36,27 @@ Joins a list of binaries with separator into a single binary. Returns binary.
 
 ---
 
+#### *uef_bin:reverse/1*
+
+`uef_bin:reverse(Binary1) -> Binary2.`
+
+Returns a binary in reversed byte order.
+
+**Examples:**
+
+```erlang
+> uef_bin:reverse(<<"ABCDEFGH">>).
+<<"HGFEDCBA">>
+
+> uef_bin:reverse(<<1,2,3,4,5>>).
+<<5,4,3,2,1>>
+
+> uef_bin:reverse(<<>>).
+<<>>
+```
+
+---
+
 #### *uef_bin:split/2*
 
 `uef_bin:split(Binary, Splitter) -> ListOfBinaries.`
