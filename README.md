@@ -276,7 +276,7 @@ Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, wher
 
 `uef_format:format_number(Number, Precision, Decimals) -> FormattedNumber.`
 
-The same as `uef_format:format_number/4` with `#{}` as the forth argument. See [uef_format:format_number/4](#uef_format:format_number/4) docs.
+The same as `uef_format:format_number/4` with `#{}` as the forth argument. See [uef_format:format_number/4](#uef_formatformat_number4) docs.
 
 **Examples:**
 
@@ -366,7 +366,7 @@ FormattedNumber :: binary().
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a precision of `2` and decimal digits of `2`.
 
-The same as `uef_format:format_price/2` with a precision of `2` as the second argument. See [uef_format:format_price/2](#uef_format:format_price/2) docs.
+The same as `uef_format:format_price/2` with a precision of `2` as the second argument. See [uef_format:format_price/2](#uef_formatformat_price2) docs.
 
 **Examples:**
 
@@ -386,7 +386,7 @@ The same as `uef_format:format_price/2` with a precision of `2` as the second ar
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a specified precision as the second argument and decimal digits of `2`.
 
-The same as `uef_format:format_price/3` with `#{}` as the third argument. See [uef_format:format_price/3](#uef_format:format_price/3) docs.
+The same as `uef_format:format_price/3` with `#{}` as the third argument. See [uef_format:format_price/3](#uef_formatformat_price3) docs.
 
 **Example:**
 
@@ -403,7 +403,7 @@ The same as `uef_format:format_price/3` with `#{}` as the third argument. See [u
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a specified precision as the second argument, decimal digits of `2`, and with currency symbol (or options) as the third argument.
 
-If `CurrencySymbol_OR_Options` is a `map` the functions works as [uef_format:format_number/4](#uef_format:format_number/4) with decimal digits of `2` as the third argument and with options as the forth one.
+If `CurrencySymbol_OR_Options` is a `map` the functions works as [uef_format:format_number/4](#uef_formatformat_number4) with decimal digits of `2` as the third argument and with options as the forth one.
 
 If `CurrencySymbol_OR_Options` is a `binary` or a `string`, the corresponding currency symbol is added to the left.
 
