@@ -5,6 +5,11 @@
 -export([random_latin_binary/2, random_binary_from_chars/2]).
 -export([numeric_prefix/1]).
 
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+-endif.
+
+
 -type split_option() :: undefined | trim_all.
 
 %% binary_join/2
@@ -139,3 +144,45 @@ numeric_prefix(<< $7, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $7
 numeric_prefix(<< $8, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $8 >>);
 numeric_prefix(<< $9, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $9 >>);
 numeric_prefix(_, Acc) -> Acc.
+
+
+
+%%%------------------------------------------------------------------------------
+%%%   Test functions
+%%%------------------------------------------------------------------------------
+
+-ifdef(TEST).
+
+numeric_prefix_test_() ->
+	[
+	?_assertEqual(<<>>, numeric_prefix(<<"a234234">>)),
+	?_assertEqual(<<"123">>, numeric_prefix(<<"123a456">>))
+	].
+
+binary_join_test_() ->
+	[
+	?_assertEqual(<<"www.example.com">>, binary_join([<<"www">>, <<"example">>, <<"com">>], <<".">>)),
+	?_assertEqual(<<"www">>, binary_join([<<"www">>], <<".">>))
+	].
+
+split_test_() ->
+	[
+	?_assertEqual([<<>>,<<"www">>,<<"example">>,<<"com">>,<<>>], split(<<".www.example.com.">>, <<".">>)),
+	?_assertEqual([<<"www">>,<<"example">>,<<"com">>], split(<<"www.example.com">>, <<".">>)),
+	?_assertEqual([<<"www.example.com">>], split(<<"www.example.com">>, <<"A">>)),
+	?_assertEqual([<<"www">>,<<"example">>,<<"com">>], split(<<".....www.example.com....">>, <<".">>, trim_all))
+	].
+
+replace_test_() ->
+	[
+	?_assertEqual(<<"aZZdefgZZ">>, replace(<<"abcdefgbc">>, <<"bc">>, <<"ZZ">>)),
+	?_assertEqual(<<"abcZZefgbc">>, replace(<<"abcdefgbc">>, <<"d">>, <<"ZZ">>))
+	].
+
+replace_chars_test_() ->
+	[
+	?_assertEqual(<<"wwwexamplecom">>, replace_chars(<<"..www.example.com.">>, [<<".">>], <<>>)),
+	?_assertEqual(<<"examplecom">>, replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>))
+	].
+
+-endif. % end of tests

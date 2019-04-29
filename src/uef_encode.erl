@@ -3,6 +3,10 @@
 -export([html_encode_list/1, html_encode_bin/1]).
 -export([win_to_utf8/1]).
 
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+-endif.
+
 %% html_encode_list/1
 -spec html_encode_list(Html::iodata()) -> list().
 html_encode_list(<<>>) -> [];
@@ -373,3 +377,22 @@ win_to_utf8(<<>>, Acc) ->
 	Acc.
 
 
+%%%------------------------------------------------------------------------------
+%%%   Tests
+%%%------------------------------------------------------------------------------
+
+-ifdef(TEST).
+
+html_encode_bin_test_() ->
+	[
+	?_assertEqual(<<"&lt;&gt;&amp;&copy;<br/>&trade;">>, html_encode_bin("<>&©\n™")),
+	?_assertEqual(<<"&#9830;&plusmn;&Sigma;">>, html_encode_bin("♦±Σ"))
+	].
+
+html_encode_list_test_() ->
+	[
+	?_assertEqual([<<"&lt;">>,<<"&gt;">>,<<"&amp;">>,<<"&copy;">>,<<"<br/>">>,<<"&trade;">>], html_encode_list("<>&©\n™")),
+	?_assertEqual([<<"&#9830;">>,<<"&plusmn;">>,<<"&Sigma;">>], html_encode_list("♦±Σ"))
+	].
+
+-endif.

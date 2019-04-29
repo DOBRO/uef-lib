@@ -3,6 +3,10 @@
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
 
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+-endif.
+
 %% days_diff/1
 -spec days_diff(calendar:date()) -> integer().
 days_diff(Date) ->
@@ -25,3 +29,30 @@ seconds_diff(DateTime) ->
 -spec seconds_diff(calendar:datetime(), calendar:datetime()) -> integer().
 seconds_diff(DateTime1, DateTime2) ->
 	calendar:datetime_to_gregorian_seconds(DateTime2) - calendar:datetime_to_gregorian_seconds(DateTime1).
+
+
+%%%------------------------------------------------------------------------------
+%%%   Tests
+%%%------------------------------------------------------------------------------
+
+-ifdef(TEST).
+
+days_diff_2_test_() ->
+	[
+	?_assertEqual(1, days_diff({2018, 12, 31}, {2019, 1, 1})),
+	?_assertEqual(-1, days_diff({2019, 1, 1}, {2018, 12, 31})),
+	?_assertEqual(0, days_diff({2019, 4, 23}, {2019, 4, 23}))
+	].
+
+
+seconds_diff_2_test_() ->
+	Date = {2019, 4, 23},
+	[
+	?_assertEqual(0, seconds_diff({Date, {17, 0, 0}}, {Date, {17, 0, 0}})),
+	?_assertEqual(1, seconds_diff({Date, {17, 0, 0}}, {Date, {17, 0, 1}})),
+	?_assertEqual(3600, seconds_diff({Date, {17, 0, 0}}, {Date, {18, 0, 0}})),
+	?_assertEqual(-3600, seconds_diff({Date, {18, 0, 0}}, {Date, {17, 0, 0}})),
+	?_assertEqual(60, seconds_diff({Date, {17, 0, 0}}, {Date, {17, 1, 0}}))
+	].
+
+-endif. % end of tests

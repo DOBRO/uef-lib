@@ -3,12 +3,26 @@
 -export([format_number/3, format_number/4]).
 -export([format_price/1, format_price/2, format_price/3]).
 
+
+%%%------------------------------------------------------------------------------
+%%%   EUnit
+%%%------------------------------------------------------------------------------
+
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+-endif.
+
+%%%------------------------------------------------------------------------------
+%%%   Macros
+%%%------------------------------------------------------------------------------
+
 -define(DEFAULT_PRICE_PRECISION, 2).
 -define(DEFAULT_PRICE_DECIMALS, 2).
 -define(THOUSANDS_SEP, <<"">>).
 -define(DECIMAL_POINT, <<".">>).
 -define(CURRENCY_POSITION, left).
 -define(CURRENCY_SEP, <<"">>).
+
 
 %%%------------------------------------------------------------------------------
 %%%   Types
@@ -141,3 +155,32 @@ split_thousands(<<>>, List) ->
 split_thousands(Bin, List) ->
 	<<B:3/binary, Rest/binary>> = Bin,
 	split_thousands(Rest, [B | List]).
+
+
+%%%------------------------------------------------------------------------------
+%%%   Tests
+%%%------------------------------------------------------------------------------
+
+-ifdef(TEST).
+
+format_number_test_() ->
+	[
+	?_assertEqual(<<"1.00">>, format_number(1, 2, 2, #{})),
+	?_assertEqual(<<"1.99">>, format_number(1.99, 2, 2, #{})),
+	?_assertEqual(<<"2.00">>, format_number(1.99, 1, 2, #{})),
+	?_assertEqual(<<"1 000 999.00">>, format_number(1000999, 2, 2, #{thousands_sep => <<" ">>})),
+	?_assertEqual(<<"2,000,000.00">>, format_number(2000000, 2, 2, #{thousands_sep => <<",">>})),
+	?_assertEqual(<<"9 999 999 999.00">>, format_number(9999999999, 2, 2, #{thousands_sep => <<" ">>})),
+	?_assertEqual(<<"99 999 999 999.99">>, format_price(99999999999.99, 2, #{thousands_sep => <<" ">>})),
+	?_assertEqual(<<"999 999 999 999.99">>, format_price(999999999999.99, 2, #{thousands_sep => <<" ">>})),
+	?_assertEqual(<<"999,999,999,999.99">>, format_price(999999999999.99,  2, #{thousands_sep => <<",">>})),
+	?_assertEqual(<<"USD 1,234,567,890==4600">>, uef_format:format_number(1234567890.4567, 2, 4, #{thousands_sep => ",", decimal_point => "==", cur_symbol => "USD", cur_sep => " ", cur_pos => left})),
+	?_assertEqual(<<"$1000.88">>, format_price(1000.8767, 4, "$")),
+	?_assertEqual(<<"1000.88 руб."/utf8>>, format_price(1000.8767, 4, #{cur_symbol => <<"руб."/utf8>>, cur_sep => " ", cur_pos => right})),
+	?_assertEqual(format_number(100, 2, 3), format_number(100, 2, 3, #{})),
+	?_assertEqual(format_price(1000), format_price(1000, 2)),
+	?_assertEqual(format_price(1000), format_price(1000, 2, <<>>)),
+	?_assertEqual(format_price(1000), format_number(1000, 2, 2, #{}))
+	].
+
+-endif. % end of tests
