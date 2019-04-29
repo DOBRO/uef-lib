@@ -1,7 +1,7 @@
 -module(uef_bin).
 
 -export([binary_join/2, split/2, split/3]).
--export([reverse/1]).
+-export([reverse/1, reverse_utf8/1]).
 -export([replace/3, replace_chars/3]).
 -export([random_latin_binary/2, random_binary_from_chars/2]).
 -export([numeric_prefix/1]).
@@ -55,13 +55,22 @@ split(B, Splitter, Option) ->
 	end.
 
 %% reverse/1
-%% Returns reversed binary
+%% Returns binary in reversed byte order
 -spec reverse(binary()) -> binary().
 reverse(B) ->
 	S = erlang:bit_size(B),
 	<<R:S/integer-little>> = B,
 	<<R:S/integer-big>>.
 
+%% reverse_utf8/1
+reverse_utf8(Bin) ->
+	reverse_utf8(Bin, <<>>).
+
+reverse_utf8(<<>>, Acc) -> Acc;
+reverse_utf8(<<U/utf8, Rest/bits>>, Acc) ->
+ 	reverse_utf8(Rest, <<U/utf8, Acc/bits>>);
+reverse_utf8(<<C, Rest/bits>>, Acc) ->
+	reverse_utf8(Rest, <<C, Acc/bits>>).
 
 %% replace/3
 %% Replaces chars with other chars in binary. Examples:
