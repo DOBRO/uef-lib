@@ -63,14 +63,9 @@ reverse(B) ->
 	<<R:S/integer-big>>.
 
 %% reverse_utf8/1
+-spec reverse_utf8(binary()) -> binary().
 reverse_utf8(Bin) ->
 	reverse_utf8(Bin, <<>>).
-
-reverse_utf8(<<>>, Acc) -> Acc;
-reverse_utf8(<<U/utf8, Rest/bits>>, Acc) ->
- 	reverse_utf8(Rest, <<U/utf8, Acc/bits>>);
-reverse_utf8(<<C, Rest/bits>>, Acc) ->
-	reverse_utf8(Rest, <<C, Acc/bits>>).
 
 %% replace/3
 %% Replaces chars with other chars in binary. Examples:
@@ -142,6 +137,16 @@ replace(B, {BitSize, C1}, C2, Acc) ->
 		<<C, Rest/bits>> ->
 			replace(Rest, {BitSize, C1}, C2, <<Acc/bits, C>>)
 	end.
+
+
+%% reverse_utf8/2
+-spec reverse_utf8(binary(), binary()) -> binary().
+reverse_utf8(<<>>, Acc) -> Acc;
+reverse_utf8(<<U/utf8, Rest/bits>>, Acc) ->
+ 	reverse_utf8(Rest, <<U/utf8, Acc/bits>>);
+reverse_utf8(<<C, Rest/bits>>, Acc) ->
+	reverse_utf8(Rest, <<C, Acc/bits>>).
+
 
 %% do_split/3
 -spec do_split(binary(), {pos_integer(), binary()}, [binary()]) -> [binary()].
@@ -228,6 +233,26 @@ reverse_test_() ->
 	?_assertEqual(<<"1">>, reverse(<<"1">>)),
 	?_assertEqual(<<0, 0, 0>>, reverse(<<0, 0, 0>>)),
 	?_assertEqual(<<"ВБА">>, reverse(<<"АБВ">>))
+	].
+
+reverse_utf8_test_() ->
+	[
+	?_assertEqual(<<5,4,3,2,1>>, reverse_utf8(<<1,2,3,4,5>>)),
+	?_assertEqual(<<"HGFEDCBA">>, reverse_utf8(<<"ABCDEFGH">>)),
+	?_assertEqual(<<>>, reverse_utf8(<<>>)),
+	?_assertEqual(<<0>>, reverse_utf8(<<0>>)),
+	?_assertEqual(<<"0">>, reverse_utf8(<<"0">>)),
+	?_assertEqual(<<1>>, reverse_utf8(<<1>>)),
+	?_assertEqual(<<"1">>, reverse_utf8(<<"1">>)),
+	?_assertEqual(<<0, 0, 0>>, reverse_utf8(<<0, 0, 0>>)),
+	?_assertEqual(<<"ВБА">>, reverse_utf8(<<"АБВ">>)),
+	?_assertEqual(<<"ЖЁЕДГВБА"/utf8>>, reverse_utf8(<<"АБВГДЕЁЖ"/utf8>>)),
+	?_assertEqual(<<7, 6, 5, 4, "ЖЁЕДГВБА"/utf8, 3, 2, 1>>, reverse_utf8(<<1, 2, 3, "АБВГДЕЁЖ"/utf8, 4, 5, 6, 7>>)),
+	?_assertEqual(<<"eßartS eid"/utf8>>, reverse_utf8(<<"die Straße"/utf8>>)),
+	?_assertEqual(<<"街條這"/utf8>>, reverse_utf8(<<"這條街"/utf8>>)),
+	?_assertEqual(<<"好你"/utf8>>, reverse_utf8(<<"你好"/utf8>>)),
+	?_assertEqual(<<"り通"/utf8>>, reverse_utf8(<<"通り"/utf8>>)),
+	?_assertEqual(<<"はちにんこ"/utf8>>, reverse_utf8(<<"こんにちは"/utf8>>))
 	].
 
 -endif. % end of tests
