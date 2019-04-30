@@ -40,7 +40,9 @@ Joins a list of binaries with separator into a single binary. Returns binary.
 
 `uef_bin:reverse(Binary1) -> Binary2.`
 
-Returns a binary in reversed byte order.
+Returns a binary in reverse *byte* order.
+
+**Note:** this function is **not** intended to work with UTF-8 binary strings. To get a binary in reverse *character* order, use [uef_bin:reverse_utf8/1](#uef_binreverse_utf81) instead.
 
 **Examples:**
 
@@ -53,6 +55,39 @@ Returns a binary in reversed byte order.
 
 > uef_bin:reverse(<<>>).
 <<>>
+```
+
+---
+
+#### *uef_bin:reverse_utf8/1*
+
+`uef_bin:reverse_utf8(UTF8_Binary1) -> UTF8_Binary2.`
+
+Returns a binary in reverse character order. Intended to work with UTF-8 binary strings.
+
+**Examples:**
+
+```erlang
+> uef_bin:reverse_utf8(<<"ABCDEFGH">>).
+<<"HGFEDCBA">>
+
+> uef_bin:reverse_utf8(<<1,2,3,4,5>>).
+<<5,4,3,2,1>>
+
+> uef_bin:reverse_utf8(<<"die Straße"/utf8>>).
+<<"eßartS eid"/utf8>>
+
+> uef_bin:reverse_utf8(<<"АБВГДЕЁЖ"/utf8>>) =:= <<"ЖЁЕДГВБА"/utf8>>.
+true
+
+> uef_bin:reverse_utf8(<<1, 2, 3, "АБВГДЕЁЖ"/utf8, 4, 5, 6, 7>>) =:= <<7, 6, 5, 4, "ЖЁЕДГВБА"/utf8, 3, 2, 1>>.
+true
+
+> uef_bin:reverse_utf8(<<"這條街"/utf8>>) =:= <<"街條這"/utf8>>.
+true
+
+> uef_bin:reverse_utf8(<<"こんにちは"/utf8>>) =:= <<"はちにんこ"/utf8>>.
+true
 ```
 
 ---
