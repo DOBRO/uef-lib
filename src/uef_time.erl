@@ -10,8 +10,7 @@
 %% days_diff/1
 -spec days_diff(calendar:date()) -> integer().
 days_diff(Date) ->
-	{DateNow, _} = erlang:localtime(),
-	days_diff(DateNow, Date).
+	days_diff(erlang:date(), Date).
 
 %% days_diff/2
 -spec days_diff(calendar:date(), calendar:date()) -> integer().
