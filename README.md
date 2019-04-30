@@ -23,7 +23,9 @@ See how to [build](#build) and [test](#test-and-dialyze).
 
 #### *uef_bin:binary_join/2*
 
-`uef_bin:binary_join(ListOfBinaries, Separator) -> Binary.`
+```erlang
+uef_bin:binary_join(ListOfBinaries, Separator) -> Binary.
+```
 
 Joins a list of binaries with separator into a single binary. Returns binary.
 
@@ -38,7 +40,9 @@ Joins a list of binaries with separator into a single binary. Returns binary.
 
 #### *uef_bin:reverse/1*
 
-`uef_bin:reverse(Binary1) -> Binary2.`
+```erlang
+uef_bin:reverse(Binary1) -> Binary2.
+```
 
 Returns a binary in reverse *byte* order.
 
@@ -61,7 +65,9 @@ Returns a binary in reverse *byte* order.
 
 #### *uef_bin:reverse_utf8/1*
 
-`uef_bin:reverse_utf8(UTF8_Binary1) -> UTF8_Binary2.`
+```erlang
+uef_bin:reverse_utf8(UTF8_Binary1) -> UTF8_Binary2.
+```
 
 Returns a binary in reverse character order. Intended to work with UTF-8 binary strings.
 
@@ -94,7 +100,9 @@ true
 
 #### *uef_bin:split/2*
 
-`uef_bin:split(Binary, Splitter) -> ListOfBinaries.`
+```erlang
+uef_bin:split(Binary, Splitter) -> ListOfBinaries.
+```
 
 Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as [binary:split/2](http://erlang.org/doc/man/binary.html#split-2) but is more performant in simple cases.
 
@@ -115,7 +123,9 @@ Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Wor
 
 #### *uef_bin:split/3*
 
-`uef_bin:split(Binary, Splitter, 'trim_all') -> ListOfBinaries.`
+```erlang
+uef_bin:split(Binary, Splitter, 'trim_all') -> ListOfBinaries.
+```
 
 Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as `uef_bin:split/2` but removes all epmty (`<<>>`) chunks. It can be used in simple cases instead of  [binary:split/3](http://erlang.org/doc/man/binary.html#split-3) for the reason that it's more performant.
 
@@ -130,7 +140,9 @@ Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Wor
 
 #### *uef_bin:replace/3*
 
-`uef_bin:replace(Binary1, Chars, OtherChars) -> Binary2.`
+```erlang
+uef_bin:replace(Binary1, Chars, OtherChars) -> Binary2.
+```
 
 Replaces chars (`Chars`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`). Works as [binary:replace/3](http://erlang.org/doc/man/binary.html#replace-3) but more permormant and can be used in simple cases.
 
@@ -148,7 +160,9 @@ Replaces chars (`Chars`) with other chars (`OtherChars`) in a binary (`Binary1`)
 
 #### *uef_bin:replace_chars/3*
 
-`uef_bin:replace_chars(Binary1, ListOfCharsToReplace, OtherChars) -> Binary2.`
+```erlang
+uef_bin:replace_chars(Binary1, ListOfCharsToReplace, OtherChars) -> Binary2.
+```
 
 Replaces chars inluded in list (`ListOfCharsToReplace`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`).
 
@@ -166,7 +180,9 @@ uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>).
 
 #### *uef_bin:random_latin_binary/2*
 
-`uef_bin:random_latin_binary(Length, CaseFlag) -> RandomLatinBinary.`
+```erlang
+uef_bin:random_latin_binary(Length, CaseFlag) -> RandomLatinBinary.
+```
 
 Generates and returns a binary of size `Length` which consists of latins [a-z], [A-Z] or [a-zA-Z]. The second argument `CaseFlag` corresponds to a letter case, an atom `'lower'`, `'upper'` or `'any'`.
 
@@ -187,7 +203,9 @@ Generates and returns a binary of size `Length` which consists of latins [a-z], 
 
 #### *uef_bin:random_binary_from_chars/2*
 
-`uef_bin:random_binary_from_chars(Length, Chars) -> RandomCharsBinary.`
+```erlang
+uef_bin:random_binary_from_chars(Length, Chars) -> RandomCharsBinary.
+```
 
 Generates and returns a binary of size `Length` which consists of the given characters `Chars`.
 
@@ -202,7 +220,9 @@ Generates and returns a binary of size `Length` which consists of the given char
 
 #### *uef_bin:numeric_prefix/1*
 
-`uef_bin:numeric_prefix(Binary) -> DigitsOnlyOrEmptyBinary.`
+```erlang
+uef_bin:numeric_prefix(Binary) -> DigitsOnlyOrEmptyBinary.
+```
 
 Returns new binary (`DigitsOnlyBinary`) which consists of digits [0-9] wich are at the beginning in the given binary (`Binary`). If `Binary` does not begin with digit, this function returns empty binary (`<<>>`).
 
@@ -224,7 +244,9 @@ Returns new binary (`DigitsOnlyBinary`) which consists of digits [0-9] wich are 
 
 #### *uef_crypt:md5_hex/1*
 
-`uef_crypt:md5_hex(IoData) -> Binary.`
+```erlang
+uef_crypt:md5_hex(IoData) -> Binary.
+```
 
 Returns binary (`Binary`) in hexadecimal form of md5 hash of the argument `IoData`.
 
@@ -249,7 +271,9 @@ Returns binary (`Binary`) in hexadecimal form of md5 hash of the argument `IoDat
 
 #### *uef_encode:html_encode_bin/1*
 
-`uef_encode:html_encode_bin(Html) -> EncodedBinary.`
+```erlang
+uef_encode:html_encode_bin(Html) -> EncodedBinary.
+```
 
 Takes argument `Html`, replaces some unsafe symbols with their appropriate HTML entities and returns binary.
 
@@ -267,7 +291,9 @@ Takes argument `Html`, replaces some unsafe symbols with their appropriate HTML 
 
 #### *uef_encode:html_encode_list/1*
 
-`uef_encode:html_encode_list(Html) -> EncodedList.`
+```erlang
+uef_encode:html_encode_list(Html) -> EncodedList.
+```
 
 Works as `uef_encode:html_encode_bin/1` but returns list of binaries.
 
@@ -285,7 +311,9 @@ Works as `uef_encode:html_encode_bin/1` but returns list of binaries.
 
 #### *uef_encode:win_to_utf8/1*
 
-`uef_encode:win_to_utf8(Binary1251) -> BinaryUtf8.`
+```erlang
+uef_encode:win_to_utf8(Binary1251) -> BinaryUtf8.
+```
 
 Converts *cp1251* binary to *utf-8* binary.
 
@@ -308,7 +336,9 @@ file_1251_to_utf8() ->
 
 #### *uef_file:read_file_info_fast/1*
 
-`uef_file:read_file_info_fast(Filename) -> {ok, FileInfo} | {error, Reason}.`
+```erlang
+uef_file:read_file_info_fast(Filename) -> {ok, FileInfo} | {error, Reason}.
+```
 
 Retrieves information about **local** file. Returns `{ok, FileInfo}` if successful, otherwise `{error, Reason}`. Works as [file:read_file_info/2](http://erlang.org/doc/man/file.html#read_file_info-2) but optimized for **local** files. This is a wrapper of:
 
@@ -318,7 +348,9 @@ Retrieves information about **local** file. Returns `{ok, FileInfo}` if successf
 
 #### *uef_file:read_file_fast/1*
 
-`uef_file:read_file_fast(Filename) -> {ok, BinaryData} | {error, Reason}.`
+```erlang
+uef_file:read_file_fast(Filename) -> {ok, BinaryData} | {error, Reason}.
+```
 
 Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, where `BinaryData` is a binary data object that contains the contents of `Filename`, or `{error, Reason}` if an error occurs. This function is optimized for reading contents of **local** files, as no Erlang process is used. It calls [file:open/2](http://erlang.org/doc/man/file.html#open-2) with options `[read, raw, binary]`.
 
@@ -330,7 +362,9 @@ Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, wher
 
 #### *uef_format:format_number/3*
 
-`uef_format:format_number(Number, Precision, Decimals) -> FormattedNumber.`
+```erlang
+uef_format:format_number(Number, Precision, Decimals) -> FormattedNumber.
+```
 
 The same as `uef_format:format_number/4` with `#{}` as the forth argument. See [uef_format:format_number/4](#uef_formatformat_number4) docs.
 
@@ -354,7 +388,9 @@ The same as `uef_format:format_number/4` with `#{}` as the forth argument. See [
 
 #### *uef_format:format_number/4*
 
-`uef_format:format_number(Number, Precision, Decimals, Options) -> FormattedNumber.`
+```erlang
+uef_format:format_number(Number, Precision, Decimals, Options) -> FormattedNumber.
+```
 
 Formats `Number` by adding thousands separator between each set of 3 digits to the left of the decimal point, substituting `Decimals` for the decimal point, and rounding to the specified `Precision`. Returns a **binary** value.
 
@@ -418,7 +454,9 @@ FormattedNumber :: binary().
 
 #### *uef_format:format_price/1*
 
-`uef_format:format_price(Number) -> FormattedPrice.`
+```erlang
+uef_format:format_price(Number) -> FormattedPrice.
+```
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a precision of `2` and decimal digits of `2`.
 
@@ -438,7 +476,9 @@ The same as `uef_format:format_price/2` with a precision of `2` as the second ar
 
 #### *uef_format:format_price/2*
 
-`uef_format:format_price(Number, Precision) -> FormattedPrice.`
+```erlang
+uef_format:format_price(Number, Precision) -> FormattedPrice.
+```
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a specified precision as the second argument and decimal digits of `2`.
 
@@ -455,7 +495,9 @@ The same as `uef_format:format_price/3` with `#{}` as the third argument. See [u
 
 #### *uef_format:format_price/3*
 
-`uef_format:format_price(Number, Precision, CurrencySymbol_OR_Options) -> FormattedPrice.`
+```erlang
+uef_format:format_price(Number, Precision, CurrencySymbol_OR_Options) -> FormattedPrice.
+```
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a specified precision as the second argument, decimal digits of `2`, and with currency symbol (or options) as the third argument.
 
@@ -511,7 +553,9 @@ If `CurrencySymbol_OR_Options` is a `binary` or a `string`, the corresponding cu
 
 #### *uef_lists:split_list_into_chunks/2*
 
-`uef_lists:split_list_into_chunks(List, MaxLen) -> [List1, List2, ..., ListN].`
+```erlang
+uef_lists:split_list_into_chunks(List, MaxLen) -> [List1, List2, ..., ListN].
+```
 
 Splits `List` into list of lists `[List1, List2, ..., ListN]` where `List1, List2, ..., ListN` are lists with maximum `MaxLen` elements.
 
@@ -544,7 +588,9 @@ Splits `List` into list of lists `[List1, List2, ..., ListN]` where `List1, List
 
 #### *uef_lists:lists_to_list_of_tuples/2*
 
-`uef_lists:lists_to_list_of_tuples(List1, List2) -> List3.`
+```erlang
+uef_lists:lists_to_list_of_tuples(List1, List2) -> List3.
+```
 
 Transforms two lists into one list of two-tuples, where the first element of each tuple is taken from the first list and the second element is taken from the second list one by one.
 
@@ -562,7 +608,9 @@ Transforms two lists into one list of two-tuples, where the first element of eac
 
 #### *uef_lists:lists_to_list_of_tuples/3*
 
-`uef_lists:lists_to_list_of_tuples(List1, List2, List3) -> List4.`
+```erlang
+uef_lists:lists_to_list_of_tuples(List1, List2, List3) -> List4.
+```
 
 Transforms three lists into one list of three-tuples, where the first element of each tuple is taken from the first list, the second element is taken from the second list one by one, and the third element is taken from the third list one by one.
 
@@ -602,7 +650,9 @@ Transforms three lists into one list of three-tuples, where the first element of
 
 #### *uef_num:round_number/2*
 
-`uef_num:round_number(Number, Precision) -> Float.`
+```erlang
+uef_num:round_number(Number, Precision) -> Float.
+```
 
 Rounds the number to the specified precision.
 
@@ -620,7 +670,9 @@ Rounds the number to the specified precision.
 
 #### *uef_num:round_price/1*
 
-`uef_num:round_price(Number) -> Float.`
+```erlang
+uef_num:round_price(Number) -> Float.
+```
 
 Rounds the number to the precision of **2**. The same as `uef_num:round_number(Number, 2)`.
 
@@ -632,7 +684,9 @@ Rounds the number to the precision of **2**. The same as `uef_num:round_number(N
 
 #### *uef_time:days_diff/1*
 
-`uef_time:days_diff(Date) -> Days.`
+```erlang
+uef_time:days_diff(Date) -> Days.
+```
 
 Returns the difference ***in days*** between `Date` and the current local date provided by function [erlang:localtime()](http://erlang.org/doc/man/erlang.html#localtime-0). `Date` must be of type `calendar:date()` (`{Year, Month, Day}`).
 
@@ -640,7 +694,9 @@ Returns the difference ***in days*** between `Date` and the current local date p
 
 #### *uef_time:days_diff/2*
 
-`uef_time:days_diff(Date1, Date2) -> Days.`
+```erlang
+uef_time:days_diff(Date1, Date2) -> Days.
+```
 
 Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `Date2` must be of type `calendar:date()` (`{Year, Month, Day}`).
 
@@ -658,7 +714,9 @@ Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `D
 
 #### *uef_time:seconds_diff/1*
 
-`uef_time:seconds_diff(DateTime) -> Seconds.`
+```erlang
+uef_time:seconds_diff(DateTime) -> Seconds.
+```
 
 Returns the difference ***in seconds*** between `Date` and the current local time provided by function [erlang:localtime()](http://erlang.org/doc/man/erlang.html#localtime-0). `DateTime` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`).
 
@@ -666,7 +724,9 @@ Returns the difference ***in seconds*** between `Date` and the current local tim
 
 #### *uef_time:seconds_diff/2*
 
-`uef_time:seconds_diff(DateTime1, DateTime2) -> Seconds.`
+```erlang
+uef_time:seconds_diff(DateTime1, DateTime2) -> Seconds.
+```
 
 Returns the difference ***in seconds*** between `DateTime2` and `DateTime1`.  `DateTime1` and `DateTime2` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`).
 
