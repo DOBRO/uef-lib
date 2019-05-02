@@ -184,7 +184,7 @@ uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>).
 uef_bin:random_latin_binary(Length, CaseFlag) -> RandomLatinBinary.
 ```
 
-Generates and returns a binary of size `Length` which consists of latins [a-z], [A-Z] or [a-zA-Z]. The second argument `CaseFlag` corresponds to a letter case, an atom `'lower'`, `'upper'` or `'any'`.
+Returns a random binary of size `Length` consisting of latins `[a-zA-Z]` and digits `[0-9]`. The second argument `CaseFlag` corresponds to a letter case, an atom `'lower'`, `'upper'` or `'any'`.
 
 **Examples:**
 
