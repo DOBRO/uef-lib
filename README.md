@@ -38,6 +38,35 @@ Joins a list of binaries with separator into a single binary. Returns binary.
 
 ---
 
+#### *uef_bin:repeat/2*
+
+```erlang
+uef_bin:repeat(Binary1, N) -> Binary2.
+```
+
+Returns a binary consisting of `Binary1` repeated `N` times.
+
+**Examples:**
+
+```erlang
+> uef_bin:repeat(<<"a">>, 10).
+<<"aaaaaaaaaa">>
+
+> uef_bin:repeat(<<"0">>, 3).
+<<"000">>
+
+> uef_bin:repeat(<<0>>, 3).
+<<0,0,0>>
+
+> uef_bin:repeat(<<1,1>>, 3).
+<<1,1,1,1,1,1>>
+
+> uef_bin:repeat(<<"abc">>, 3).
+<<"abcabcabc">>
+```
+
+---
+
 #### *uef_bin:reverse/1*
 
 ```erlang

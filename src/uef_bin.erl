@@ -1,6 +1,7 @@
 -module(uef_bin).
 
 -export([binary_join/2, split/2, split/3]).
+-export([repeat/2]).
 -export([reverse/1, reverse_utf8/1]).
 -export([replace/3, replace_chars/3]).
 -export([random_latin_binary/2, random_binary_from_chars/2]).
@@ -53,6 +54,12 @@ split(B, Splitter, Option) ->
 		trim_all -> lists:filter(fun(<<>>) -> false; (_) -> true end, List);
 		_ -> List
 	end.
+
+%% repeat/2
+-spec repeat(binary(), pos_integer()) -> binary().
+repeat(Bin, N) ->
+	repeat(Bin, N, <<>>).
+
 
 %% reverse/1
 %% Returns binary in reversed byte order
@@ -125,6 +132,14 @@ numeric_prefix(B) -> numeric_prefix(B, <<>>).
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
+
+%% repeat/3
+-spec repeat(binary(), pos_integer(), binary()) -> binary().
+repeat(_, N, Acc) when N < 1 ->
+	Acc;
+repeat(Bin, N, Acc) ->
+	repeat(Bin, N-1, <<Acc/bits, Bin/bits>>).
+
 
 %% replace/4
 -spec replace(binary(), {pos_integer(), binary()}, binary(), binary()) -> binary().
@@ -208,6 +223,18 @@ split_test_() ->
 	?_assertEqual([<<"www">>,<<"example">>,<<"com">>], split(<<"www.example.com">>, <<".">>)),
 	?_assertEqual([<<"www.example.com">>], split(<<"www.example.com">>, <<"A">>)),
 	?_assertEqual([<<"www">>,<<"example">>,<<"com">>], split(<<".....www.example.com....">>, <<".">>, trim_all))
+	].
+
+repeat_test_() ->
+	[
+	?_assertEqual(<<"0">>, repeat(<<"0">>, 1)),
+	?_assertEqual(<<"aaaaa">>, repeat(<<"a">>, 5)),
+	?_assertEqual(<<0>>, repeat(<<0>>, 1)),
+	?_assertEqual(<<0,0,0>>, repeat(<<0>>, 3)),
+	?_assertEqual(<<1,1,1,1>>, repeat(<<1,1>>, 2)),
+	?_assertEqual(<<1,0,1,0>>, repeat(<<1,0>>, 2)),
+	?_assertEqual(<<"abcabcabc">>, repeat(<<"abc">>, 3)),
+	?_assertEqual(<<"ЖЖЖ"/utf8>>, repeat(<<"Ж"/utf8>>, 3))
 	].
 
 replace_test_() ->
