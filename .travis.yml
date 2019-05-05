@@ -6,6 +6,7 @@ otp_release:
   - 19.3
   - 18.3
   - 17.5
+before_script: kerl list installations
 script:
   - make test
   - make dialyzer
