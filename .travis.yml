@@ -12,3 +12,6 @@ script:
 branches:
   only:
   - master
+cache:
+  directories:
+    - _build
