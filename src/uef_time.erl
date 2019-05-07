@@ -3,6 +3,7 @@
 -export([add_seconds/1, add_seconds/2]).
 -export([add_minutes/1, add_minutes/2]).
 -export([add_hours/1, add_hours/2]).
+-export([add_days/1, add_days/2]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
 
@@ -59,6 +60,17 @@ add_hours(Hours) ->
 -spec add_hours(date() | datetime(), Hours :: integer()) -> datetime().
 add_hours(DateOrDatetime, Hours) ->
 	add_seconds(DateOrDatetime, Hours * 3600).
+
+
+%% add_days/1
+-spec add_days(Days :: integer()) -> datetime().
+add_days(Days) ->
+	add_seconds(Days * 86400).
+
+%% add_days/2
+-spec add_days(date() | datetime(), Days :: integer()) -> datetime().
+add_days(DateOrDatetime, Days) ->
+	add_seconds(DateOrDatetime, Days * 86400).
 
 
 %% days_diff/1
