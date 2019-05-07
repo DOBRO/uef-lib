@@ -1,6 +1,7 @@
 -module(uef_time).
 
 -export([add_seconds/1, add_seconds/2]).
+-export([add_minutes/1, add_minutes/2]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
 
@@ -37,6 +38,16 @@ add_seconds(DateTime, Seconds) ->
 	Seconds2 = calendar:datetime_to_gregorian_seconds(DateTime) + Seconds,
 	calendar:gregorian_seconds_to_datetime(Seconds2).
 
+%% add_minutes/1
+-spec add_minutes(Minutes :: integer()) -> datetime().
+add_minutes(Minutes) ->
+	add_seconds(Minutes * 60).
+
+
+%% add_minutes/2
+-spec add_minutes(date() | datetime(), Minutes :: integer()) -> datetime().
+add_minutes(DateTime, Minutes) ->
+	add_seconds(DateTime, Minutes * 60).
 
 
 %% days_diff/1
