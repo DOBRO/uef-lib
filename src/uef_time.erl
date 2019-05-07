@@ -1,33 +1,70 @@
 -module(uef_time).
 
+-export([add_seconds/1, add_seconds/2]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
+
+%%%------------------------------------------------------------------------------
+%%%   EUnit
+%%%------------------------------------------------------------------------------
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
 -endif.
 
+%%%------------------------------------------------------------------------------
+%%%   Types
+%%%------------------------------------------------------------------------------
+
+-type date() :: calendar:date(). % {Year, Month, Day}
+-type datetime() :: calendar:datetime(). % {{Year, Month, Day}, {Hour, Min, Sec}}
+
+%%%------------------------------------------------------------------------------
+%%%   API
+%%%------------------------------------------------------------------------------
+
+%% add_seconds/1
+-spec add_seconds(Seconds :: integer()) -> datetime().
+add_seconds(Seconds) ->
+	add_seconds(erlang:localtime(), Seconds).
+
+
+%% add_seconds/2
+-spec add_seconds(date() | datetime(), integer()) -> datetime().
+add_seconds({_Y, _M, _D} = Date, Seconds) ->
+	add_seconds({Date, {0, 0, 0}}, Seconds);
+add_seconds(DateTime, Seconds) ->
+	Seconds2 = calendar:datetime_to_gregorian_seconds(DateTime) + Seconds,
+	calendar:gregorian_seconds_to_datetime(Seconds2).
+
+
+
 %% days_diff/1
--spec days_diff(calendar:date()) -> integer().
+-spec days_diff(date()) -> integer().
 days_diff(Date) ->
 	days_diff(erlang:date(), Date).
 
 %% days_diff/2
--spec days_diff(calendar:date(), calendar:date()) -> integer().
+-spec days_diff(date(), date()) -> integer().
 days_diff(Date1, Date2) ->
 	calendar:date_to_gregorian_days(Date2) - calendar:date_to_gregorian_days(Date1).
 
 %% seconds_diff/1
--spec seconds_diff(calendar:datetime()) -> integer().
+-spec seconds_diff(datetime()) -> integer().
 seconds_diff(DateTime) ->
 	DateTimeNow = erlang:localtime(),
 	calendar:datetime_to_gregorian_seconds(DateTime) - calendar:datetime_to_gregorian_seconds(DateTimeNow).
 
 %% seconds_diff/2
 %% Example: seconds_diff({{Year1, Month1, Day1}, {Hour1, Min1, Sec1}}, {{Year2, Month2, Day2}, {Hour2, Min2, Sec2}})
--spec seconds_diff(calendar:datetime(), calendar:datetime()) -> integer().
+-spec seconds_diff(datetime(), datetime()) -> integer().
 seconds_diff(DateTime1, DateTime2) ->
 	calendar:datetime_to_gregorian_seconds(DateTime2) - calendar:datetime_to_gregorian_seconds(DateTime1).
+
+%%%------------------------------------------------------------------------------
+%%%   Internal functions
+%%%------------------------------------------------------------------------------
+
 
 
 %%%------------------------------------------------------------------------------
