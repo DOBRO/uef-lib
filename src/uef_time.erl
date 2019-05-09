@@ -4,6 +4,7 @@
 -export([add_minutes/1, add_minutes/2]).
 -export([add_hours/1, add_hours/2]).
 -export([add_days/1, add_days/2]).
+-export([add_months/1, add_months/2]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
 
@@ -73,6 +74,31 @@ add_days(DateOrDatetime, Days) ->
 	add_seconds(DateOrDatetime, Days * 86400).
 
 
+%% add_months/1
+-spec add_months(integer()) -> datetime().
+add_months(Months) ->
+	add_months(erlang:localtime(), Months).
+
+%% add_months/2
+-spec add_months(date() | datetime(), Months :: integer()) -> date() | datetime().
+add_months(DateOrDatetime, Months) ->
+	ok = validate_datetime(DateOrDatetime),
+	{Year1, Mon1, Day1, Time} = case DateOrDatetime of
+		{ {Y, M, D}, T} -> {Y, M, D, T};
+		{Y, M, D} -> {Y, M, D, skip}
+	end,
+	TotalMonths = Year1 * 12 + Mon1 + Months,
+	{Year2, Mon2} = case TotalMonths rem 12 of
+		0 -> {(TotalMonths div 12) - 1, 12};
+		N -> {TotalMonths div 12, N}
+	end,
+	Date = add_months_check_date(Year2, Mon2, Day1),
+	case Time of
+		skip -> Date;
+		_ -> {Date, Time}
+	end.
+
+
 %% days_diff/1
 -spec days_diff(date()) -> integer().
 days_diff(Date) ->
@@ -99,6 +125,31 @@ seconds_diff(DateTime1, DateTime2) ->
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
 
+%% validate_datetime/1
+-spec validate_datetime(date() | datetime()) -> ok | no_return.
+validate_datetime({_, _, _} = Date) ->
+	validate_datetime({Date, {0, 0, 0}});
+validate_datetime({Date, {Hour, Min, Sec}}) ->
+	true = calendar:valid_date(Date),
+	true = erlang:is_integer(Hour) andalso Hour > -1 andalso Hour < 24,
+	true = erlang:is_integer(Min) andalso Min > -1 andalso Min < 60,
+	true = erlang:is_integer(Sec) andalso Sec > -1 andalso Sec < 60,
+	ok;
+validate_datetime(Other) ->
+	erlang:error({badarg, Other}).
+
+
+%% add_months_check_date/3
+-spec add_months_check_date(integer(), integer(), integer()) -> date() | no_return().
+add_months_check_date(Y, M, D) when D > 1 ->
+	case calendar:valid_date(Y, M, D) of
+		true  ->
+			{Y, M, D};
+		false ->
+			add_months_check_date(Y, M, D - 1)
+	end;
+add_months_check_date(Y, M, D) -> % just in case
+	erlang:error({out_of_range, {Y, M, D}}).
 
 
 %%%------------------------------------------------------------------------------
