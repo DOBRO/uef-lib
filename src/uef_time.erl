@@ -6,6 +6,8 @@
 -export([add_days/1, add_days/2]).
 -export([add_weeks/1, add_weeks/2]).
 -export([add_months/1, add_months/2]).
+-export([add_years/1, add_years/2]).
+-export([add_time/1, add_time/2]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
 
@@ -23,6 +25,15 @@
 
 -type date() :: calendar:date(). % {Year, Month, Day}
 -type datetime() :: calendar:datetime(). % {{Year, Month, Day}, {Hour, Min, Sec}}
+-type psecond() :: sec | second | seconds.
+-type pminute() :: min | minute | minutes.
+-type phour() :: hrs | hour | hours.
+-type pday() :: day | days.
+-type pmonth() :: month | months.
+-type pyear() :: year | years.
+-type ptype() :: psecond() | pminute() | phour() | pday() | pmonth() | pyear().
+-type period() :: {integer(), ptype()} | {ptype(), integer()}.
+-type periods() :: [period()].
 
 %%%------------------------------------------------------------------------------
 %%%   API
@@ -111,6 +122,62 @@ add_months(DateOrDatetime, Months) ->
 		skip -> Date;
 		_ -> {Date, Time}
 	end.
+
+
+%% add_years/1
+-spec add_years(Years :: integer()) -> datetime().
+add_years(Years) ->
+	add_years(erlang:localtime(), Years).
+
+%% add_years/2
+-spec add_years(date() | datetime(), Years :: integer()) -> datetime().
+add_years(DateOrDatetime, Years) ->
+	add_months(DateOrDatetime, Years * 12).
+
+
+%% add_time/1
+-spec add_time(periods()) -> datetime().
+add_time(Periods) ->
+	add_time(erlang:localtime(), Periods).
+
+%% add_time/2
+-spec add_time(date() | datetime(), periods()) -> date() | datetime().
+add_time(DT, []) ->
+	DT;
+add_time(DT, [{N, Ptype} | Tail]) when is_integer(N) andalso is_atom(Ptype) ->
+	DT2 = case Ptype of
+		% seconds
+		sec			-> add_seconds(DT, N);
+		second		-> add_seconds(DT, N);
+		seconds		-> add_seconds(DT, N);
+		% minutes
+		min			-> add_minutes(DT, N);
+		minute		-> add_minutes(DT, N);
+		minutes		-> add_minutes(DT, N);
+		% hours
+		hrs			-> add_hours(DT, N);
+		hour		-> add_hours(DT, N);
+		hours		-> add_hours(DT, N);
+		% days
+		day			-> add_days(DT, N);
+		days		-> add_days(DT, N);
+		% weeks
+		week		-> add_weeks(DT, N);
+		weeks		-> add_weeks(DT, N);
+		% months
+		month		-> add_months(DT, N);
+		months		-> add_months(DT, N);
+		% years
+		year		-> add_years(DT, N);
+		years		-> add_years(DT, N);
+		% other
+		_			-> erlang:error({badarg, Ptype})
+	end,
+	add_time(DT2, Tail);
+add_time(DT, [{Ptype, N} | Tail]) when is_atom(Ptype) andalso is_integer(N) ->
+	add_time(DT, [{N, Ptype} | Tail]);
+add_time(_, [Arg | _]) ->
+	erlang:error({badarg, Arg}).
 
 
 %% days_diff/1
