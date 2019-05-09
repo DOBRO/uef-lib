@@ -4,6 +4,7 @@
 -export([add_minutes/1, add_minutes/2]).
 -export([add_hours/1, add_hours/2]).
 -export([add_days/1, add_days/2]).
+-export([add_weeks/1, add_weeks/2]).
 -export([add_months/1, add_months/2]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
@@ -77,6 +78,15 @@ add_days(DateOrDatetime, Days) ->
 		_ -> Date % type date()
 	end.
 
+%% add_weeks/1
+-spec add_weeks(Weeks :: integer()) -> datetime().
+add_weeks(Weeks) ->
+	add_seconds(Weeks * 604800).
+
+%% add_weeks/1
+-spec add_weeks(date() | datetime(), Weeks :: integer()) -> date() | datetime().
+add_weeks(DateOrDatetime, Weeks) ->
+	add_days(DateOrDatetime, Weeks * 7).
 
 %% add_months/1
 -spec add_months(integer()) -> datetime().
