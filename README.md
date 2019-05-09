@@ -719,7 +719,7 @@ Rounds the number to the precision of **2**. The same as `uef_num:round_number(N
 uef_time:days_diff(Date) -> Days.
 ```
 
-Returns the difference ***in days*** between `Date` and the current local date provided by function [erlang:localtime()](http://erlang.org/doc/man/erlang.html#localtime-0). `Date` must be of type `calendar:date()` (`{Year, Month, Day}`).
+Returns the difference ***in days*** between `Date` and the current local date provided by function [erlang:date()](http://erlang.org/doc/man/erlang.html#localtime-0). `Date` must be of type `calendar:date()` (`{Year, Month, Day}`). `Days` is a positive value if `Date` is after `erlang:date()` or a negative value otherwise.
 
 ---
 
@@ -729,7 +729,7 @@ Returns the difference ***in days*** between `Date` and the current local date p
 uef_time:days_diff(Date1, Date2) -> Days.
 ```
 
-Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `Date2` must be of type `calendar:date()` (`{Year, Month, Day}`).
+Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `Date2` must be of type `calendar:date()` (`{Year, Month, Day}`). `Days` is a positive value if `Date2` is after `Date1` or a negative value otherwise.
 
 **Examples:**
 
