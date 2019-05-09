@@ -69,9 +69,13 @@ add_days(Days) ->
 	add_seconds(Days * 86400).
 
 %% add_days/2
--spec add_days(date() | datetime(), Days :: integer()) -> datetime().
+-spec add_days(date() | datetime(), Days :: integer()) -> date() | datetime().
 add_days(DateOrDatetime, Days) ->
-	add_seconds(DateOrDatetime, Days * 86400).
+	{Date, Time} = add_seconds(DateOrDatetime, Days * 86400),
+	case DateOrDatetime of
+		{_, _} -> {Date, Time}; % type datetime()
+		_ -> Date % type date()
+	end.
 
 
 %% add_months/1
