@@ -749,7 +749,7 @@ Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `D
 uef_time:seconds_diff(DateTime) -> Seconds.
 ```
 
-Returns the difference ***in seconds*** between `Date` and the current local time provided by function [erlang:localtime()](http://erlang.org/doc/man/erlang.html#localtime-0). `DateTime` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`).
+Returns the difference ***in seconds*** between `Date` and the current local time provided by function [erlang:localtime()](http://erlang.org/doc/man/erlang.html#localtime-0). `DateTime` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`). `Seconds` is a positive value if `DateTime` is after `erlang:localtime()` or a negative value otherwise.
 
 ---
 
@@ -759,7 +759,7 @@ Returns the difference ***in seconds*** between `Date` and the current local tim
 uef_time:seconds_diff(DateTime1, DateTime2) -> Seconds.
 ```
 
-Returns the difference ***in seconds*** between `DateTime2` and `DateTime1`.  `DateTime1` and `DateTime2` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`).
+Returns the difference ***in seconds*** between `DateTime2` and `DateTime1`.  `DateTime1` and `DateTime2` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`). `Seconds` is a positive value if `DateTime2` is after `DateTime1` or a negative value otherwise.
 
 **Examples:**
 
