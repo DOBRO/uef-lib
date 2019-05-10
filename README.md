@@ -764,6 +764,55 @@ NewDateTime :: calendar:datetime().
 
 ---
 
+#### *uef_time:add_minutes/1*
+
+```erlang
+uef_time:add_minutes(Minutes) -> NewDateTime.
+```
+
+Same as `uef_time:add_seconds(Minutes * 60)`. See docs of [uef_time:add_seconds/1](#uef_timeadd_seconds1).
+
+**Types:**
+
+```erlang
+Minutes :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+#### *uef_time:add_minutes/2*
+
+```erlang
+uef_time:add_minutes(Date_OR_DateTime, Minutes) -> NewDateTime.
+```
+
+Adds the number of minutes `Minutes` to `Date_OR_DateTime` and returns a new datetime value.
+
+**Types:**
+
+```erlang
+Date_OR_DateTime :: calendar:date() | calendar:datetime().
+Minutes :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+**Examples:**
+
+```erlang
+> uef_time:add_minutes({2019, 1, 1}, 10).
+{{2019,1,1},{0,10,0}}
+
+> uef_time:add_minutes({2019, 1, 1}, -10).
+{{2018,12,31},{23,50,0}}
+
+> uef_time:add_minutes({{2019, 1, 1}, {23, 59, 0}}, 10).
+{{2019,1,2},{0,9,0}}
+
+> uef_time:add_minutes({{2019, 1, 1}, {0, 1, 0}}, -10).
+{{2018,12,31},{23,51,0}}
+```
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
