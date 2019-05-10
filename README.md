@@ -813,6 +813,57 @@ NewDateTime :: calendar:datetime().
 
 ---
 
+#### *uef_time:add_hours/1*
+
+```erlang
+uef_time:add_hours(Hours) -> NewDateTime.
+```
+
+Same as `uef_time:add_seconds(Hours * 3600)`. See docs of [uef_time:add_seconds/1](#uef_timeadd_seconds1).
+
+**Types:**
+
+```erlang
+Hours :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+---
+
+#### *uef_time:add_hours/2*
+
+```erlang
+uef_time:add_hours(Date_OR_DateTime, Hours) -> NewDateTime.
+```
+
+Adds the number of hours `Hours` to `Date_OR_DateTime` and returns a new datetime value.
+
+**Types:**
+
+```erlang
+Date_OR_DateTime :: calendar:date() | calendar:datetime().
+Hours :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+**Examples:**
+
+```erlang
+> uef_time:add_hours({2019, 1, 1}, 10).
+{{2019,1,1},{10,0,0}}
+
+> uef_time:add_hours({2019, 1, 1}, -10).
+{{2018,12,31},{14,0,0}}
+
+> uef_time:add_hours({{2019, 1, 1}, {23, 59, 0}}, 10).
+{{2019,1,2},{9,59,0}}
+
+> uef_time:add_hours({{2019, 1, 1}, {0, 1, 0}}, -10).
+{{2018,12,31},{14,1,0}}
+```
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
