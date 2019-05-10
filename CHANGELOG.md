@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New functions `uef_time:add_minutes/1,2`
 - New functions `uef_time:add_hours/1,2`
 - New functions `uef_time:add_days/1,2`
-- New functions `uef_time:add_months/1,2`
 - New functions `uef_time:add_weeks/1,2`
+- New functions `uef_time:add_months/1,2`
 - New functions `uef_time:add_years/1,2`
 - New functions `uef_time:add_time/1,2`
 

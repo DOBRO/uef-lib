@@ -713,6 +713,57 @@ Rounds the number to the precision of **2**. The same as `uef_num:round_number(N
 
 ---
 
+#### *uef_time:add_seconds/1*
+
+```erlang
+uef_time:add_seconds(Seconds) -> NewDateTime.
+```
+
+Same as `uef_time:add_seconds(erlang:localtime(), Seconds)`. See docs of [uef_time:add_seconds/2](#uef_timeadd_seconds2).
+
+**Types:**
+
+```erlang
+Seconds :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+---
+
+#### *uef_time:add_seconds/2*
+
+```erlang
+uef_time:add_seconds(Date_OR_DateTime, Seconds) -> NewDateTime.
+```
+
+Adds the number of seconds `Seconds` to `Date_OR_DateTime` and returns a new datetime value.
+
+**Types:**
+
+```erlang
+Date_OR_DateTime :: calendar:date() | calendar:datetime().
+Seconds :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+**Examples:**
+
+```erlang
+> uef_time:add_seconds({2019, 1, 1}, 10).
+{{2019,1,1},{0,0,10}}
+
+> uef_time:add_seconds({2019, 1, 1}, -10).
+{{2018,12,31},{23,59,50}}
+
+> uef_time:add_seconds({{2019, 1, 1}, {23, 59, 0}}, 10).
+{{2019,1,1},{23,59,10}}
+
+> uef_time:add_seconds({{2019, 1, 1}, {23, 59, 0}}, -10).
+{{2019,1,1},{23,58,50}}
+```
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
