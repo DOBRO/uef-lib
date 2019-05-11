@@ -222,7 +222,7 @@ validate_datetime(Other) ->
 
 %% add_months_check_date/3
 -spec add_months_check_date(integer(), integer(), integer()) -> date() | no_return().
-add_months_check_date(Y, M, D) when D > 1 ->
+add_months_check_date(Y, M, D) when D > 0 ->
 	case calendar:valid_date(Y, M, D) of
 		true  ->
 			{Y, M, D};
