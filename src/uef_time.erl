@@ -342,6 +342,48 @@ add_years_test_() ->
 	?_assertMatch({_,_,_}, add_years(Date1, 1))
 	].
 
+add_time_test_() ->
+	Date1 = erlang:date(),
+	DateTime1 = erlang:localtime(),
+	AllPeriods = [{1, year}, {1, month}, {1, week}, {1, day}, {1, hour}, {1, minute}, {1, second}],
+	[
+	?_assertEqual(add_time(AllPeriods), add_time(erlang:localtime(), AllPeriods)),
+
+	?_assertEqual(add_time(Date1, [{1, sec}]), add_time(Date1, [{1, seconds}])),
+	?_assertEqual(add_time(Date1, [{1, second}]), add_time(Date1, [{1, seconds}])),
+	?_assertEqual(add_time(Date1, [{1, min}]), add_time(Date1, [{1, minutes}])),
+	?_assertEqual(add_time(Date1, [{1, minute}]), add_time(Date1, [{1, minutes}])),
+	?_assertEqual(add_time(Date1, [{1, hrs}]), add_time(Date1, [{1, hours}])),
+	?_assertEqual(add_time(Date1, [{1, hour}]), add_time(Date1, [{1, hours}])),
+	?_assertEqual(add_time(Date1, [{1, day}]), add_time(Date1, [{1, days}])),
+	?_assertEqual(add_time(Date1, [{1, week}]), add_time(Date1, [{1, weeks}])),
+	?_assertEqual(add_time(Date1, [{1, month}]), add_time(Date1, [{1, months}])),
+	?_assertEqual(add_time(Date1, [{1, year}]), add_time(Date1, [{1, years}])),
+
+	?_assertEqual(add_time(Date1, [{seconds, 1}]), add_time(Date1, [{1, seconds}])),
+	?_assertEqual(add_time(Date1, [{minutes, 1}]), add_time(Date1, [{1, minutes}])),
+	?_assertEqual(add_time(Date1, [{hours, 1}]), add_time(Date1, [{1, hours}])),
+	?_assertEqual(add_time(Date1, [{days, 1}]), add_time(Date1, [{1, days}])),
+	?_assertEqual(add_time(Date1, [{weeks, 1}]), add_time(Date1, [{1, weeks}])),
+	?_assertEqual(add_time(Date1, [{months, 1}]), add_time(Date1, [{1, months}])),
+	?_assertEqual(add_time(Date1, [{years, 1}]), add_time(Date1, [{1, years}])),
+
+	?_assertEqual(add_seconds(Date1, 1), add_time(Date1, [{1, seconds}])),
+	?_assertEqual(add_seconds(DateTime1, 1), add_time(DateTime1, [{1, seconds}])),
+	?_assertEqual(add_minutes(Date1, 1), add_time(Date1, [{1, minutes}])),
+	?_assertEqual(add_minutes(DateTime1, 1), add_time(DateTime1, [{1, minutes}])),
+	?_assertEqual(add_hours(Date1, 1), add_time(Date1, [{1, hours}])),
+	?_assertEqual(add_hours(DateTime1, 1), add_time(DateTime1, [{1, hours}])),
+	?_assertEqual(add_days(Date1, 1), add_time(Date1, [{1, days}])),
+	?_assertEqual(add_days(DateTime1, 1), add_time(DateTime1, [{1, days}])),
+	?_assertEqual(add_weeks(Date1, 1), add_time(Date1, [{1, weeks}])),
+	?_assertEqual(add_weeks(DateTime1, 1), add_time(DateTime1, [{1, weeks}])),
+	?_assertEqual(add_months(Date1, 1), add_time(Date1, [{1, months}])),
+	?_assertEqual(add_months(DateTime1, 1), add_time(DateTime1, [{1, months}])),
+	?_assertEqual(add_years(Date1, 1), add_time(Date1, [{1, years}])),
+	?_assertEqual(add_years(DateTime1, 1), add_time(DateTime1, [{1, years}]))
+	].
+
 days_diff_2_test_() ->
 	[
 	?_assertEqual(1, days_diff({2018, 12, 31}, {2019, 1, 1})),
