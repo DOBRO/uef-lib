@@ -260,10 +260,26 @@ add_minutes_test_() ->
 	?_assertEqual({{2001,1,1}, {0,0,0}}, add_minutes({{2000,12,31}, {23,59,0}}, 1)),
 	?_assertEqual({{1999,12,31}, {23,59,0}}, add_minutes({2000,1,1}, -1)),
 	?_assertEqual(add_seconds(Date1, 60), add_minutes(Date1, 1)),
+	?_assertEqual(add_seconds(Date1, -60), add_minutes(Date1, -1)),
 	?_assertEqual(add_minutes(1), add_minutes(erlang:localtime(), 1)),
 	?_assertMatch({{_,_,_}, {_,_,_}}, add_minutes(1)),
 	?_assertMatch({{_,_,_}, {_,_,_}}, add_minutes(erlang:localtime(), 1)),
-	?_assertMatch({{_,_,_}, {_,_,_}}, add_minutes({1,1,1}, 1))
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_minutes(Date1, 1))
+	].
+
+add_hours_test_() ->
+	Date1 = {1,1,1},
+	[
+	?_assertEqual({{1999,12,31}, {23,0,0}}, add_hours({2000,1,1}, -1)),
+	?_assertEqual({{2001,1,1}, {0,0,0}}, add_hours({{2000,12,31}, {23,0,0}}, 1)),
+	?_assertEqual(add_hours(1), add_hours(erlang:localtime(), 1)),
+	?_assertEqual(add_seconds(Date1, 3600), add_hours(Date1, 1)),
+	?_assertEqual(add_seconds(Date1, -3600), add_hours(Date1, -1)),
+	?_assertEqual(add_minutes(Date1, 60), add_hours(Date1, 1)),
+	?_assertEqual(add_minutes(Date1, -60), add_hours(Date1, -1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_hours(1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_hours(erlang:localtime(), 1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_hours(Date1, 1))
 	].
 
 days_diff_2_test_() ->
