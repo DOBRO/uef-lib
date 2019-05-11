@@ -297,6 +297,19 @@ add_days_test_() ->
 	?_assertMatch({_,_,_}, add_days(Date1, 1))
 	].
 
+add_weeks_test_() ->
+	Date1 = {1,1,1},
+	[
+	?_assertEqual(add_days(7), add_weeks(1)),
+	?_assertEqual(add_days(-7), add_weeks(-1)),
+	?_assertEqual(add_days(Date1, 7), add_weeks(Date1, 1)),
+	?_assertEqual(add_days(Date1, -7), add_weeks(Date1, -1)),
+	?_assertEqual({2019, 1, 8}, add_weeks({2019, 1, 1}, 1)),
+	?_assertEqual({2018, 12, 25}, add_weeks({2019, 1, 1}, -1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_weeks(1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_weeks(erlang:localtime(), 1)),
+	?_assertMatch({_,_,_}, add_weeks(Date1, 1))
+	].
 
 days_diff_2_test_() ->
 	[
