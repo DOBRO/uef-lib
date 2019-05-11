@@ -1022,6 +1022,57 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
 ---
 
+#### *uef_time:add_years/1*
+
+```erlang
+uef_time:add_years(Years) -> NewDateTime.
+```
+
+Same as `uef_time:add_years(erlang:localtime(), Years)`. See docs of [uef_time:add_years/2](#uef_timeadd_years2).
+
+**Types:**
+
+```erlang
+Years :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+---
+
+#### *uef_time:add_years/2*
+
+```erlang
+uef_time:add_years(DateOrDatetime, Years) -> NewDateOrDateTime.
+```
+
+Adds the number of years `Years` to `DateOrDatetime` and returns a new *date or datetime* value. The type of `NewDateOrDateTime` is the same as the type of `DateOrDatetime`.
+
+**Types:**
+
+```erlang
+DateOrDatetime :: calendar:date() | calendar:datetime().
+Years :: integer().
+NewDateOrDateTime :: calendar:date() | calendar:datetime().
+```
+
+**Examples:**
+
+```erlang
+> uef_time:add_years({2019, 1, 31}, 1).
+{2020,1,31}
+
+> uef_time:add_years({2019, 1, 31}, -1).
+{2018,1,31}
+
+> uef_time:add_years({{2019, 1, 1}, {23, 59, 0}}, 1).
+{{2020,1,1},{23,59,0}}
+
+> uef_time:add_years({{2019, 1, 1}, {0, 1, 0}}, -1).
+{{2018,1,1},{0,1,0}}
+```
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
