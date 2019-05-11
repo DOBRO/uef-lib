@@ -1073,6 +1073,75 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
 ---
 
+#### *uef_time:add_time/1*
+
+```erlang
+uef_time:add_time(Periods) -> NewDateTime.
+```
+
+Same as `uef_time:add_time(erlang:localtime(), Periods)`. See docs of [uef_time:add_time/2](#uef_timeadd_time2). `NewDateTime` is of type `calendar:datetime()`. See types for `Periods` in *Types* section of function `uef_time:add_time/2`.
+
+---
+
+#### *uef_time:add_time/2*
+
+```erlang
+uef_time:add_time(DateOrDatetime, Periods) -> NewDateOrDateTime.
+```
+
+Adds one or more periods of time to `DateOrDatetime` and returns a new *date or datetime* value. This is a universal function based on functions `uef_time:add_seconds/2`, `uef_time:add_minutes/2`, `uef_time:add_hours/2`, `uef_time:add_days/2`, `uef_time:add_weeks/2`, `uef_time:add_months/2` and `uef_time:add_years/2`. The type of `NewDateOrDateTime` depends on the type of `DateOrDatetime` and `Periods` (see *Examples*).
+
+**Types:**
+
+```erlang
+DateOrDatetime :: calendar:date() | calendar:datetime().
+NewDateOrDateTime :: calendar:date() | calendar:datetime().
+
+psecond() :: sec | second | seconds.
+pminute() :: min | minute | minutes.
+phour() :: hrs | hour | hours.
+pday() :: day | days.
+pmonth() :: month | months.
+pyear() :: year | years.
+ptype() :: psecond() | pminute() | phour() | pday() | pmonth() | pyear().
+
+period() :: {integer(), ptype()} | {ptype(), integer()}.
+periods() :: [period()].
+```
+
+**Examples:**
+
+```erlang
+> uef_time:add_time({2000, 1, 1}, [{1, year}, {1, month}, {1, week}, {1, day}, {1, hour}, {1, minute}, {1, second}]).
+{{2001,2,9},{1,1,1}}   % type calendar:datetime()
+
+> uef_time:add_time({2000, 1, 1}, [{1, year}, {1, month}, {1, week}, {1, day}]).
+{2001,2,9}   % type calendar:date()
+
+> uef_time:add_time({{2000, 1, 1}, {0, 0, 0}}, [{1, year}, {1, month}, {1, week}, {1, day}]).
+{{2001,2,9},{0,0,0}}   % type calendar:datetime()
+
+> uef_time:add_time({2000, 1, 1}, [{year, 1}, {month, 1}, {week, 1}, {day, 1}, {hour, 1}, {minute, 1}, {second, 1}]).
+{{2001,2,9},{1,1,1}}
+
+> uef_time:add_time({2000, 1, 1}, [{1, hrs}, {1, min}, {1, sec}]).
+{{2000,1,1},{1,1,1}}
+
+> uef_time:add_time({{2000, 1, 31}, {23, 59, 59}}, [{1, hour}, {1, minute}, {1, second}]).
+{{2000,2,1},{1,1,0}}
+
+> uef_time:add_time({{2000, 1, 31}, {23, 59, 59}}, [{1, second}]).
+{{2000,2,1},{0,0,0}}
+
+> uef_time:add_time({2000, 1, 1}, [{1, years}]) =:= uef_time:add_years({2000, 1, 1}, 1).
+true
+
+> uef_time:add_time({2000, 1, 1}, [{1, month}]) =:= uef_time:add_months({2000, 1, 1}, 1).
+true
+```
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
