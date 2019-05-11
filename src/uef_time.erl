@@ -239,6 +239,15 @@ add_months_check_date(Y, M, D) -> % just in case
 
 -ifdef(TEST).
 
+add_seconds_test_() ->
+	[
+	?_assertEqual({{0,1,1}, {0,0,1}}, add_seconds({0, 1, 1}, 1)),
+	?_assertEqual({{2001,1,1}, {0,0,0}}, add_seconds({{2000,12,31}, {23,59,59}}, 1)),
+	?_assertEqual({{2000,2,1}, {0,0,0}}, add_seconds({{2000,1,31}, {23,59,59}}, 1)),
+	?_assertEqual({{1999,12,31}, {23,59,59}}, add_seconds({2000,1,1}, -1)),
+	?_assertEqual(add_seconds(1), add_seconds(erlang:localtime(), 1))
+	].
+
 days_diff_2_test_() ->
 	[
 	?_assertEqual(1, days_diff({2018, 12, 31}, {2019, 1, 1})),
