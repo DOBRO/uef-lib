@@ -282,6 +282,22 @@ add_hours_test_() ->
 	?_assertMatch({{_,_,_}, {_,_,_}}, add_hours(Date1, 1))
 	].
 
+add_days_test_() ->
+	Date1 = {1,1,1},
+	[
+	?_assertEqual({1999,12,31}, add_days({2000,1,1}, -1)),
+	?_assertEqual({{2001,1,1}, {0,0,0}}, add_days({{2000,12,31}, {0,0,0}}, 1)),
+	?_assertEqual(add_days(1), add_days(erlang:localtime(), 1)),
+	?_assertEqual(add_seconds(Date1, 86400), add_days({Date1, {0,0,0}}, 1)),
+	?_assertEqual(add_seconds(Date1, -86400), add_days({Date1, {0,0,0}}, -1)),
+	?_assertEqual(add_hours(Date1, 24), add_days({Date1, {0,0,0}}, 1)),
+	?_assertEqual(add_hours(Date1, -24), add_days({Date1, {0,0,0}}, -1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_days(1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_days(erlang:localtime(), 1)),
+	?_assertMatch({_,_,_}, add_days(Date1, 1))
+	].
+
+
 days_diff_2_test_() ->
 	[
 	?_assertEqual(1, days_diff({2018, 12, 31}, {2019, 1, 1})),
