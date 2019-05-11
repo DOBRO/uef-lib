@@ -968,6 +968,60 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
 ---
 
+#### *uef_time:add_months/1*
+
+```erlang
+uef_time:add_months(Months) -> NewDateTime.
+```
+
+Same as `uef_time:add_months(erlang:localtime(), Months)`. See docs of [uef_time:add_months/2](#uef_timeadd_months2).
+
+**Types:**
+
+```erlang
+Months :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+---
+
+#### *uef_time:add_months/2*
+
+```erlang
+uef_time:add_months(DateOrDatetime, Months) -> NewDateOrDateTime.
+```
+
+Adds the number of months `Months` to `DateOrDatetime` and returns a new *date or datetime* value. The type of `NewDateOrDateTime` is the same as the type of `DateOrDatetime`.
+
+**Types:**
+
+```erlang
+DateOrDatetime :: calendar:date() | calendar:datetime().
+Months :: integer().
+NewDateOrDateTime :: calendar:date() | calendar:datetime().
+```
+
+**Examples:**
+
+```erlang
+> uef_time:add_months({2019, 1, 31}, 1).
+{2019,2,28}
+
+> uef_time:add_months({2016, 1, 31}, 1).
+{2016,2,29}
+
+> uef_time:add_months({2019, 1, 31}, -1).
+{2018,12,31}
+
+> uef_time:add_months({{2019, 1, 1}, {23, 59, 0}}, 1).
+{{2019,2,1},{23,59,0}}
+
+> uef_time:add_months({{2019, 1, 1}, {0, 1, 0}}, -1).
+{{2018,12,1},{0,1,0}}
+```
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
