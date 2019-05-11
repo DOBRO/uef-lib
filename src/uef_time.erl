@@ -327,6 +327,21 @@ add_months_test_() ->
 	?_assertMatch({_,_,_}, add_months(Date1, 1))
 	].
 
+add_years_test_() ->
+	Date1 = erlang:date(),
+	{Year1, _, _} = Date1,
+	[
+	?_assertEqual(add_months(12), add_years(1)),
+	?_assertEqual(add_months(-12), add_years(-1)),
+	?_assertEqual(add_months(Date1, 12), add_years(Date1, 1)),
+	?_assertEqual(add_months(Date1, -12), add_years(Date1, -1)),
+	?_assertEqual({Year1 + 1, 1, 1}, add_years({Year1, 1, 1}, 1)),
+	?_assertEqual({Year1 - 1, 1, 1}, add_years({Year1, 1, 1}, -1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_years(1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_years(erlang:localtime(), 1)),
+	?_assertMatch({_,_,_}, add_years(Date1, 1))
+	].
+
 days_diff_2_test_() ->
 	[
 	?_assertEqual(1, days_diff({2018, 12, 31}, {2019, 1, 1})),
