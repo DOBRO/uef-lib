@@ -917,6 +917,57 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
 ---
 
+#### *uef_time:add_weeks/1*
+
+```erlang
+uef_time:add_weeks(Weeks) -> NewDateTime.
+```
+
+Same as `uef_time:add_seconds(Weeks * 604800)`. See docs of [uef_time:add_seconds/1](#uef_timeadd_seconds1).
+
+**Types:**
+
+```erlang
+Weeks :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+---
+
+#### *uef_time:add_weeks/2*
+
+```erlang
+uef_time:add_weeks(DateOrDatetime, Weeks) -> NewDateOrDateTime.
+```
+
+Adds the number of weeks `Weeks` to `DateOrDatetime` and returns a new *date or datetime* value. The type of `NewDateOrDateTime` is the same as the type of `DateOrDatetime`.
+
+**Types:**
+
+```erlang
+DateOrDatetime :: calendar:date() | calendar:datetime().
+Weeks :: integer().
+NewDateOrDateTime :: calendar:date() | calendar:datetime().
+```
+
+**Examples:**
+
+```erlang
+> uef_time:add_weeks({2019, 1, 1}, 4).
+{2019,1,29}
+
+> uef_time:add_weeks({2019, 1, 1}, -4).
+{2018,12,4}
+
+> uef_time:add_weeks({{2019, 1, 1}, {23, 59, 0}}, 4).
+{{2019,1,29},{23,59,0}}
+
+> uef_time:add_weeks({{2019, 1, 1}, {0, 1, 0}}, -4).
+{{2018,12,4},{0,1,0}}
+```
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
