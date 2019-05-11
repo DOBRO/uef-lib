@@ -253,7 +253,7 @@ add_seconds_test_() ->
 	].
 
 add_minutes_test_() ->
-	Date1 = {1,1,1},
+	Date1 = erlang:date(),
 	[
 	?_assertEqual({{0,1,1}, {0,0,0}}, add_minutes({0, 1, 1}, 0)),
 	?_assertEqual({{0,1,1}, {0,1,0}}, add_minutes({0, 1, 1}, 1)),
@@ -268,7 +268,7 @@ add_minutes_test_() ->
 	].
 
 add_hours_test_() ->
-	Date1 = {1,1,1},
+	Date1 = erlang:date(),
 	[
 	?_assertEqual({{1999,12,31}, {23,0,0}}, add_hours({2000,1,1}, -1)),
 	?_assertEqual({{2001,1,1}, {0,0,0}}, add_hours({{2000,12,31}, {23,0,0}}, 1)),
@@ -283,7 +283,7 @@ add_hours_test_() ->
 	].
 
 add_days_test_() ->
-	Date1 = {1,1,1},
+	Date1 = erlang:date(),
 	[
 	?_assertEqual({1999,12,31}, add_days({2000,1,1}, -1)),
 	?_assertEqual({{2001,1,1}, {0,0,0}}, add_days({{2000,12,31}, {0,0,0}}, 1)),
@@ -298,7 +298,7 @@ add_days_test_() ->
 	].
 
 add_weeks_test_() ->
-	Date1 = {1,1,1},
+	Date1 = erlang:date(),
 	[
 	?_assertEqual(add_days(7), add_weeks(1)),
 	?_assertEqual(add_days(-7), add_weeks(-1)),
@@ -309,6 +309,22 @@ add_weeks_test_() ->
 	?_assertMatch({{_,_,_}, {_,_,_}}, add_weeks(1)),
 	?_assertMatch({{_,_,_}, {_,_,_}}, add_weeks(erlang:localtime(), 1)),
 	?_assertMatch({_,_,_}, add_weeks(Date1, 1))
+	].
+
+add_months_test_() ->
+	Date1 = erlang:date(),
+	{Year1, _, _} = Date1,
+	[
+	?_assertEqual({Year1, 2, 28}, add_months({Year1, 1, 31}, 1)),
+	?_assertEqual({2016, 2, 29}, add_months({2016, 1, 31}, 1)),
+	?_assertEqual({Year1 - 1, 12, 31}, add_months({Year1, 1, 31}, -1)),
+	?_assertEqual({Year1 + 1, 1, 31}, add_months({Year1, 1, 31}, 12)),
+	?_assertEqual({Year1 - 1, 1, 31}, add_months({Year1, 1, 31}, -12)),
+	?_assertEqual({Year1, 2, 1}, add_months({Year1, 1, 1}, 1)),
+	?_assertEqual({Year1 - 1, 12, 1}, add_months({Year1, 1, 1}, -1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_months(1)),
+	?_assertMatch({{_,_,_}, {_,_,_}}, add_months(erlang:localtime(), 1)),
+	?_assertMatch({_,_,_}, add_months(Date1, 1))
 	].
 
 days_diff_2_test_() ->
