@@ -733,15 +733,15 @@ NewDateTime :: calendar:datetime().
 #### *uef_time:add_seconds/2*
 
 ```erlang
-uef_time:add_seconds(Date_OR_DateTime, Seconds) -> NewDateTime.
+uef_time:add_seconds(DateOrDatetime, Seconds) -> NewDateTime.
 ```
 
-Adds the number of seconds `Seconds` to `Date_OR_DateTime` and returns a new datetime value.
+Adds the number of seconds `Seconds` to `DateOrDatetime` and returns a new datetime value.
 
 **Types:**
 
 ```erlang
-Date_OR_DateTime :: calendar:date() | calendar:datetime().
+DateOrDatetime :: calendar:date() | calendar:datetime().
 Seconds :: integer().
 NewDateTime :: calendar:datetime().
 ```
@@ -779,18 +779,20 @@ Minutes :: integer().
 NewDateTime :: calendar:datetime().
 ```
 
+---
+
 #### *uef_time:add_minutes/2*
 
 ```erlang
-uef_time:add_minutes(Date_OR_DateTime, Minutes) -> NewDateTime.
+uef_time:add_minutes(DateOrDatetime, Minutes) -> NewDateTime.
 ```
 
-Adds the number of minutes `Minutes` to `Date_OR_DateTime` and returns a new datetime value.
+Adds the number of minutes `Minutes` to `DateOrDatetime` and returns a new datetime value.
 
 **Types:**
 
 ```erlang
-Date_OR_DateTime :: calendar:date() | calendar:datetime().
+DateOrDatetime :: calendar:date() | calendar:datetime().
 Minutes :: integer().
 NewDateTime :: calendar:datetime().
 ```
@@ -833,15 +835,15 @@ NewDateTime :: calendar:datetime().
 #### *uef_time:add_hours/2*
 
 ```erlang
-uef_time:add_hours(Date_OR_DateTime, Hours) -> NewDateTime.
+uef_time:add_hours(DateOrDatetime, Hours) -> NewDateTime.
 ```
 
-Adds the number of hours `Hours` to `Date_OR_DateTime` and returns a new datetime value.
+Adds the number of hours `Hours` to `DateOrDatetime` and returns a new datetime value.
 
 **Types:**
 
 ```erlang
-Date_OR_DateTime :: calendar:date() | calendar:datetime().
+DateOrDatetime :: calendar:date() | calendar:datetime().
 Hours :: integer().
 NewDateTime :: calendar:datetime().
 ```
@@ -860,6 +862,57 @@ NewDateTime :: calendar:datetime().
 
 > uef_time:add_hours({{2019, 1, 1}, {0, 1, 0}}, -10).
 {{2018,12,31},{14,1,0}}
+```
+
+---
+
+#### *uef_time:add_days/1*
+
+```erlang
+uef_time:add_days(Days) -> NewDateTime.
+```
+
+Same as `uef_time:add_seconds(Days * 86400)`. See docs of [uef_time:add_seconds/1](#uef_timeadd_seconds1).
+
+**Types:**
+
+```erlang
+Days :: integer().
+NewDateTime :: calendar:datetime().
+```
+
+---
+
+#### *uef_time:add_days/2*
+
+```erlang
+uef_time:add_days(DateOrDatetime, Days) -> NewDateOrDateTime.
+```
+
+Adds the number of days `Days` to `DateOrDatetime` and returns a new *date or datetime* value. The type of `NewDateOrDateTime` is the same as the type of `DateOrDatetime`.
+
+**Types:**
+
+```erlang
+DateOrDatetime :: calendar:date() | calendar:datetime().
+Days :: integer().
+NewDateOrDateTime :: calendar:date() | calendar:datetime().
+```
+
+**Examples:**
+
+```erlang
+> uef_time:add_days({2019, 1, 1}, 10).
+{2019,1,11}
+
+> uef_time:add_days({2019, 1, 1}, -10).
+{2018,12,22}
+
+> uef_time:add_days({{2019, 1, 1}, {23, 59, 0}}, 10).
+{{2019,1,11},{23,59,0}}
+
+> uef_time:add_days({{2019, 1, 1}, {0, 1, 0}}, -10).
+{{2018,12,22},{0,1,0}}
 ```
 
 ---
