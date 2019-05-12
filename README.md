@@ -1142,13 +1142,23 @@ true
 
 ---
 
+#### *uef_time:today/0*
+
+```erlang
+uef_time:today() -> CurrentDate.
+```
+
+Returns the current date as *{Year, Month, Day}*. Same as [erlang:date()](http://erlang.org/doc/man/erlang.html#date-0).
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
 uef_time:days_diff(Date) -> Days.
 ```
 
-Returns the difference ***in days*** between `Date` and the current local date provided by function [erlang:date()](http://erlang.org/doc/man/erlang.html#localtime-0). `Date` must be of type `calendar:date()` (`{Year, Month, Day}`). `Days` is a positive value if `Date` is after `erlang:date()` or a negative value otherwise.
+Returns the difference ***in days*** between `Date` and the current local date provided by function [erlang:date()](http://erlang.org/doc/man/erlang.html#date-0). `Date` must be of type `calendar:date()` (`{Year, Month, Day}`). `Days` is a positive value if `Date` is after `erlang:date()` or a negative value otherwise.
 
 ---
 
