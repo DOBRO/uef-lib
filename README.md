@@ -1162,6 +1162,16 @@ Returns tomorrow's date as *{Year, Month, Day}*. `TomorrowDate` is of type `cale
 
 ---
 
+#### *uef_time:yesterday/0*
+
+```erlang
+uef_time:yesterday() -> YesterdayDate.
+```
+
+Returns yesterday's date as *{Year, Month, Day}*. `YesterdayDate` is of type `calendar:date()`.
+
+---
+
 #### *uef_time:days_diff/1*
 
 ```erlang
