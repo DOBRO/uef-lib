@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2019-05-12
+
+### Changed
+
+- Fix function `uef_time:unix_time/0` to work with OTP-18 and OTP-19
+- OTP-18 or higher is now required
+
 ## [1.6.0] - 2019-05-12
+
+### Added
 
 - New function `uef_time:unix_time/0`
 - New function `uef_time:unix_time/1`
