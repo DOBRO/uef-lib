@@ -230,6 +230,7 @@ unix_time() ->
 	erlang:system_time(second).
 
 %% unix_time/1
+-spec unix_time(datetime()) -> integer().
 unix_time(Datetime) ->
 	calendar:datetime_to_gregorian_seconds(Datetime) - ?UNIX_EPOCH_GREGORIAN_SECONDS.
 
