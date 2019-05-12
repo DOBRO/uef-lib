@@ -4,6 +4,8 @@
 
 *uef-lib* is a **U**seful **E**rlang **F**unctions **Lib**rary. It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
 
+Erlang/OTP 18 or higher is required.
+
 See how to [build](#build) and [test](#test-and-dialyze).
 
 ## Modules
