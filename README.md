@@ -1148,7 +1148,17 @@ true
 uef_time:today() -> CurrentDate.
 ```
 
-Returns the current date as *{Year, Month, Day}*. Same as [erlang:date()](http://erlang.org/doc/man/erlang.html#date-0).
+Returns the current date as *{Year, Month, Day}*. Same as [erlang:date()](http://erlang.org/doc/man/erlang.html#date-0). `CurrentDate` is of type `calendar:date()`.
+
+---
+
+#### *uef_time:tomorrow/0*
+
+```erlang
+uef_time:tomorrow() -> TomorrowDate.
+```
+
+Returns tomorrow's date as *{Year, Month, Day}*. `TomorrowDate` is of type `calendar:date()`.
 
 ---
 
