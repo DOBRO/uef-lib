@@ -227,7 +227,7 @@ seconds_diff(DateTime1, DateTime2) ->
 %% unix_time/0
 -spec unix_time() -> integer().
 unix_time() ->
-	erlang:system_time(second).
+	erlang:system_time(seconds).
 
 %% unix_time/1
 -spec unix_time(datetime()) -> integer().
