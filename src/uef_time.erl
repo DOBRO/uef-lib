@@ -8,6 +8,7 @@
 -export([add_months/1, add_months/2]).
 -export([add_years/1, add_years/2]).
 -export([add_time/1, add_time/2]).
+-export([today/0, tomorrow/0, yesterday/0]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
 
@@ -179,6 +180,19 @@ add_time(DT, [{Ptype, N} | Tail]) when is_atom(Ptype) andalso is_integer(N) ->
 add_time(_, [Arg | _]) ->
 	erlang:error({badarg, Arg}).
 
+%% today/0
+-spec today() -> date().
+today() ->
+	erlang:date().
+
+%% tomorrow/0
+-spec tomorrow() -> date().
+tomorrow() ->
+	add_days(erlang:date(), 1).
+
+%% yesterday/0
+yesterday() ->
+	add_days(erlang:date(), -1).
 
 %% days_diff/1
 -spec days_diff(date()) -> integer().
@@ -384,6 +398,24 @@ add_time_test_() ->
 	?_assertEqual(add_years(DateTime1, 1), add_time(DateTime1, [{1, years}]))
 	].
 
+today_test_() ->
+	[
+	?_assertEqual(erlang:date(), today()),
+	?_assertMatch({_,_,_}, today())
+	].
+
+tomorrow_test_() ->
+	[
+	?_assertEqual(add_days(today(), 1), tomorrow()),
+	?_assertMatch({_,_,_}, tomorrow())
+	].
+
+yesterday_test_() ->
+	[
+	?_assertEqual(add_days(today(), -1), yesterday()),
+	?_assertMatch({_,_,_}, yesterday())
+	].
+
 days_diff_2_test_() ->
 	[
 	?_assertEqual(1, days_diff({2018, 12, 31}, {2019, 1, 1})),
@@ -393,7 +425,7 @@ days_diff_2_test_() ->
 
 
 seconds_diff_2_test_() ->
-	Date = {2019, 4, 23},
+	Date = erlang:date(),
 	[
 	?_assertEqual(0, seconds_diff({Date, {17, 0, 0}}, {Date, {17, 0, 0}})),
 	?_assertEqual(1, seconds_diff({Date, {17, 0, 0}}, {Date, {17, 0, 1}})),
