@@ -1175,16 +1175,36 @@ Returns yesterday's date as *{Year, Month, Day}*. `YesterdayDate` is of type `ca
 #### *uef_time:unix_time/0*
 
 ```erlang
-uef_time:unix_time() -> UnixTime.
+uef_time:unix_time() -> Seconds.
 ```
 
 Returns the current number of seconds since 00:00:00 (UTC), 1 January 1970. It also known as *Unix time* or *POSIX time* or *UNIX Epoch time*.
 
-**Examples:**
+**Example:**
 
 ```erlang
 > uef_time:unix_time().
 1557670215
+```
+
+---
+
+#### *uef_time:unix_time/1*
+
+```erlang
+uef_time:unix_time(Datetime) -> Seconds.
+```
+
+Returns the number of seconds elapsed between *00:00:00 (UTC), 1 January 1970* and `Datetime`. `Datetime` must be of type `calenadr:datetime()`.
+
+**Examples:**
+
+```erlang
+> uef_time:unix_time({{1970,1,1}, {0,0,0}}).
+0
+
+> uef_time:unix_time({{2000,1,1}, {23,59,59}}).
+946771199
 ```
 
 ---

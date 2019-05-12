@@ -11,7 +11,13 @@
 -export([today/0, tomorrow/0, yesterday/0]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
--export([unix_time/0]).
+-export([unix_time/0, unix_time/1]).
+
+%%%------------------------------------------------------------------------------
+%%%   Macros
+%%%------------------------------------------------------------------------------
+
+-define(UNIX_EPOCH_GREGORIAN_SECONDS, calendar:datetime_to_gregorian_seconds({{1970,1,1}, {0,0,0}})).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
@@ -222,6 +228,11 @@ seconds_diff(DateTime1, DateTime2) ->
 -spec unix_time() -> integer().
 unix_time() ->
 	erlang:system_time(second).
+
+%% unix_time/1
+unix_time(Datetime) ->
+	calendar:datetime_to_gregorian_seconds(Datetime) - ?UNIX_EPOCH_GREGORIAN_SECONDS.
+
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
@@ -439,6 +450,14 @@ seconds_diff_2_test_() ->
 	?_assertEqual(3600, seconds_diff({Date, {17, 0, 0}}, {Date, {18, 0, 0}})),
 	?_assertEqual(-3600, seconds_diff({Date, {18, 0, 0}}, {Date, {17, 0, 0}})),
 	?_assertEqual(60, seconds_diff({Date, {17, 0, 0}}, {Date, {17, 1, 0}}))
+	].
+
+unix_time_test_() ->
+	[
+	?_assertEqual(0, uef_time:unix_time({{1970,1,1}, {0,0,0}})),
+	?_assertEqual(1, uef_time:unix_time({{1970,1,1}, {0,0,1}})),
+	?_assertEqual(59, uef_time:unix_time({{1970,1,1}, {0,0,59}})),
+	?_assertEqual(uef_time:unix_time(), uef_time:unix_time(calendar:universal_time()))
 	].
 
 -endif. % end of tests
