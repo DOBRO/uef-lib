@@ -11,6 +11,7 @@
 -export([today/0, tomorrow/0, yesterday/0]).
 -export([days_diff/1, days_diff/2]).
 -export([seconds_diff/1, seconds_diff/2]).
+-export([unix_time/0]).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
@@ -215,6 +216,12 @@ seconds_diff(DateTime) ->
 -spec seconds_diff(datetime(), datetime()) -> integer().
 seconds_diff(DateTime1, DateTime2) ->
 	calendar:datetime_to_gregorian_seconds(DateTime2) - calendar:datetime_to_gregorian_seconds(DateTime1).
+
+
+%% unix_time/0
+-spec unix_time() -> integer().
+unix_time() ->
+	erlang:system_time(second).
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
