@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fix function `uef_time:unix_time/0` to work with OTP-18 and OTP-19
+- Fixed: function `uef_time:unix_time/0` did not work with OTP-18 and OTP-19
 - OTP-18 or higher is now required
 
 ## [1.6.0] - 2019-05-12
