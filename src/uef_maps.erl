@@ -2,13 +2,21 @@
 
 -export([find_nested/2]).
 
+%%%------------------------------------------------------------------------------
+%%%   Types
+%%%------------------------------------------------------------------------------
+
+-type mapkey() :: term().
+-type mapkeys() :: [mapkey()].
+-type find_result() :: {ok, term()} | error.
+
 
 %%%------------------------------------------------------------------------------
 %%%   API
 %%%------------------------------------------------------------------------------
 
 %% find_nested/3
--spec find_nested(Keys :: [], map()) -> {ok, term()} | error.
+-spec find_nested(mapkeys(), map()) -> find_result().
 find_nested(Keys, Map) ->
 	find_nested_unsafe(Keys, Map).
 
@@ -17,11 +25,13 @@ find_nested(Keys, Map) ->
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
 
+%% find_nested_unsafe/2
+-spec find_nested_unsafe(mapkeys(), map()) -> find_result().
 find_nested_unsafe(Keys, Map) ->
 	find_nested(Keys, Map, unsafe, error).
 
 %% find_nested/4
--spec find_nested(Keys :: [], map(), safe | unsafe, Result) -> Result when Result :: {ok, term()} | error.
+-spec find_nested(mapkeys(), map(), safe | unsafe, find_result()) -> find_result().
 find_nested([], _, _, Result) ->
 	Result;
 find_nested([Key|Tail], Map, Safe, _) ->
