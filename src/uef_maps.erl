@@ -1,6 +1,8 @@
 -module(uef_maps).
 
 -export([find_nested/2]).
+-export([get_nested/2]).
+
 
 %%%------------------------------------------------------------------------------
 %%%   Types
@@ -15,11 +17,20 @@
 %%%   API
 %%%------------------------------------------------------------------------------
 
-%% find_nested/3
+%% find_nested/2
 -spec find_nested(mapkeys(), map()) -> find_result().
 find_nested(Keys, Map) ->
 	find_nested_unsafe(Keys, Map).
 
+
+%% find_nested/2
+-spec get_nested(mapkeys(), map()) -> term().
+get_nested(Keys, Map) ->
+	FindResult = find_nested_unsafe(Keys, Map), % may fail here with a {badmap,Map} exception
+	case FindResult of
+		{ok, Value} -> Value;
+		error -> erlang:error({badkeys,Keys},[Keys,Map])
+	end.
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
@@ -37,7 +48,7 @@ find_nested([], _, _, Result) ->
 find_nested([Key|Tail], Map, Safe, _) ->
 	Result = case {is_map(Map), Safe} of
 		{false, safe}  -> error; % don't fail, return 'error' safely
-		_ -> maps:find(Key, Map) % may fail here when {false, unsafe}
+		_ -> maps:find(Key, Map) % may fail here (when {false, unsafe}) with a {badmap,Map} exception
 	end,
 	case Result of
 		{ok, NestedMap} -> find_nested(Tail, NestedMap, Safe, Result);
