@@ -16,8 +16,9 @@ See how to [build](#build) and [test](#test-and-dialyze).
 * **[uef_file](#module-uef_file)** - working with files.
 * **[uef_format](#module-uef_format)** - formatting numbers.
 * **[uef_lists](#module-uef_lists)** - lists transformations.
+* **[uef_maps](#module-uef_maps)** - functions for maps processing.
 * **[uef_num](#module-uef_num)** - helpful functions for numbers.
-* **[uef_time](#module-uef_time)** - date/time functions.
+* **[uef_time](#module-uef_time)** - datetime functions.
 
 ## Documentation
 
@@ -673,6 +674,50 @@ Transforms three lists into one list of three-tuples, where the first element of
  {b1,b2,b3},
  {b1,c2,a3},
  {b1,c2,b3}]
+```
+
+---
+
+### Module `uef_maps`
+
+---
+
+#### *uef_maps:find_nested/2*
+
+```erlang
+uef_maps:find_nested(Keys, Map) -> {ok, Value} | error.
+```
+
+Traverses a nested map (*map of maps*) through the keys and returns a tuple `{ok, Value}`, where `Value` is the value associated with the last element of list `Keys`, or `error` if no value is found.
+
+The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+**Examples:**
+
+```erlang
+> Value = abc, M3 = #{3 => Value}, M2 = #{2 => M3}, M1 = #{1 => M2}, M0 = #{0 => M1}.
+#{0 => #{1 => #{2 => #{3 => abc}}}} % M0
+
+> uef_maps:find_nested([0], M0).
+{ok,#{1 => #{2 => #{3 => abc}}}} % {ok, M1}
+
+> uef_maps:find_nested([0,1], M0).
+{ok,#{2 => #{3 => abc}}} % {ok, M2}
+
+> uef_maps:find_nested([0,1,2], M0).
+{ok,#{3 => abc}} % {ok, M3}
+
+> uef_maps:find_nested([0,1,2,3], M0).
+{ok,abc} % {ok, Value}
+
+> uef_maps:find_nested([-1], M0).
+error
+
+> uef_maps:find_nested([0,1,-2,3], M0).
+error
+
+> uef_maps:find_nested([0,1,2,-3], M0).
+error
 ```
 
 ---
