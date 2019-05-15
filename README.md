@@ -718,6 +718,9 @@ error
 
 > uef_maps:find_nested([key1,key2,key3,-4], M0).
 error
+
+> uef_maps:find_nested([key1,key2,key3,key4,key5], M0).
+** exception error: {badmap,abc}
 ```
 
 ---
