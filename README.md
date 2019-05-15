@@ -695,28 +695,28 @@ The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a 
 **Examples:**
 
 ```erlang
-> Value = abc, M3 = #{3 => Value}, M2 = #{2 => M3}, M1 = #{1 => M2}, M0 = #{0 => M1}.
-#{0 => #{1 => #{2 => #{3 => abc}}}} % M0
+> Value = abc, M3 = #{key4 => Value}, M2 = #{key3 => M3}, M1 = #{key2 => M2}, M0 = #{key1 => M1}.
+#{key1 => #{key2 => #{key3 => #{key4 => abc}}}} % M0
 
-> uef_maps:find_nested([0], M0).
-{ok,#{1 => #{2 => #{3 => abc}}}} % {ok, M1}
+> uef_maps:find_nested([key1], M0).
+{ok,#{key2 => #{key3 => #{key4 => abc}}}} % {ok, M1}
 
-> uef_maps:find_nested([0,1], M0).
-{ok,#{2 => #{3 => abc}}} % {ok, M2}
+> uef_maps:find_nested([key1,key2], M0).
+{ok,#{key3 => #{key4 => abc}}} % {ok, M2}
 
-> uef_maps:find_nested([0,1,2], M0).
-{ok,#{3 => abc}} % {ok, M3}
+> uef_maps:find_nested([key1,key2,key3], M0).
+{ok,#{key4 => abc}} % {ok, M3}
 
-> uef_maps:find_nested([0,1,2,3], M0).
+> uef_maps:find_nested([key1,key2,key3,key4], M0).
 {ok,abc} % {ok, Value}
 
 > uef_maps:find_nested([-1], M0).
 error
 
-> uef_maps:find_nested([0,1,-2,3], M0).
+> uef_maps:find_nested([key1,key2,-3,key4], M0).
 error
 
-> uef_maps:find_nested([0,1,2,-3], M0).
+> uef_maps:find_nested([key1,key2,key3,-4], M0).
 error
 ```
 
