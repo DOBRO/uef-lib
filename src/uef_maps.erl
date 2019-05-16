@@ -36,7 +36,7 @@ get_nested(Keys, Map) ->
 	FindResult = find_nested_unsafe(Keys, Map), % may fail here with a {badmap,Map} exception
 	case FindResult of
 		{ok, Value} -> Value;
-		error -> erlang:error({notfound,Keys},[Keys,Map])
+		error -> erlang:error({badkeys,Keys},[Keys,Map])
 	end.
 
 %% get_nested/3
