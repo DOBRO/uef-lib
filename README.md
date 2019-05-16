@@ -757,6 +757,37 @@ abc % Value
 
 ---
 
+#### *uef_maps:get_nested/3*
+
+```erlang
+uef_maps:get_nested(Keys, Map, Default) -> Value | Default.
+```
+
+Traverses nested map `Map` (*map of maps*) deep through the keys that are elements of list `Keys`. Returns value `Value` associated with the last element of list `Keys`. If no value is found, `Default` is returned.
+
+The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list. It **does not** fail if any internal value associated with any element of list `Keys` is not a map.
+
+**Examples:**
+
+```erlang
+> Value = abc, Default = default, M3 = #{key4 => Value}, M2 = #{key3 => M3}, M1 = #{key2 => M2}, M0 = #{key1 => M1}.
+#{key1 => #{key2 => #{key3 => #{key4 => abc}}}} % M0.
+
+> uef_maps:get_nested([key1,key2,key3,key4], M0, Default).
+abc % Value
+
+> uef_maps:get_nested([key1,key2,key3,-4], M0, Default).
+default % Default
+
+> uef_maps:get_nested([key1,key2,-3,key4], M0, Default).
+default % Default
+
+> uef_maps:get_nested([key1,key2,key3,key4,key5], M0, Default).
+default % Default anyway. Doesn't fail
+```
+
+---
+
 ### Module `uef_num`
 
 ---
