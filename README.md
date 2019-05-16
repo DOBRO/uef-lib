@@ -788,6 +788,49 @@ default % Default anyway. Doesn't fail
 
 ---
 
+#### *uef_maps:is_key_nested/2*
+
+```erlang
+uef_maps:is_key_nested(Keys, Map) -> true | false.
+```
+
+Returns `true` if map `Map` contains submaps as values associated with their own key corresponding to the element of list `Keys`, and returns `false` otherwise.
+
+The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+**Examples:**
+
+```erlang
+> M3 = #{key4 => value}, M2 = #{key3 => M3}, M1 = #{key2 => M2}, M0 = #{key1 => M1}.
+#{key1 => #{key2 => #{key3 => #{key4 => value}}}} % M0
+
+> uef_maps:is_key_nested([key1,key2,key3,key4], M0).
+true
+
+> uef_maps:is_key_nested([key1,key2,key3], M0).
+true
+
+> uef_maps:is_key_nested([key1,key2], M0).
+true
+
+> uef_maps:is_key_nested([key1], M0).
+true
+
+> uef_maps:is_key_nested([], M0).
+false
+
+> uef_maps:is_key_nested([key1,key2,key3,key4,key5], M0).
+false
+
+> uef_maps:is_key_nested([-1,key2,key3,key4], M0).
+false
+
+> uef_maps:is_key_nested([key1,-2,key3,key4], M0).
+false
+```
+
+---
+
 #### *uef_maps:new_nested/1*
 
 ```erlang

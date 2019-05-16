@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New function `uef_maps:find_nested/2`
 - New function `uef_maps:get_nested/2`
 - New function `uef_maps:get_nested/3`
+- New function `uef_maps:is_key_nested/2`
 - New function `uef_maps:new_nested/1`
 - New function `uef_maps:new_nested/2`
 

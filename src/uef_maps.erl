@@ -3,6 +3,7 @@
 -export([find_nested/2]).
 -export([get_nested/2, get_nested/3]).
 -export([new_nested/1, new_nested/2]).
+-export([is_key_nested/2]).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
@@ -68,6 +69,17 @@ new_nested(Keys, Value) when is_list(Keys) ->
 new_nested(Keys, Value) ->
 	erlang:error({badlist, Keys}, [Keys, Value]).
 
+%% is_key_nested/2
+-spec is_key_nested(mapkeys(), map()) -> boolean().
+is_key_nested(Keys, Map) when is_list(Keys), is_map(Map) ->
+	is_key_nested(Keys, Map, false);
+is_key_nested(Keys, Map) ->
+	Args = [Keys, Map],
+	case is_list(Keys) of
+		true  -> erlang:error({badmap, Map}, Args);
+		false -> erlang:error({badlist, Keys}, Args)
+	end.
+
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
@@ -104,6 +116,16 @@ find_nested(NotList, _, _, _) ->
 new_nested_1([], Map) -> Map;
 new_nested_1([Key|Tail], Map) ->
 	new_nested_1(Tail, #{Key => Map}).
+
+%% is_key_nested/3
+-spec is_key_nested(mapkeys(), map(), boolean()) -> boolean().
+is_key_nested([], _, Bool) ->
+	Bool;
+is_key_nested([Key|Tail], Map, _) ->
+	case Map of
+		#{Key := Value} -> is_key_nested(Tail, Value, true);
+		_ -> false
+	end.
 
 %%%------------------------------------------------------------------------------
 %%%   Tests
@@ -188,6 +210,32 @@ new_nested_test_() ->
 	?_assertEqual(new_nested([1,2,3]), new_nested([1,2,3], #{})),
 	?_assertError({badlist, bad_list}, new_nested(bad_list)),
 	?_assertError({badlist, bad_list}, new_nested(bad_list, value))
+	].
+
+is_key_nested_test_() ->
+	Value = value,
+	M3 = #{3 => Value},
+	M2 = #{2 => M3},
+	M1 = #{1 => M2},
+	M0 = #{0 => M1},
+	BadMap = bad_map,
+	BadList = bad_list,
+	[
+	?_assertEqual(true, is_key_nested([0], M0)),
+	?_assertEqual(true, is_key_nested([0,1], M0)),
+	?_assertEqual(true, is_key_nested([0,1,2], M0)),
+	?_assertEqual(true, is_key_nested([0,1,2,3], M0)),
+	?_assertEqual(false, is_key_nested([], M0)),
+	?_assertEqual(false, is_key_nested([-1], M0)),
+	?_assertEqual(false, is_key_nested([0,-1], M0)),
+	?_assertEqual(false, is_key_nested([0,1,-2], M0)),
+	?_assertEqual(false, is_key_nested([0,1,2,-3], M0)),
+	?_assertEqual(false, is_key_nested([0,-1,2,3], M0)),
+	?_assertEqual(false, is_key_nested([0,1,-2,3], M0)),
+	?_assertEqual(false, is_key_nested([0,1,2,3,4], M0)),
+	?_assertEqual(false, is_key_nested([0,1,2,3,4,5], M0)),
+	?_assertError({badlist, BadList}, is_key_nested(bad_list, #{})),
+	?_assertError({badmap, BadMap}, is_key_nested([1], BadMap))
 	].
 
 -endif. % end of tests
