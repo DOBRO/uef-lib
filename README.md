@@ -688,7 +688,7 @@ Transforms three lists into one list of three-tuples, where the first element of
 uef_maps:find_nested(Keys, Map) -> {ok, Value} | error.
 ```
 
-Traverses a nested map (*map of maps*) through the keys and returns a tuple `{ok, Value}`, where `Value` is the value associated with the last element of list `Keys`, or `error` if no value is found.
+Traverses nested map `Map` (*map of maps*) deep through the keys that are elements of list `Keys`. Returns a tuple `{ok, Value}`, where `Value` is the value associated with the last element of list `Keys`, or `error` if no value is found.
 
 The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
@@ -721,6 +721,38 @@ error
 
 > uef_maps:find_nested([key1,key2,key3,key4,key5], M0).
 ** exception error: {badmap,abc}
+```
+
+---
+
+#### *uef_maps:get_nested/2*
+
+```erlang
+uef_maps:get_nested(Keys, Map) -> Value.
+```
+
+Traverses nested map `Map` (*map of maps*) deep through the keys that are elements of list `Keys`. Returns value `Value` associated with the last element of list `Keys`.
+
+The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badkeys,Keys}` exception if no value is found, or with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+**Examples:**
+
+```erlang
+> Value = abc, M3 = #{key4 => Value}, M2 = #{key3 => M3}, M1 = #{key2 => M2}, M0 = #{key1 => M1}.
+#{key1 => #{key2 => #{key3 => #{key4 => abc}}}} % M0
+
+> uef_maps:get_nested([key1], M0).
+#{key2 => #{key3 => #{key4 => abc}}} % M1
+
+> uef_maps:get_nested([key1,key2], M0).
+#{key3 => #{key4 => abc}} % M2
+
+> uef_maps:get_nested([key1,key2,key3], M0).
+#{key4 => abc} % M3
+
+> uef_maps:get_nested([key1,key2,key3,key4], M0).
+abc % Value
+
 ```
 
 ---
