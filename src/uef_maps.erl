@@ -2,6 +2,7 @@
 
 -export([find_nested/2]).
 -export([get_nested/2, get_nested/3]).
+-export([new_nested/1, new_nested/2]).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
@@ -50,6 +51,23 @@ get_nested(Keys, Map, Default) when is_map(Map) ->
 get_nested(Keys, Map, Default) ->
 	erlang:error({badmap,Map},[Keys, Map, Default]).
 
+%% new_nested/1
+-spec new_nested(mapkeys()) -> map().
+new_nested(Keys) ->
+	new_nested(Keys, #{}).
+
+%% new_nested/2
+-spec new_nested(mapkeys(), Value :: term()) -> map().
+new_nested([], _) ->
+	#{};
+new_nested([Key], Value) ->
+	#{Key => Value};
+new_nested(Keys, Value) when is_list(Keys) ->
+	[LastKey | Rest] = lists:reverse(Keys),
+	new_nested_1(Rest, #{LastKey => Value});
+new_nested(Keys, Value) ->
+	erlang:error({badlist, Keys}, [Keys, Value]).
+
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
@@ -81,6 +99,11 @@ find_nested([Key|Tail], Map, Safe, _) ->
 find_nested(NotList, _, _, _) ->
 	erlang:error({badlist, NotList}).
 
+%% new_nested_1/2
+-spec new_nested_1(mapkeys(), map()) -> map().
+new_nested_1([], Map) -> Map;
+new_nested_1([Key|Tail], Map) ->
+	new_nested_1(Tail, #{Key => Map}).
 
 %%%------------------------------------------------------------------------------
 %%%   Tests
@@ -147,5 +170,24 @@ find_nested__and__get_nested_test_() ->
 	?_assertError({badlist, BadList}, get_nested(BadList, #{}, Default))
 	].
 
+new_nested_test_() ->
+	[
+	?_assertEqual(#{}, new_nested([])),
+	?_assertEqual(#{}, new_nested([], #{})),
+	?_assertEqual(#{}, new_nested([], aaa)),
+	?_assertEqual(new_nested([]), new_nested([], #{})),
+	?_assertEqual(#{1 => #{}}, new_nested([1])),
+	?_assertEqual(#{1 => #{2 => #{}}}, new_nested([1,2])),
+	?_assertEqual(#{1 => #{2 => #{3 => #{}}}}, new_nested([1,2,3])),
+	?_assertEqual(#{1 => value}, new_nested([1], value)),
+	?_assertEqual(#{1 => #{2 => value}}, new_nested([1,2], value)),
+	?_assertEqual(#{1 => #{2 => #{3 => value}}}, new_nested([1,2,3], value)),
+	?_assertEqual(new_nested([]), new_nested([], #{})),
+	?_assertEqual(new_nested([1]), new_nested([1], #{})),
+	?_assertEqual(new_nested([1,2]), new_nested([1,2], #{})),
+	?_assertEqual(new_nested([1,2,3]), new_nested([1,2,3], #{})),
+	?_assertError({badlist, bad_list}, new_nested(bad_list)),
+	?_assertError({badlist, bad_list}, new_nested(bad_list, value))
+	].
 
 -endif. % end of tests

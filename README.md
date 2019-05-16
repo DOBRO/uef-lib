@@ -138,7 +138,7 @@ true
 uef_bin:split(Binary, Splitter) -> ListOfBinaries.
 ```
 
-Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as [binary:split/2](http://erlang.org/doc/man/binary.html#split-2) but is more performant in simple cases.
+Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works as [binary:split/2](http://erlang.org/doc/man/binary.html#split-2) but is more performant in simple cases.
 
 **Examples:**
 
@@ -161,7 +161,7 @@ Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Wor
 uef_bin:split(Binary, Splitter, 'trim_all') -> ListOfBinaries.
 ```
 
-Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Works as `uef_bin:split/2` but removes all epmty (`<<>>`) chunks. It can be used in simple cases instead of  [binary:split/3](http://erlang.org/doc/man/binary.html#split-3) for the reason that it's more performant.
+Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works as `uef_bin:split/2` but removes all epmty (`<<>>`) chunks. It can be used in simple cases instead of  [binary:split/3](http://erlang.org/doc/man/binary.html#split-3) for the reason that it's more performant.
 
 **Example:**
 
@@ -178,7 +178,7 @@ Splits binary (`Binary`) with splitter (`Splitter`) into a list of binaries. Wor
 uef_bin:replace(Binary1, Chars, OtherChars) -> Binary2.
 ```
 
-Replaces chars (`Chars`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`). Works as [binary:replace/3](http://erlang.org/doc/man/binary.html#replace-3) but more permormant and can be used in simple cases.
+Replaces chars `Chars` with other chars `OtherChars` in binary `Binary1` and returns another binary `Binary2`. Works as [binary:replace/3](http://erlang.org/doc/man/binary.html#replace-3) but more permormant and can be used in simple cases.
 
 **Examples:**
 
@@ -198,7 +198,7 @@ Replaces chars (`Chars`) with other chars (`OtherChars`) in a binary (`Binary1`)
 uef_bin:replace_chars(Binary1, ListOfCharsToReplace, OtherChars) -> Binary2.
 ```
 
-Replaces chars inluded in list (`ListOfCharsToReplace`) with other chars (`OtherChars`) in a binary (`Binary1`) and returns another binary (`Binary2`).
+Replaces chars inluded in list `ListOfCharsToReplace` with other chars `OtherChars` in binary `Binary1` and returns another binary `Binary2`.
 
 **Examples:**
 
@@ -258,7 +258,7 @@ Generates and returns a binary of size `Length` which consists of the given char
 uef_bin:numeric_prefix(Binary) -> DigitsOnlyOrEmptyBinary.
 ```
 
-Returns new binary (`DigitsOnlyBinary`) which consists of digits [0-9] wich are at the beginning in the given binary (`Binary`). If `Binary` does not begin with digit, this function returns empty binary (`<<>>`).
+Returns new binary `DigitsOnlyBinary` which consists of digits [0-9] wich are at the beginning in the given binary `Binary`. If `Binary` does not begin with digit, this function returns empty binary (`<<>>`).
 
 **Examples:**
 
@@ -282,7 +282,7 @@ Returns new binary (`DigitsOnlyBinary`) which consists of digits [0-9] wich are 
 uef_crypt:md5_hex(IoData) -> Binary.
 ```
 
-Returns binary (`Binary`) in hexadecimal form of md5 hash of the argument `IoData`.
+Returns binary `Binary` in hexadecimal form of md5 hash of the argument `IoData`.
 
 **Examples:**
 
@@ -784,6 +784,44 @@ default % Default
 
 > uef_maps:get_nested([key1,key2,key3,key4,key5], M0, Default).
 default % Default anyway. Doesn't fail
+```
+
+---
+
+#### *uef_maps:new_nested/1*
+
+```erlang
+uef_maps:new_nested(Keys) -> Map.
+```
+
+Same as `uef_maps:new_nested(Keys, #{})`. See docs of [uef_maps:new_nested/2](#uef_mapsnew_nested2).
+
+---
+
+#### *uef_maps:new_nested/2*
+
+```erlang
+uef_maps:new_nested(Keys, Value) -> Map.
+```
+
+Returns new nested map `Map` with the deepest map `#{LastKey => Value}`, where `LastKey` is the last element of list `Keys`.
+
+The call fails with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+**Examples:**
+
+```erlang
+> uef_maps:new_nested([], value).
+#{}
+
+> uef_maps:new_nested([key], value).
+#{key => value}
+
+> uef_maps:new_nested([key1, key2], value).
+#{key1 => #{key2 => value}}
+
+> uef_maps:new_nested([key1, key2, key3], value).
+#{key1 => #{key2 => #{key3 => value}}}
 ```
 
 ---
