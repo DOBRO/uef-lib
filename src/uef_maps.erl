@@ -5,6 +5,7 @@
 -export([new_nested/1, new_nested/2]).
 -export([is_key_nested/2]).
 -export([put_nested/3]).
+-export([update_nested/3]).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
@@ -100,6 +101,27 @@ put_nested(Keys, Value, Map) ->
 	end.
 
 
+%% update_nested/3
+-spec update_nested(mapkeys(), Value :: term(), map()) -> map().
+update_nested([], _, Map) when is_map(Map) ->
+	Map;
+update_nested([Key], Value, Map) when is_map(Map) ->
+	maps:update(Key, Value, Map);
+update_nested(Keys, Value, Map) when is_list(Keys), is_map(Map) ->
+	case nested_to_tuples_for_update(Keys, Map, []) of
+		{ok, Tuples} ->
+			lists:foldl(fun({K, M}, Acc) -> maps:update(K, Acc, M) end, Value, Tuples);
+		{error, Reason} ->
+			erlang:error(Reason, [Keys, Value, Map])
+	end;
+update_nested(Keys, Value, Map) ->
+	Args = [Keys, Value, Map],
+	case is_list(Keys) of
+		true  -> erlang:error({badmap, Map}, Args);
+		false -> erlang:error({badlist, Keys}, Args)
+	end.
+
+
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
@@ -158,6 +180,19 @@ nested_to_tuples_for_put([Key|Tail], Map, Tuples) ->
 			nested_to_tuples_for_put(Tail, #{}, [{Key, Map}|Tuples]);
 		_ ->
 			nested_to_tuples_for_put(Tail, #{}, [{Key, #{}}|Tuples])
+	end.
+
+%% nested_to_tuples_for_update/3
+-spec nested_to_tuples_for_update(mapkeys(), term(), Tuples) -> {ok, Tuples} | {error, {badkey, mapkey()}}
+	when Tuples :: [{mapkey(), map()}].
+nested_to_tuples_for_update([], _Map, Tuples) ->
+	{ok, Tuples};
+nested_to_tuples_for_update([Key|Tail], Map, Tuples) ->
+	case Map of
+		#{Key := M} ->
+			nested_to_tuples_for_update(Tail, M, [{Key, Map}|Tuples]);
+		_ ->
+			{error, {badkey, Key}}
 	end.
 
 %%%------------------------------------------------------------------------------
@@ -290,4 +325,26 @@ put_nested_test_() ->
 	?_assertError({badlist, BadList}, put_nested(BadList, NewVal, Map1)),
 	?_assertError({badmap, BadMap}, put_nested([], NewVal, BadMap))
 	].
+
+update_nested_test_() ->
+	Map1 = #{1 => #{2 => #{3 => val3}}},
+	NewVal = new_value,
+	BadMap = bad_map,
+	BadList = bad_list,
+	[
+	?_assertEqual(Map1, update_nested([], NewVal, Map1)),
+	?_assertEqual(#{1 => NewVal}, update_nested([1], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => NewVal}}, update_nested([1,2], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => #{3 => NewVal}}}, update_nested([1,2,3], NewVal, Map1)),
+	?_assertError({badkey, -3}, update_nested([1,2,-3], NewVal, Map1)),
+	?_assertError({badkey, 4}, update_nested([1,2,3,4], NewVal, Map1)),
+	?_assertError({badkey, 4}, update_nested([1,2,3,4,5], NewVal, Map1)),
+	?_assertError({badkey, -1}, update_nested([-1], NewVal, Map1)),
+	?_assertError({badkey, -2}, update_nested([1,-2], NewVal, Map1)),
+	?_assertError({badkey, -3}, update_nested([1,2,-3], NewVal, Map1)),
+	?_assertError({badkey, -4}, update_nested([1,2,3,-4], NewVal, Map1)),
+	?_assertError({badlist, BadList}, update_nested(BadList, NewVal, Map1)),
+	?_assertError({badmap, BadMap}, update_nested([], NewVal, BadMap))
+	].
+
 -endif. % end of tests

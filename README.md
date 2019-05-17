@@ -918,6 +918,55 @@ The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with 
 
 ---
 
+#### *uef_maps:update_nested/3*
+
+```erlang
+uef_maps:update_nested(Keys, Value, Map1) -> Map2.
+```
+
+Works similar to [uef_maps:put_nested/3](#uef_mapsput_nested3) with the difference that it fails with a `{badkey,SomeKey}` exception if `SomeKey` does not exist in the structure of map `Map1`, where `SomeKey` is one of the elements of list `Keys`.
+
+The call also fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+**Examples:**
+
+```erlang
+> Map1 = #{1 => #{2 => #{3 => val3}}}.
+#{1 => #{2 => #{3 => val3}}} % Map1
+
+> uef_maps:update_nested([], new_value, Map1).
+#{1 => #{2 => #{3 => val3}}} % Map1 (empty list of keys)
+
+> uef_maps:update_nested([1], new_value, Map1).
+#{1 => new_value}
+
+> uef_maps:update_nested([1,2], new_value, Map1).
+#{1 => #{2 => new_value}}
+
+> uef_maps:update_nested([1,2,3], new_value, Map1).
+#{1 => #{2 => #{3 => new_value}}}
+
+> uef_maps:update_nested([1,2,3,4], new_value, Map1).
+** exception error: {badkey,4}
+
+> uef_maps:update_nested([1,2,3,4,5], new_value, Map1).
+** exception error: {badkey,4} % 4, not 5! because 4 is before
+
+> uef_maps:update_nested([-1], new_value, Map1).
+** exception error: {badkey,-1}
+
+> uef_maps:update_nested([1,-2], new_value, Map1).
+** exception error: {badkey,-2}
+
+> uef_maps:update_nested([1,2,-3], new_value, Map1).
+** exception error: {badkey,-3}
+
+> uef_maps:update_nested([1,2,3,-4], new_value, Map1).
+** exception error: {badkey,-4}
+```
+
+---
+
 ### Module `uef_num`
 
 ---
