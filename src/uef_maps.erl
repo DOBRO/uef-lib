@@ -4,6 +4,7 @@
 -export([get_nested/2, get_nested/3]).
 -export([new_nested/1, new_nested/2]).
 -export([is_key_nested/2]).
+-export([put_nested/3]).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
@@ -69,12 +70,30 @@ new_nested(Keys, Value) when is_list(Keys) ->
 new_nested(Keys, Value) ->
 	erlang:error({badlist, Keys}, [Keys, Value]).
 
+
 %% is_key_nested/2
 -spec is_key_nested(mapkeys(), map()) -> boolean().
 is_key_nested(Keys, Map) when is_list(Keys), is_map(Map) ->
 	is_key_nested(Keys, Map, false);
 is_key_nested(Keys, Map) ->
 	Args = [Keys, Map],
+	case is_list(Keys) of
+		true  -> erlang:error({badmap, Map}, Args);
+		false -> erlang:error({badlist, Keys}, Args)
+	end.
+
+
+%% put_nested/3
+-spec put_nested(mapkeys(), Value :: term(), map()) -> map().
+put_nested([], _, Map) when is_map(Map) ->
+	Map;
+put_nested([Key], Value, Map) when is_map(Map) ->
+	Map#{Key => Value};
+put_nested(Keys, Value, Map) when is_list(Keys), is_map(Map) ->
+	Tuples = nested_to_tuples_for_put(Keys, Map, []),
+	lists:foldl(fun({K, M}, Acc) -> M#{K => Acc} end, Value, Tuples);
+put_nested(Keys, Value, Map) ->
+	Args = [Keys, Value, Map],
 	case is_list(Keys) of
 		true  -> erlang:error({badmap, Map}, Args);
 		false -> erlang:error({badlist, Keys}, Args)
@@ -125,6 +144,20 @@ is_key_nested([Key|Tail], Map, _) ->
 	case Map of
 		#{Key := Value} -> is_key_nested(Tail, Value, true);
 		_ -> false
+	end.
+
+%% nested_to_tuples_for_put/3
+-spec nested_to_tuples_for_put(mapkeys(), term(), Tuples) -> Tuples when Tuples :: [{mapkey(), map()}].
+nested_to_tuples_for_put([], _Map, Tuples) ->
+	Tuples;
+nested_to_tuples_for_put([Key|Tail], Map, Tuples) ->
+	case Map of
+		#{Key := M} ->
+			nested_to_tuples_for_put(Tail, M, [{Key, Map}|Tuples]);
+		_ when is_map(Map) ->
+			nested_to_tuples_for_put(Tail, #{}, [{Key, Map}|Tuples]);
+		_ ->
+			nested_to_tuples_for_put(Tail, #{}, [{Key, #{}}|Tuples])
 	end.
 
 %%%------------------------------------------------------------------------------
@@ -234,8 +267,27 @@ is_key_nested_test_() ->
 	?_assertEqual(false, is_key_nested([0,1,-2,3], M0)),
 	?_assertEqual(false, is_key_nested([0,1,2,3,4], M0)),
 	?_assertEqual(false, is_key_nested([0,1,2,3,4,5], M0)),
-	?_assertError({badlist, BadList}, is_key_nested(bad_list, #{})),
+	?_assertError({badlist, BadList}, is_key_nested(BadList, #{})),
 	?_assertError({badmap, BadMap}, is_key_nested([1], BadMap))
 	].
 
+put_nested_test_() ->
+	Map1 = #{1 => #{2 => #{3 => val3}}},
+	NewVal = new_value,
+	BadMap = bad_map,
+	BadList = bad_list,
+	[
+	?_assertEqual(Map1, put_nested([], NewVal, Map1)),
+	?_assertEqual(#{1 => NewVal}, put_nested([1], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => NewVal}}, put_nested([1,2], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => #{3 => NewVal}}}, put_nested([1,2,3], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => #{3 => val3, -3 => NewVal}}}, put_nested([1,2,-3], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => #{3 => #{4 => NewVal}}}}, put_nested([1,2,3,4], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => #{3 => val3}}, -1 => NewVal}, put_nested([-1], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => #{3 => val3}, -2 => NewVal}}, put_nested([1,-2], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => #{3 => val3, -3 => NewVal}}}, put_nested([1,2,-3], NewVal, Map1)),
+	?_assertEqual(#{1 => #{2 => #{3 => #{-4 => NewVal}}}}, put_nested([1,2,3,-4], NewVal, Map1)),
+	?_assertError({badlist, BadList}, put_nested(BadList, NewVal, Map1)),
+	?_assertError({badmap, BadMap}, put_nested([], NewVal, BadMap))
+	].
 -endif. % end of tests

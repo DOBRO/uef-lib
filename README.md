@@ -869,6 +869,55 @@ The call fails with a `{badlist,Keys}` exception if `Keys` is not a list.
 
 ---
 
+#### *uef_maps:put_nested/3*
+
+```erlang
+uef_maps:put_nested(Keys, Value, Map1) -> Map2.
+```
+
+Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has internal structure `#{Key1 => #{Key2 => #{... => #{KeyN => ValueN}}}}`. The function associates `KeyN` with value `Value` and updates the entire structure of map `Map1` returning new map `Map2`. If some keys from list `Keys` are not in the structure of map `Map1`, they will be inserted into the structure of map `Map2` in the same order.
+
+The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+**Examples:**
+
+```erlang
+> Map1 = #{1 => #{2 => #{3 => val3}}}.
+#{1 => #{2 => #{3 => val3}}} % Map1
+
+> uef_maps:put_nested([], new_value, Map1).
+#{1 => #{2 => #{3 => val3}}} % Map1 (empty list of keys)
+
+> uef_maps:put_nested([1], new_value, Map1).
+#{1 => new_value}
+
+> uef_maps:put_nested([1,2], new_value, Map1).
+#{1 => #{2 => new_value}}
+
+> uef_maps:put_nested([1,2,3], new_value, Map1).
+#{1 => #{2 => #{3 => new_value}}}
+
+> uef_maps:put_nested([1,2,-3], new_value, Map1).
+#{1 => #{2 => #{-3 => new_value,3 => val3}}}
+
+> uef_maps:put_nested([1,2,3,4], new_value, Map1).
+#{1 => #{2 => #{3 => #{4 => new_value}}}}
+
+> uef_maps:put_nested([-1], new_value, Map1).
+#{-1 => new_value,1 => #{2 => #{3 => val3}}}
+
+> uef_maps:put_nested([1,-2], new_value, Map1).
+#{1 => #{-2 => new_value,2 => #{3 => val3}}}
+
+> uef_maps:put_nested([1,2,-3], new_value, Map1).
+#{1 => #{2 => #{-3 => new_value,3 => val3}}}
+
+> uef_maps:put_nested([1,2,3,-4], new_value, Map1).
+#{1 => #{2 => #{3 => #{-4 => new_value}}}}
+```
+
+---
+
 ### Module `uef_num`
 
 ---
