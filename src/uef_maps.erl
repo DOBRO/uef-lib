@@ -6,6 +6,7 @@
 -export([is_key_nested/2]).
 -export([put_nested/3]).
 -export([update_nested/3]).
+-export([remove_nested/2]).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
