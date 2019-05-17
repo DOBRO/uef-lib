@@ -123,6 +123,29 @@ update_nested(Keys, Value, Map) ->
 	end.
 
 
+%% remove_nested/2
+-spec remove_nested(mapkeys(), map()) -> map().
+remove_nested([], Map) when is_map(Map) ->
+	Map;
+remove_nested([Key], Map) when is_map(Map) ->
+	maps:remove(Key, Map);
+remove_nested(Keys, Map) when is_list(Keys), is_map(Map) ->
+	case nested_to_tuples_for_update(Keys, Map, []) of
+		{ok, Tuples} ->
+			[{LastKey, LastMap} | Rest] = Tuples,
+			Acc0 = maps:remove(LastKey, LastMap),
+			lists:foldl(fun({K, M}, Acc) -> M#{K => Acc} end, Acc0, Rest);
+		{error, _} ->
+			Map
+	end;
+remove_nested(Keys, Map) ->
+	Args = [Keys, Map],
+	case is_list(Keys) of
+		true  -> erlang:error({badmap, Map}, Args);
+		false -> erlang:error({badlist, Keys}, Args)
+	end.
+
+
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
