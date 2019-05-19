@@ -1,6 +1,7 @@
 # uef-lib
 
 [![Build Status](https://travis-ci.com/DOBRO/uef-lib.svg?branch=master)](https://travis-ci.com/DOBRO/uef-lib)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 *uef-lib* is a **U**seful **E**rlang **F**unctions **Lib**rary. It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
 
