@@ -682,6 +682,58 @@ Transforms three lists into one list of three-tuples, where the first element of
 
 ---
 
+#### *uef_maps:delete_nested/2*
+
+```erlang
+uef_maps:delete_nested(Keys, Map1) -> {ok, Map2} | {error, {badkey, SomeKey}} | {error, empty_keys}.
+```
+
+Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has internal structure `#{Key1 => #{Key2 => #{... => #{KeyN => ValueN}}}}`. The function removes key `KeyN`, if it exists, and its associated value from the corresponding internal map and updates the entire structure of map `Map1` getting new map `Map2`. There are three possible return values:
+
+* tuple `{ok, Map2}` if `KeyN` was removed;
+
+* tuple `{error, {badkey, SomeKey}}` if `SomeKey` does not exist in the structure of map `Map1`, where `SomeKey` is one of the elements of list `Keys`;
+
+* tuple `{error, empty_keys}` if `Keys` is empty list.
+
+The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+**Examples:**
+
+```erlang
+> Map1 = #{1 => #{2 => #{3 => val3, 33 => val33}}}.
+#{1 => #{2 => #{3 => val3,33 => val33}}}
+
+> uef_maps:delete_nested([], Map1).
+{error,empty_keys}
+
+> uef_maps:delete_nested([1], Map1).
+{ok,#{}}
+
+> uef_maps:delete_nested([1,2], Map1).
+{ok,#{1 => #{}}}
+
+> uef_maps:delete_nested([1,2,3], Map1).
+{ok,#{1 => #{2 => #{33 => val33}}}}
+
+> uef_maps:delete_nested([-1], Map1).
+{error,{badkey,-1}}
+
+> uef_maps:delete_nested([1,-2], Map1).
+{error,{badkey,-2}}
+
+> uef_maps:delete_nested([1,2,-3], Map1).
+{error,{badkey,-3}}
+
+> uef_maps:delete_nested([1,2,3,4], Map1).
+{error,{badkey,4}}
+
+> uef_maps:delete_nested([1,2,3,4,5], Map1).
+{error,{badkey,4}} % 4, not 5!
+```
+
+---
+
 #### *uef_maps:find_nested/2*
 
 ```erlang
