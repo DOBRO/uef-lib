@@ -699,6 +699,8 @@ Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has interna
 
 The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
+See also: [uef_maps:remove_nested/2](#uef_mapsremove_nested2), [uef_maps:take_nested/2](#uef_mapstake_nested2).
+
 **Examples:**
 
 ```erlang
@@ -932,6 +934,8 @@ Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has interna
 
 The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
+See also: [uef_maps:update_nested/3](#uef_mapsupdate_nested3)
+
 **Examples:**
 
 ```erlang
@@ -981,6 +985,8 @@ Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has interna
 
 The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
+See also: [uef_maps:delete_nested/2](#uef_mapsdelete_nested2), [uef_maps:take_nested/2](#uef_mapstake_nested2).
+
 **Examples:**
 
 ```erlang
@@ -1026,6 +1032,8 @@ uef_maps:take_nested(Keys, Map1) -> {Value, Map2} | error.
 Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has internal structure `#{Key1 => #{Key2 => #{... => #{KeyN => Value}}}}`. The function removes key `KeyN`, if it exists, and its associated value `Value` from the corresponding internal map and updates the entire structure of map `Map1` returning tuple `{Value, Map2}`. If some keys from list `Keys` are not in the structure of map `Map1` the function returns `error`.
 
 The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+See also: [uef_maps:delete_nested/2](#uef_mapsdelete_nested2), [uef_maps:remove_nested/2](#uef_mapsremove_nested2).
 
 **Examples:**
 
