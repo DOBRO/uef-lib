@@ -371,4 +371,17 @@ update_nested_test_() ->
 	?_assertError({badmap, BadMap}, update_nested([], NewVal, BadMap))
 	].
 
+remove_nested_test_() ->
+	Map1 = #{1 => #{2 => #{3 => val3}}},
+	[
+	?_assertEqual(Map1, remove_nested([], Map1)),
+	?_assertEqual(#{}, remove_nested([1], Map1)),
+	?_assertEqual(#{1 => #{}}, remove_nested([1,2], Map1)),
+	?_assertEqual(#{1 => #{2 => #{}}}, remove_nested([1,2,3], Map1)),
+	?_assertEqual(Map1, remove_nested([-1], Map1)),
+	?_assertEqual(Map1, remove_nested([1,-2], Map1)),
+	?_assertEqual(Map1, remove_nested([1,2,-3], Map1)),
+	?_assertEqual(Map1, remove_nested([1,2,3,4], Map1))
+	].
+
 -endif. % end of tests
