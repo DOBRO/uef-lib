@@ -148,7 +148,7 @@ remove_nested(Keys, Map) ->
 
 
 %% take_nested/2
--spec take_nested(mapkeys(), map()) -> map().
+-spec take_nested(mapkeys(), map()) -> {Value :: term(), map()} | error.
 take_nested([], Map) when is_map(Map) ->
 	error;
 take_nested([Key], Map) when is_map(Map) ->
