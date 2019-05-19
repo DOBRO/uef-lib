@@ -971,6 +971,52 @@ The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with 
 
 ---
 
+#### *uef_maps:remove_nested/2*
+
+```erlang
+uef_maps:remove_nested(Keys, Map1) -> Map2.
+```
+
+Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has internal structure `#{Key1 => #{Key2 => #{... => #{KeyN => ValueN}}}}`. The function removes key `KeyN`, if it exists, and its associated value from the corresponding internal map and updates the entire structure of map `Map1` returning new map `Map2`. If some keys from list `Keys` are not in the structure of map `Map1`, the function returns a map without changes.
+
+The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
+
+**Examples:**
+
+```erlang
+> Map1 = #{1 => #{2 => #{3 => val3, 33 => val33}}}.
+#{1 => #{2 => #{3 => val3,33 => val33}}}
+
+> uef_maps:remove_nested([], Map1).
+#{1 => #{2 => #{3 => val3,33 => val33}}}  % Map1 (empty list of keys)
+
+> uef_maps:remove_nested([1], Map1).
+#{}
+
+> uef_maps:remove_nested([1,2], Map1).
+#{1 => #{}}
+
+> uef_maps:remove_nested([1,2,3], Map1).
+#{1 => #{2 => #{33 => val33}}}
+
+> uef_maps:remove_nested([-1], Map1).
+#{1 => #{2 => #{3 => val3,33 => val33}}}  % Map1
+
+> uef_maps:remove_nested([1,-2], Map1).
+#{1 => #{2 => #{3 => val3,33 => val33}}}  % Map1
+
+> uef_maps:remove_nested([1,2,-3], Map1).
+#{1 => #{2 => #{3 => val3,33 => val33}}}  % Map1
+
+> uef_maps:remove_nested([1,2,3,4], Map1).
+#{1 => #{2 => #{3 => val3,33 => val33}}}  % Map1
+
+> uef_maps:remove_nested([1,2,3,4,5], Map1).
+#{1 => #{2 => #{3 => val3,33 => val33}}}  % Map1
+```
+
+---
+
 #### *uef_maps:update_nested/3*
 
 ```erlang
