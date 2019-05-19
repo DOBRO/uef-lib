@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New function `uef_maps:new_nested/2`
 - New function `uef_maps:put_nested/3`
 - New function `uef_maps:update_nested/3`
+- New function `uef_maps:remove_nested/2`
+- New function `uef_maps:take_nested/2`
 
 ## [1.6.1] - 2019-05-12
 

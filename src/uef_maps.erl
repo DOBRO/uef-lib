@@ -7,6 +7,7 @@
 -export([put_nested/3]).
 -export([update_nested/3]).
 -export([remove_nested/2]).
+-export([take_nested/2]).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
@@ -133,12 +134,36 @@ remove_nested(Keys, Map) when is_list(Keys), is_map(Map) ->
 	case nested_to_tuples_for_update(Keys, Map, []) of
 		{ok, Tuples} ->
 			[{LastKey, LastMap} | Rest] = Tuples,
-			Acc0 = maps:remove(LastKey, LastMap),
-			lists:foldl(fun({K, M}, Acc) -> M#{K => Acc} end, Acc0, Rest);
+			LastMap2 = maps:remove(LastKey, LastMap),
+			lists:foldl(fun({K, M}, Acc) -> M#{K => Acc} end, LastMap2, Rest);
 		{error, _} ->
 			Map
 	end;
 remove_nested(Keys, Map) ->
+	Args = [Keys, Map],
+	case is_list(Keys) of
+		true  -> erlang:error({badmap, Map}, Args);
+		false -> erlang:error({badlist, Keys}, Args)
+	end.
+
+
+%% take_nested/2
+-spec take_nested(mapkeys(), map()) -> map().
+take_nested([], Map) when is_map(Map) ->
+	error;
+take_nested([Key], Map) when is_map(Map) ->
+	maps:take(Key, Map);
+take_nested(Keys, Map) when is_list(Keys), is_map(Map) ->
+	case nested_to_tuples_for_update(Keys, Map, []) of
+		{ok, Tuples} ->
+			[{LastKey, LastMap} | Rest] = Tuples,
+			{Value, LastMap2} = maps:take(LastKey, LastMap),
+			Map2 = lists:foldl(fun({K, M}, Acc) -> M#{K => Acc} end, LastMap2, Rest),
+			{Value, Map2};
+		{error, _} ->
+			error
+	end;
+take_nested(Keys, Map) ->
 	Args = [Keys, Map],
 	case is_list(Keys) of
 		true  -> erlang:error({badmap, Map}, Args);
@@ -382,6 +407,19 @@ remove_nested_test_() ->
 	?_assertEqual(Map1, remove_nested([1,-2], Map1)),
 	?_assertEqual(Map1, remove_nested([1,2,-3], Map1)),
 	?_assertEqual(Map1, remove_nested([1,2,3,4], Map1))
+	].
+
+take_nested_test_() ->
+	Map1 = #{1 => #{2 => #{3 => val3}}},
+	[
+	?_assertEqual(error, take_nested([], Map1)),
+	?_assertEqual({ #{2 => #{3 => val3}}, #{} }, take_nested([1], Map1)),
+	?_assertEqual({ #{3 => val3}, #{1 => #{}} }, take_nested([1,2], Map1)),
+	?_assertEqual({ val3, #{1 => #{2 => #{}}} }, take_nested([1,2,3], Map1)),
+	?_assertEqual(error, take_nested([-1], Map1)),
+	?_assertEqual(error, take_nested([1,-2], Map1)),
+	?_assertEqual(error, take_nested([1,2,-3], Map1)),
+	?_assertEqual(error, take_nested([1,2,3,4], Map1))
 	].
 
 -endif. % end of tests
