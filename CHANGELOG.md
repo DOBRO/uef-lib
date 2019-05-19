@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- OTP-19 or higher is now required
+
 ### Added
 
 - New module `uef_maps`
