@@ -1,7 +1,7 @@
 {application, uef, [
 	{description, "Useful Erlang Functions Library"},
 	{vsn, "2.0.0"},
-	{modules, [uef_bin, uef_crypt, uef_encode, uef_file, uef_format, uef_lists, uef_num, uef_time]},
+	{modules, [uef_bin, uef_crypt, uef_encode, uef_file, uef_format, uef_lists, uef_maps, uef_num, uef_time]},
 	{registered, []},
 	{applications, [kernel, stdlib]},
 	{env, []},
