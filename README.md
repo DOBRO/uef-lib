@@ -1,5 +1,6 @@
 # uef-lib
 
+[![Hex pm](https://img.shields.io/hexpm/v/uef.svg?color=yellow)](https://hex.pm/packages/uef)
 [![Build Status](https://travis-ci.com/DOBRO/uef-lib.svg?branch=master)](https://travis-ci.com/DOBRO/uef-lib)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
