@@ -1751,6 +1751,20 @@ rebar3 eunit
 rebar3 dialyzer
 ```
 
+## Build documentation
+
+### Build docs GNU `make`
+
+```bash
+make docs
+```
+
+### Build docs with `rebar3`
+
+```bash
+rebar3 edoc
+```
+
 ## Contributing
 
 You are welcome :)
