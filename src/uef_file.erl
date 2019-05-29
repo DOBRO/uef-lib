@@ -40,14 +40,26 @@
 %% read_file_info_fast/1
 %% Should return the same as file:read_file_info/1,2
 %% http://erlang.org/doc/man/file.html#read_file_info-1
--spec read_file_info_fast(file_name()) -> {ok, file_info()} | {error, any()}.
+-spec read_file_info_fast(Filename :: file_name()) -> {ok, FileInfo :: file_info()} | {error, Reason :: any()}.
+%% @doc
+%% Retrieves information about local file.
+%% Returns {ok, FileInfo} if successful, otherwise {error, Reason}.
+%% Works as file:read_file_info/2 but optimized for local files. This is a wrapper of:
+%% file:read_file_info(Filename, [raw, {time, posix}]).
+%% @end
 read_file_info_fast(Filename) ->
 	file:read_file_info(Filename, [raw, {time, posix}]).
 
 %% read_file_fast/1
 %% Should return the same as file:read_file/1
 %% http://erlang.org/doc/man/file.html#read_file-1
--spec read_file_fast(file_name()) -> {ok, binary()} | {error, any()}.
+-spec read_file_fast(Filename :: file_name()) -> {ok, BinaryData :: binary()} | {error, Reason :: any()}.
+%% @doc
+%% Reads contents of local file Filename
+%% and returns {ok, BinaryData}, where BinaryData is a binary data object that contains the contents of Filename, or {error, Reason} if an error occurs.
+%% This function is optimized for reading contents of local files, as no Erlang process is used.
+%% It calls file:open/2 with options [read, raw, binary].
+%% @end
 read_file_fast(Filename) ->
 	case read_file_info_fast(Filename) of
 		{ok, #file_info{size = Filesize}} ->
