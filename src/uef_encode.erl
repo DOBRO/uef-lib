@@ -29,8 +29,15 @@
 -include_lib("eunit/include/eunit.hrl").
 -endif.
 
+%%%------------------------------------------------------------------------------
+%%%   API
+%%%------------------------------------------------------------------------------
+
 %% html_encode_list/1
--spec html_encode_list(Html::iodata()) -> list().
+-spec html_encode_list(Html::iodata()) -> EncodedList :: [binary()].
+%% @doc
+%% Takes argument Html, replaces some unsafe symbols with their appropriate HTML entities and returns list of binaries.
+%% @end
 html_encode_list(<<>>) -> [];
 html_encode_list([]) -> [];
 html_encode_list(Html) ->
@@ -44,17 +51,26 @@ html_encode_list(Html) ->
 	end.
 
 %% html_encode_bin/1
--spec html_encode_bin(Html::iodata()) -> binary().
+-spec html_encode_bin(Html::iodata()) -> EncodedBinary :: binary().
+%% @doc
+%% Takes argument Html, replaces some unsafe symbols with their appropriate HTML entities and returns binary.
+%% @end
 html_encode_bin(<<>>) -> <<>>;
 html_encode_bin([]) -> <<>>;
 html_encode_bin(Html) -> unicode:characters_to_binary(html_encode_list(Html)).
 
 %% win_to_utf8/1
--spec win_to_utf8(binary()) -> binary().
+-spec win_to_utf8(Binary1251 :: binary()) -> BinaryUtf8 :: binary().
+%% @doc
+%% Converts cp1251 binary to utf-8 binary.
+%% @end
 win_to_utf8(Bin) ->
 	win_to_utf8(Bin, <<>>).
 
-%%%%%%%%%%%%% Internal functions   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%------------------------------------------------------------------------------
+%%%   Internal functions
+%%%------------------------------------------------------------------------------
 
 %% html_encode/2
 html_encode_list([], Acc) -> lists:reverse(Acc);

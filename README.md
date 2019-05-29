@@ -331,7 +331,7 @@ Takes argument `Html`, replaces some unsafe symbols with their appropriate HTML 
 uef_encode:html_encode_list(Html) -> EncodedList.
 ```
 
-Works as `uef_encode:html_encode_bin/1` but returns list of binaries.
+Takes argument Html, replaces some unsafe symbols with their appropriate HTML entities and returns list of binaries.
 
 **Examples:**
 
