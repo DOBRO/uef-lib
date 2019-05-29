@@ -71,11 +71,17 @@
 
 %% add_seconds/1
 -spec add_seconds(Seconds :: integer()) -> datetime().
+%% @doc
+%% Same as uef_time:add_seconds(erlang:localtime(), Seconds). See docs of uef_time:add_seconds/2.
+%% @end
 add_seconds(Seconds) ->
 	add_seconds(erlang:localtime(), Seconds).
 
 %% add_seconds/2
--spec add_seconds(date() | datetime(), integer()) -> datetime().
+-spec add_seconds(DateOrDatetime :: date() | datetime(), Seconds :: integer()) -> datetime().
+%% @doc
+%% Adds the number of seconds Seconds to DateOrDatetime and returns a new datetime value.
+%% @end
 add_seconds({_Y, _M, _D} = Date, Seconds) ->
 	add_seconds({Date, {0, 0, 0}}, Seconds);
 add_seconds(DateTime, Seconds) ->
@@ -85,33 +91,52 @@ add_seconds(DateTime, Seconds) ->
 
 %% add_minutes/1
 -spec add_minutes(Minutes :: integer()) -> datetime().
+%% @doc
+%% Same as uef_time:add_seconds(Minutes * 60). See docs of uef_time:add_seconds/1.
+%% @end
 add_minutes(Minutes) ->
 	add_seconds(Minutes * 60).
 
 %% add_minutes/2
--spec add_minutes(date() | datetime(), Minutes :: integer()) -> datetime().
+-spec add_minutes(DateOrDatetime :: date() | datetime(), Minutes :: integer()) -> datetime().
+%% @doc
+%% Adds the number of minutes Minutes to DateOrDatetime and returns a new datetime value.
+%% @end
 add_minutes(DateOrDatetime, Minutes) ->
 	add_seconds(DateOrDatetime, Minutes * 60).
 
 
 %% add_hours/1
 -spec add_hours(Hours :: integer()) -> datetime().
+%% @doc
+%% Same as uef_time:add_seconds(Hours * 3600). See docs of uef_time:add_seconds/1.
+%% @end
 add_hours(Hours) ->
 	add_seconds(Hours * 3600).
 
 %% add_hours/2
--spec add_hours(date() | datetime(), Hours :: integer()) -> datetime().
+-spec add_hours(DateOrDatetime :: date() | datetime(), Hours :: integer()) -> datetime().
+%% @doc
+%% Adds the number of hours Hours to DateOrDatetime and returns a new datetime value.
+%% @end
 add_hours(DateOrDatetime, Hours) ->
 	add_seconds(DateOrDatetime, Hours * 3600).
 
 
 %% add_days/1
 -spec add_days(Days :: integer()) -> datetime().
+%% @doc
+%% Same as uef_time:add_seconds(Days * 86400). See docs of uef_time:add_seconds/1.
+%% @end
 add_days(Days) ->
 	add_seconds(Days * 86400).
 
 %% add_days/2
--spec add_days(date() | datetime(), Days :: integer()) -> date() | datetime().
+-spec add_days(DateOrDatetime :: date() | datetime(), Days :: integer()) -> NewDateOrDateTime :: date() | datetime().
+%% @doc
+%% Adds the number of days Days to DateOrDatetime and returns a new date or datetime value.
+%% The type of NewDateOrDateTime is the same as the type of DateOrDatetime.
+%% @end
 add_days(DateOrDatetime, Days) ->
 	{Date, Time} = add_seconds(DateOrDatetime, Days * 86400),
 	case DateOrDatetime of
@@ -121,21 +146,35 @@ add_days(DateOrDatetime, Days) ->
 
 %% add_weeks/1
 -spec add_weeks(Weeks :: integer()) -> datetime().
+%% @doc
+%% Same as uef_time:add_seconds(Weeks * 604800). See docs of uef_time:add_seconds/1.
+%% @end
 add_weeks(Weeks) ->
 	add_seconds(Weeks * 604800).
 
 %% add_weeks/1
--spec add_weeks(date() | datetime(), Weeks :: integer()) -> date() | datetime().
+-spec add_weeks(DateOrDatetime :: date() | datetime(), Weeks :: integer()) -> NewDateOrDateTime :: date() | datetime().
+%% @doc
+%% Adds the number of weeks Weeks to DateOrDatetime and returns a new date or datetime value.
+%% The type of NewDateOrDateTime is the same as the type of DateOrDatetime.
+%% @end
 add_weeks(DateOrDatetime, Weeks) ->
 	add_days(DateOrDatetime, Weeks * 7).
 
 %% add_months/1
--spec add_months(integer()) -> datetime().
+-spec add_months(Months :: integer()) -> datetime().
+%% @doc
+%% Same as uef_time:add_months(erlang:localtime(), Months). See docs of uef_time:add_months/2.
+%% @end
 add_months(Months) ->
 	add_months(erlang:localtime(), Months).
 
 %% add_months/2
--spec add_months(date() | datetime(), Months :: integer()) -> date() | datetime().
+-spec add_months(DateOrDatetime :: date() | datetime(), Months :: integer()) -> NewDateOrDateTime :: date() | datetime().
+%% @doc
+%% Adds the number of months Months to DateOrDatetime and returns a new date or datetime value.
+%% The type of NewDateOrDateTime is the same as the type of DateOrDatetime.
+%% @end
 add_months(DateOrDatetime, Months) ->
 	ok = validate_datetime(DateOrDatetime),
 	{Year1, Mon1, Day1, Time} = case DateOrDatetime of
@@ -156,22 +195,35 @@ add_months(DateOrDatetime, Months) ->
 
 %% add_years/1
 -spec add_years(Years :: integer()) -> datetime().
+%% @doc
+%% Same as uef_time:add_years(erlang:localtime(), Years). See docs of uef_time:add_years/2.
+%% @end
 add_years(Years) ->
 	add_years(erlang:localtime(), Years).
 
 %% add_years/2
--spec add_years(date() | datetime(), Years :: integer()) -> datetime().
+-spec add_years(DateOrDatetime :: date() | datetime(), Years :: integer()) -> NewDateOrDateTime :: date() | datetime().
+%% @doc
+%% Adds the number of years Years to DateOrDatetime and returns a new date or datetime value.
+%% The type of NewDateOrDateTime is the same as the type of DateOrDatetime.
+%% @end
 add_years(DateOrDatetime, Years) ->
 	add_months(DateOrDatetime, Years * 12).
 
 
 %% add_time/1
--spec add_time(periods()) -> datetime().
+-spec add_time(Periods :: periods()) -> datetime().
+%% @doc
+%% Same as uef_time:add_time(erlang:localtime(), Periods).
+%% @end
 add_time(Periods) ->
 	add_time(erlang:localtime(), Periods).
 
 %% add_time/2
--spec add_time(date() | datetime(), periods()) -> date() | datetime().
+-spec add_time(DateOrDatetime :: date() | datetime(), periods()) -> NewDateOrDateTime :: date() | datetime().
+%% @doc
+%% Adds one or more periods of time to DateOrDatetime and returns a new date or datetime value.
+%% @end
 add_time(DT, []) ->
 	DT;
 add_time(DT, [{N, Ptype} | Tail]) when is_integer(N) andalso is_atom(Ptype) ->
@@ -210,49 +262,84 @@ add_time(_, [Arg | _]) ->
 	erlang:error({badarg, Arg}).
 
 %% today/0
--spec today() -> date().
+-spec today() -> CurrentDate :: date().
+%% @doc
+%% Returns the current date as {Year, Month, Day}. Same as erlang:date(). CurrentDate is of type calendar:date().
+%% @end
 today() ->
 	erlang:date().
 
 %% tomorrow/0
--spec tomorrow() -> date().
+-spec tomorrow() -> TomorrowDate :: date().
+%% @doc
+%% Returns tomorrow's date as {Year, Month, Day}. TomorrowDate is of type calendar:date().
+%% @end
 tomorrow() ->
 	add_days(erlang:date(), 1).
 
 %% yesterday/0
+-spec yesterday() -> YesterdayDate :: date().
+%% @doc
+%% Returns yesterday's date as {Year, Month, Day}. YesterdayDate is of type calendar:date().
+%% @end
 yesterday() ->
 	add_days(erlang:date(), -1).
 
 %% days_diff/1
--spec days_diff(date()) -> integer().
+-spec days_diff(Date :: date()) -> Days :: integer().
+%% @doc
+%% Returns the difference in days between Date and the current local date provided by function erlang:date().
+%% Date must be of type calendar:date() ({Year, Month, Day}).
+%% Days is a positive value if Date is after erlang:date() or a negative value otherwise.
+%% @end
 days_diff(Date) ->
 	days_diff(erlang:date(), Date).
 
 %% days_diff/2
--spec days_diff(date(), date()) -> integer().
+-spec days_diff(Date1 :: date(), Date2 :: date()) -> Days :: integer().
+%% @doc
+%% Returns the difference in days between Date2 and Date1.
+%% Date1 and Date2 must be of type calendar:date() ({Year, Month, Day}).
+%% Days is a positive value if Date2 is after Date1 or a negative value otherwise.
+%% @end
 days_diff(Date1, Date2) ->
 	calendar:date_to_gregorian_days(Date2) - calendar:date_to_gregorian_days(Date1).
 
 %% seconds_diff/1
--spec seconds_diff(datetime()) -> integer().
+-spec seconds_diff(DateTime :: datetime()) -> Seconds :: integer().
+%% @doc
+%% Returns the difference in seconds between Date and the current local time provided by function erlang:localtime().
+%% DateTime must be of type calendar:datetime() ({{Year, Month, Day}, {Hour, Minute, Second}}).
+%% Seconds is a positive value if DateTime is after erlang:localtime() or a negative value otherwise.
+%% @end
 seconds_diff(DateTime) ->
 	DateTimeNow = erlang:localtime(),
 	calendar:datetime_to_gregorian_seconds(DateTime) - calendar:datetime_to_gregorian_seconds(DateTimeNow).
 
 %% seconds_diff/2
-%% Example: seconds_diff({{Year1, Month1, Day1}, {Hour1, Min1, Sec1}}, {{Year2, Month2, Day2}, {Hour2, Min2, Sec2}})
--spec seconds_diff(datetime(), datetime()) -> integer().
+-spec seconds_diff(DateTime1 :: datetime(), DateTime2 :: datetime()) -> integer().
+%% @doc
+%% Returns the difference in seconds between DateTime2 and DateTime1.
+%% DateTime1 and DateTime2 must be of type calendar:datetime() ({{Year, Month, Day}, {Hour, Minute, Second}}).
+%% Seconds is a positive value if DateTime2 is after DateTime1 or a negative value otherwise.
+%% @end
 seconds_diff(DateTime1, DateTime2) ->
 	calendar:datetime_to_gregorian_seconds(DateTime2) - calendar:datetime_to_gregorian_seconds(DateTime1).
 
 
 %% unix_time/0
--spec unix_time() -> integer().
+-spec unix_time() -> Seconds :: integer().
+%% @doc
+%% Returns the current number of seconds since 00:00:00 (UTC), 1 January 1970. It also known as Unix time or POSIX time or UNIX Epoch time.
+%% @end
 unix_time() ->
 	erlang:system_time(seconds).
 
 %% unix_time/1
--spec unix_time(datetime()) -> integer().
+-spec unix_time(Datetime :: datetime()) -> Seconds :: integer().
+%% @doc
+%% Returns the number of seconds elapsed between 00:00:00 (UTC), 1 January 1970 and Datetime. Datetime must be of type calenadr:datetime().
+%% @end
 unix_time(Datetime) ->
 	calendar:datetime_to_gregorian_seconds(Datetime) - ?UNIX_EPOCH_GREGORIAN_SECONDS.
 
