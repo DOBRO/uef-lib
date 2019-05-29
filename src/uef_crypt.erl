@@ -28,11 +28,22 @@
 -include_lib("eunit/include/eunit.hrl").
 -endif.
 
-%% md5_hex/1
--spec md5_hex(Data :: iodata()) -> binary().
-md5_hex(Data) ->
-	hstr(erlang:md5(Data)).
+%%%------------------------------------------------------------------------------
+%%%   API
+%%%------------------------------------------------------------------------------
 
+%% md5_hex/1
+-spec md5_hex(IoData :: iodata()) -> Binary :: binary().
+%% @doc
+%% Returns binary Binary in hexadecimal form of md5 hash of the argument IoData
+%% @end
+md5_hex(IoData) ->
+	hstr(erlang:md5(IoData)).
+
+
+%%%------------------------------------------------------------------------------
+%%%   Internal functions
+%%%------------------------------------------------------------------------------
 
 %% hstr/1
 -spec hstr(binary()) -> binary().
