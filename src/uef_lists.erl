@@ -29,9 +29,16 @@
 -include_lib("eunit/include/eunit.hrl").
 -endif.
 
+%%%------------------------------------------------------------------------------
+%%%   API
+%%%------------------------------------------------------------------------------
+
 %% split_list_into_chunks/2
-%% split_list_into_chunks([1,2,3,4,5,6,7,8], 3) -> [[1,2,3], [4,5,6], [7,8]]
--spec split_list_into_chunks(list(), pos_integer()) -> list().
+-spec split_list_into_chunks(List :: list(), MaxLen :: pos_integer()) -> List2 :: list().
+%% @doc
+%% Splits List into list of lists [List1, List2, ..., ListN]
+%% where List1, List2, ..., ListN are lists with maximum MaxLen elements.
+%% @end
 split_list_into_chunks([],_) -> [];
 split_list_into_chunks(List,Len) when Len > length(List) ->
 	[List];
@@ -41,8 +48,12 @@ split_list_into_chunks(List,Len) ->
 
 
 %% lists_to_list_of_tuples/2
-%% lists_to_list_of_tuples([a,b,c], [1,2]) -> [{a,1},{a,2},{b,1},{b,2},{c,1},{c,2}]
--spec lists_to_list_of_tuples(list(), list()) -> [tuple()].
+-spec lists_to_list_of_tuples(List1 :: list(), List2 :: list()) -> List3 :: [tuple()].
+%% @doc
+%% Transforms two lists into one list of two-tuples,
+%% where the first element of each tuple is taken from the first list
+%% and the second element is taken from the second list one by one.
+%% @end
 lists_to_list_of_tuples(List1, List2) ->
 	List = lists:foldl(
 		fun(Elem1, Acc1) ->
@@ -58,9 +69,13 @@ lists_to_list_of_tuples(List1, List2) ->
 	lists:reverse(List).
 
 %% lists_to_list_of_tuples/3
-%% lists_to_list_of_tuples([a1,b1,c1], [a2,b2,c2], [a3,b3,c3]) ->
-%% [{a1,a2,a3},{a1,a2,b3}, {a1,a2,c3},{a1,b2,a3},{a1,b2,b3}, ...]
--spec lists_to_list_of_tuples(list(), list(), list()) -> [tuple()].
+-spec lists_to_list_of_tuples(List1 :: list(), List2 :: list(), List3 :: list()) -> List4 :: [tuple()].
+%% @doc
+%% Transforms three lists into one list of three-tuples,
+%% where the first element of each tuple is taken from the first list,
+%% the second element is taken from the second list one by one,
+%% and the third element is taken from the third list one by one.
+%% @end
 lists_to_list_of_tuples(List1, List2, List3) ->
 	List = lists:foldl(
 		fun(Elem1, Acc1) ->
