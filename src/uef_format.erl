@@ -67,11 +67,19 @@
 
 %% format_number/3
 -spec format_number(number(), precision(), decimals()) -> formatted_number().
+%% @doc
+%% The same as uef_format:format_number/4 with #{} as the forth argument. See uef_format:format_number/4 docs.
+%% @end
 format_number(Number, Precision, Decimals) ->
 	format_number(Number, Precision, Decimals, #{}).
 
 %% format_number/4
 -spec format_number(number(), precision(), decimals(), format_number_opts()) -> formatted_number().
+%% @doc
+%% Formats Number by adding thousands separator between each set of 3 digits to the left of the decimal point,
+%% substituting Decimals for the decimal point, and rounding to the specified Precision.
+%% Returns a binary value.
+%% @end
 format_number(Number, Precision, Decimals, Opts) when is_integer(Number) ->
 	format_number(erlang:float(Number), Precision, Decimals, Opts);
 format_number(Number, Precision, Decimals, Opts) when is_float(Number) ->
@@ -83,17 +91,35 @@ format_number(Number, Precision, Decimals, Opts) when is_float(Number) ->
 	do_format_number(RoundedNumber, Decimals, Opts).
 
 %% format_price/1
--spec format_price(number()) -> formatted_number().
+-spec format_price(Number:: number()) -> FormattedPrice :: formatted_number().
+%% @doc
+%% Formats Number in price-like style.
+%% Returns a binary containing FormattedPrice formatted with a precision of 2 and decimal digits of 2.
+%% The same as uef_format:format_price/2 with a precision of 2 as the second argument. See uef_format:format_price/2 docs.
+%% @end
 format_price(Price) ->
 	format_price(Price, ?DEFAULT_PRICE_PRECISION).
 
 %% format_price/2
--spec format_price(number(), precision()) -> formatted_number().
+-spec format_price(Number :: number(), Precision :: precision()) -> FormattedPrice :: formatted_number().
+%% @doc
+%% Formats Number in price-like style.
+%% Returns a binary containing FormattedPrice formatted with a specified precision as the second argument and decimal digits of 2.
+%% The same as uef_format:format_price/3 with #{} as the third argument. See uef_format:format_price/3 docs.
+%% @end
 format_price(Price, Precision) ->
 	format_price(Price, Precision, #{}).
 
 %% format_price/3
--spec format_price(number(), precision(), format_number_opts() | binary() | string()) -> formatted_number().
+-spec format_price(Number :: number(), Precision :: precision(), CurrencySymbol_OR_Options :: format_number_opts() | binary() | string()) -> FormattedPrice :: formatted_number().
+%% @doc
+%% Formats Number in price-like style.
+%% Returns a binary containing FormattedPrice formatted with a specified precision as the second argument, decimal digits of 2,
+%% and with currency symbol (or options) as the third argument.
+%% If CurrencySymbol_OR_Options is a map the functions works as uef_format:format_number/4
+%% with decimal digits of 2 as the third argument and with options as the forth one.
+%% If CurrencySymbol_OR_Options is a binary or a string, the corresponding currency symbol is added to the left.
+%% @end
 format_price(Price, Precision, Opts) when is_map(Opts) ->
 	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, Opts);
 format_price(Price, Precision, CurSymbol) when is_binary(CurSymbol) orelse is_list(CurSymbol) ->
