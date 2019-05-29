@@ -744,7 +744,7 @@ See also: [uef_maps:remove_nested/2](#uef_mapsremove_nested2), [uef_maps:take_ne
 uef_maps:find_nested(Keys, Map) -> {ok, Value} | error.
 ```
 
-Traverses nested map `Map` (*map of maps*) deep through the keys that are elements of list `Keys`. Returns a tuple `{ok, Value}`, where `Value` is the value associated with the last element of list `Keys`, or `error` if no value is found.
+Traverses nested map `Map` (*map of maps*) deep through the keys that are elements of list `Keys`. Returns tuple `{ok, Value}`, where `Value` is the value associated with the last element of list `Keys`, or `error` if no value is found.
 
 The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 

@@ -55,12 +55,22 @@
 
 %% find_nested/2
 -spec find_nested(mapkeys(), map()) -> find_result().
+%% @doc
+%% Returns tuple {ok, Value}, where Value is the value associated with the last element of list Keys, or error if no value is found.
+%% The call fails with a {badmap,Map} exception if Map is not a map, or with a {badlist,Keys} exception if Keys is not a list.
+%% @end
 find_nested(Keys, Map) ->
 	find_nested_unsafe(Keys, Map).
 
 
 %% get_nested/2
--spec get_nested(mapkeys(), map()) -> term().
+-spec get_nested(Keys :: mapkeys(), Map :: map()) -> Value :: term().
+%% @doc
+%% Returns value Value associated with the last element of list Keys.
+%% The call fails with a {badmap,Map} exception if Map is not a map,
+%% or with a {badkeys,Keys} exception if no value is found,
+%% or with a {badlist,Keys} exception if Keys is not a list.
+%% @end
 get_nested(Keys, Map) ->
 	FindResult = find_nested_unsafe(Keys, Map), % may fail here with a {badmap,Map} exception
 	case FindResult of
@@ -69,7 +79,14 @@ get_nested(Keys, Map) ->
 	end.
 
 %% get_nested/3
--spec get_nested(mapkeys(), map(), Default :: term()) -> term().
+-spec get_nested(Keys :: mapkeys(), Map :: map(), Default :: term()) -> Value :: term().
+%% @doc
+%% Returns value Value associated with the last element of list Keys.
+%% If no value is found, Default is returned.
+%% The call fails with a {badmap,Map} exception if Map is not a map,
+%% or with a {badlist,Keys} exception if Keys is not a list.
+%% It does not fail if any internal value associated with any element of list Keys is not a map.
+%% @end
 get_nested(Keys, Map, Default) when is_map(Map) ->
 	FindResult = find_nested_safe(Keys, Map),
 	case FindResult of
@@ -81,11 +98,18 @@ get_nested(Keys, Map, Default) ->
 
 %% new_nested/1
 -spec new_nested(mapkeys()) -> map().
+%% @doc
+%% Same as uef_maps:new_nested(Keys, #{}). See docs of uef_maps:new_nested/2.
+%% @end
 new_nested(Keys) ->
 	new_nested(Keys, #{}).
 
 %% new_nested/2
--spec new_nested(mapkeys(), Value :: term()) -> map().
+-spec new_nested(Keys :: mapkeys(), Value :: term()) -> Map :: map().
+%% @doc
+%% Returns new nested map Map with the deepest map #{LastKey => Value}, where LastKey is the last element of list Keys.
+%% The call fails with a {badlist,Keys} exception if Keys is not a list.
+%% @end
 new_nested([], _) ->
 	#{};
 new_nested([Key], Value) ->
@@ -98,7 +122,13 @@ new_nested(Keys, Value) ->
 
 
 %% is_key_nested/2
--spec is_key_nested(mapkeys(), map()) -> boolean().
+-spec is_key_nested(Keys :: mapkeys(), map()) -> boolean().
+%% @doc
+%% Returns true if map Map contains submaps as values associated with their own key corresponding to the element of list Keys,
+%% and returns false otherwise.
+%% The call fails with a {badmap,Map} exception if Map is not a map,
+%% or with a {badlist,Keys} exception if Keys is not a list.
+%% @end
 is_key_nested(Keys, Map) when is_list(Keys), is_map(Map) ->
 	is_key_nested(Keys, Map, false);
 is_key_nested(Keys, Map) ->
@@ -110,7 +140,12 @@ is_key_nested(Keys, Map) ->
 
 
 %% put_nested/3
--spec put_nested(mapkeys(), Value :: term(), map()) -> map().
+-spec put_nested(Keys :: mapkeys(), Value :: term(), Map1 :: map()) -> Map2 :: map().
+%% @doc
+%% The function associates KeyN with value Value and updates the entire structure of map Map1 returning new map Map2.
+%% If some keys from list Keys are not in the structure of map Map1, they will be inserted into the structure of map Map2 in the same order.
+%% The call fails with a {badmap,Map1} exception if Map1 is not a map, or with a {badlist,Keys} exception if Keys is not a list.
+%% @end
 put_nested([], _, Map) when is_map(Map) ->
 	Map;
 put_nested([Key], Value, Map) when is_map(Map) ->
@@ -128,6 +163,11 @@ put_nested(Keys, Value, Map) ->
 
 %% update_nested/3
 -spec update_nested(mapkeys(), Value :: term(), map()) -> map().
+%% @doc
+%% Works similar to uef_maps:put_nested/3 with the difference that it fails with a {badkey,SomeKey} exception
+%% if SomeKey does not exist in the structure of map Map1, where SomeKey is one of the elements of list Keys.
+%% The call also fails with a {badmap,Map1} exception if Map1 is not a map, or with a {badlist,Keys} exception if Keys is not a list.
+%% @end
 update_nested([], _, Map) when is_map(Map) ->
 	Map;
 update_nested([Key], Value, Map) when is_map(Map) ->
@@ -148,7 +188,13 @@ update_nested(Keys, Value, Map) ->
 
 
 %% remove_nested/2
--spec remove_nested(mapkeys(), map()) -> map().
+-spec remove_nested(Keys :: mapkeys(), Map1 :: map()) -> Map2 :: map().
+%% @doc
+%% The function removes key KeyN, if it exists, and its associated value from the corresponding internal map
+%% and updates the entire structure of map Map1 returning new map Map2.
+%% If some keys from list Keys are not in the structure of map Map1 the function returns a map without changes.
+%% The call fails with a {badmap,Map1} exception if Map1 is not a map, or with a {badlist,Keys} exception if Keys is not a list.
+%% @end
 remove_nested([], Map) when is_map(Map) ->
 	Map;
 remove_nested([Key], Map) when is_map(Map) ->
@@ -171,7 +217,13 @@ remove_nested(Keys, Map) ->
 
 
 %% take_nested/2
--spec take_nested(mapkeys(), map()) -> {Value :: term(), map()} | error.
+-spec take_nested(Keys :: mapkeys(), Map1 :: map()) -> {Value :: term(), Map2 :: map()} | error.
+%% @doc
+%% The function removes key KeyN, if it exists, and its associated value Value from the corresponding internal map
+%% and updates the entire structure of map Map1 returning tuple {Value, Map2}.
+%% If some keys from list Keys are not in the structure of map Map1 the function returns error.
+%% The call fails with a {badmap,Map1} exception if Map1 is not a map, or with a {badlist,Keys} exception if Keys is not a list.
+%% @end
 take_nested([], Map) when is_map(Map) ->
 	error;
 take_nested([Key], Map) when is_map(Map) ->
@@ -195,7 +247,11 @@ take_nested(Keys, Map) ->
 
 
 %% delete_nested/2
--spec delete_nested(mapkeys(), map()) -> {ok, map()} | {error, {badkey, mapkey()}} | {error, empty_keys}.
+-spec delete_nested(Keys :: mapkeys(), Map1 :: map()) -> {ok, Map2 :: map()} | {error, {badkey, mapkey()}} | {error, empty_keys}.
+%% @doc
+%% The function removes key KeyN, if it exists, and its associated value from the corresponding internal map
+%% and updates the entire structure of map Map1 getting new map Map2. KeyN is the last element of list Keys.
+%% @end
 delete_nested([], Map) when is_map(Map) ->
 	{error, empty_keys};
 delete_nested([Key], Map) when is_map(Map) ->
