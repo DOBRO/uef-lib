@@ -9,7 +9,7 @@
 # - Downloaded from $REBAR3_URL
 #
 
-.PHONY: all compile test dialyzer dialyze clean distclean shell
+.PHONY: all compile test dialyzer dialyze clean distclean shell docs edoc
 
 REBAR3_URL=https://s3.amazonaws.com/rebar3/rebar3
 
@@ -46,6 +46,11 @@ distclean:
 
 shell:
 	@$(REBAR3) shell
+
+docs:
+	@$(REBAR3) edoc
+
+edoc: docs
 
 $(REBAR3):
 	curl -Lo rebar3 $(REBAR3_URL) || wget $(REBAR3_URL)
