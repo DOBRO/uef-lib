@@ -28,12 +28,22 @@
 -include_lib("eunit/include/eunit.hrl").
 -endif.
 
+%%%------------------------------------------------------------------------------
+%%%   API
+%%%------------------------------------------------------------------------------
+
 %% round_price/1
--spec round_price(number()) -> float().
+-spec round_price(Number :: number()) -> float().
+%% @doc
+%% Rounds the number to the precision of 2. The same as uef_num:round_number(Number, 2).
+%% @end
 round_price(Price) -> round_number(Price, 2).
 
 %% round_number/2
--spec round_number(number(), integer()) -> float().
+-spec round_number(Number :: number(), Precision :: integer()) -> float().
+%% @doc
+%% Rounds the number to the specified precision.
+%% @end
 round_number(Number, Precision) ->
 	P = math:pow(10, Precision),
 	erlang:round(Number * P) / P.
