@@ -41,9 +41,10 @@
 %%%------------------------------------------------------------------------------
 
 %% binary_join/2
-%% Examle:
-%% binary_join([<<"Hello">>, <<"World">>], <<", ">>) -> <<"Hello, World">>
--spec binary_join([binary()], binary()) -> binary().
+-spec binary_join(ListOfBinaries :: [binary()], Separator :: binary()) -> binary().
+%% @doc
+%% Joins a list of binaries with separator into a single binary. Returns binary.
+%% @end
 binary_join([], _Sep) -> <<>>;
 binary_join([Bin], _Sep) -> Bin;
 binary_join([Head|Tail], Sep) ->
@@ -52,22 +53,22 @@ binary_join([Head|Tail], Sep) ->
 	end, Head, Tail).
 
 %% split/2
-%% Splits binary with delimiter and returns list of binary chunks
-%% Examples:
-%% split(<<".www.google.com.">>, <<".">>) -> [<<>>,<<"www">>,<<"google">>,<<"com">>,<<>>]
-%% split(<<"www.google.com">>, <<".">>) -> [<<"www">>,<<"google">>,<<"com">>]
-%% split(<<"www.google.com">>, <<"A">>) -> [<<"www.google.com">>]
--spec split(binary(), binary()) -> [binary()].
+-spec split(Binary :: binary(), Splitter :: binary()) -> ListOfBinaries :: [binary()].
+%% @doc
+%% Splits binary Binary with splitter Splitter into a list of binaries.
+%% Works as binary:split/2 but is more performant in simple cases.
+%% @end
 split(B, Splitter) ->
 	split(B, Splitter, undefined).
 
 
 %% split/3
-%% The same as split/2 but with option.
-%% With option 'trim_all' - removes all epmty chunks (<<>>).
-%% Examples:
-%% split(<<"..www.google.com.">>, <<".">>, trim_all) -> [<<"www">>,<<"google">>,<<"com">>]
--spec split(binary(), binary(), split_option()) -> [binary()].
+-spec split(Binary :: binary(), Splitter :: binary(), SplitOption:: split_option()) -> ListOfBinaries :: [binary()].
+%% @doc
+%% Splits binary Binary with splitter Splitter into a list of binaries.
+%% Works as uef_bin:split/2 but removes all epmty `(<<>>)' chunks.
+%% It can be used in simple cases instead of binary:split/3 for the reason that it's more performant.
+%% @end
 split(<<>>, _, _) -> [];
 split(B, <<>>, _) -> [B];
 split(B, Splitter, Option) ->
@@ -78,29 +79,38 @@ split(B, Splitter, Option) ->
 	end.
 
 %% repeat/2
--spec repeat(binary(), pos_integer()) -> binary().
+-spec repeat(Binary1 :: binary(), N :: pos_integer()) -> Binary2 :: binary().
+%% @doc
+%% Returns binary Binary2 consisting of Binary1 repeated N times.
+%% @end
 repeat(Bin, N) ->
 	repeat(Bin, N, <<>>).
 
 
 %% reverse/1
-%% Returns binary in reversed byte order
 -spec reverse(binary()) -> binary().
+%% @doc
+%% Returns a binary in reverse byte order.
+%% @end
 reverse(B) ->
 	S = erlang:bit_size(B),
 	<<R:S/integer-little>> = B,
 	<<R:S/integer-big>>.
 
 %% reverse_utf8/1
--spec reverse_utf8(binary()) -> binary().
+-spec reverse_utf8(UTF8_Binary1 :: binary()) -> UTF8_Binary2 :: binary().
+%% @doc
+%% Returns a binary in reverse character order. Intended to work with UTF-8 binary strings.
+%% @end
 reverse_utf8(Bin) ->
 	reverse_utf8(Bin, <<>>).
 
 %% replace/3
-%% Replaces chars with other chars in binary. Examples:
-%% replace(<<"abcdefgbc">>, <<"bc">>, <<"ZZ">>) -> <<"aZZdefgZZ">>
-%% replace(<<"abcdefgbc">>, <<$d>>, <<"ZZ">>) -> <<"abcZZefgbc">>
--spec replace(binary(), binary(), binary()) -> binary().
+-spec replace(Binary1 :: binary(), Chars :: binary(), OtherChars :: binary()) -> Binary2 :: binary().
+%% @doc
+%% Replaces chars Chars with other chars OtherChars in binary Binary1 and returns another binary Binary2.
+%% Works as binary:replace/3 but more permormant and can be used in simple cases.
+%% @end
 replace(<<>>, _, _) -> <<>>;
 replace(B, <<>>, _) -> B;
 replace(B, C1, C2) ->
@@ -108,10 +118,10 @@ replace(B, C1, C2) ->
 
 
 %% replace_chars/3
-%% Replaces chars inluded in list with other chars. Examples:
-%% replace_chars(<<"..www.google.com.">>, [<<".">>], <<>>) -> <<"wwwgooglecom">>
-%% replace_chars(<<"..www.google.com.">>, [<<".">>, <<"w">>], <<>>) -> <<"googlecom">>
--spec replace_chars(binary(), [binary()], binary()) -> binary().
+-spec replace_chars(Binary1 :: binary(), ListOfCharsToReplace :: [binary()], OtherChars :: binary()) -> Binary2 :: binary().
+%% @doc
+%% Replaces chars inluded in list ListOfCharsToReplace with other chars OtherChars in binary Binary1 and returns another binary Binary2.
+%% @end
 replace_chars(B0, [], _) -> B0;
 replace_chars(B0, Chars, ToChar) ->
 	lists:foldl(fun(Ch, B) ->
@@ -121,6 +131,10 @@ replace_chars(B0, Chars, ToChar) ->
 
 %% random_latin_binary/2
 -spec random_latin_binary(Length :: pos_integer(), CaseFlag :: lower | upper | any) -> binary().
+%% @doc
+%% Returns a random binary of size Length consisting of latins [a-zA-Z] and digits [0-9].
+%% The second argument CaseFlag corresponds to a letter case, an atom 'lower', 'upper' or 'any'.
+%% @end
 random_latin_binary(Length, CaseFlag) ->
 	Chars = case CaseFlag of
 		lower -> <<"abcdefghijklmnopqrstuvwxyz0123456789">>;
@@ -132,6 +146,9 @@ random_latin_binary(Length, CaseFlag) ->
 
 %% random_binary_from_chars/2
 -spec random_binary_from_chars(Length :: pos_integer(), Chars :: binary()) -> binary().
+%% @doc
+%% Generates and returns a binary of size Length which consists of the given characters Chars.
+%% @end
 random_binary_from_chars(Length, Chars) ->
 	Bsize = erlang:byte_size(Chars),
 	lists:foldl(
@@ -145,10 +162,11 @@ random_binary_from_chars(Length, Chars) ->
 
 
 %% numeric_prefix/1
-%% Leaves only digits wich are at the beginning and removes the rest. Examles:
-%% numeric_prefix(<<"3456sld1knskjd">>) -> <<"3456">>.
-%% numeric_prefix(<<"ddd3456sld1knskjd">>) -> <<>>.
--spec numeric_prefix(binary()) -> binary().
+-spec numeric_prefix(Binary :: binary()) -> DigitsOnlyOrEmptyBinary :: binary().
+%% @doc
+%% Returns new binary DigitsOnlyBinary which consists of digits [0-9] wich are at the beginning in the given binary Binary.
+%% If Binary does not begin with digit, this function returns empty binary `(<<>>)'.
+%% @end
 numeric_prefix(B) -> numeric_prefix(B, <<>>).
 
 %%%------------------------------------------------------------------------------

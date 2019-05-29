@@ -51,7 +51,7 @@ Joins a list of binaries with separator into a single binary. Returns binary.
 uef_bin:repeat(Binary1, N) -> Binary2.
 ```
 
-Returns a binary consisting of `Binary1` repeated `N` times.
+Returns binary `Binary2` consisting of `Binary1` repeated `N` times.
 
 **Examples:**
 
