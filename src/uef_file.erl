@@ -53,7 +53,7 @@ read_file_info_fast(Filename) ->
 %% read_file_fast/1
 %% Should return the same as file:read_file/1
 %% http://erlang.org/doc/man/file.html#read_file-1
--spec read_file_fast(Filename :: file_name()) -> {ok, BinaryData :: binary()} | {error, Reason :: any()}.
+-spec read_file_fast(Filename :: file_name()) -> {ok, BinaryData :: binary()} | {error, Reason :: atom()}.
 %% @doc
 %% Reads contents of local file Filename
 %% and returns {ok, BinaryData}, where BinaryData is a binary data object that contains the contents of Filename, or {error, Reason} if an error occurs.

@@ -52,11 +52,12 @@
 
 -type formatted_number() :: binary().
 -type precision() :: integer().
--type decimals() :: non_neg_integer().
+-type decimals() :: 0..253. % see types for erlang:float_to_binary/2
+-type cur_symbol() :: binary() | [byte()].
 -type format_number_opts() :: #{
 	thousands_sep => binary() | string(),
 	decimal_point => binary() | string(),
-	cur_symbol => binary() | string(),
+	cur_symbol => cur_symbol(),
 	cur_pos => left | right,
 	cur_sep => binary() | string()
 }.
@@ -111,7 +112,7 @@ format_price(Price, Precision) ->
 	format_price(Price, Precision, #{}).
 
 %% format_price/3
--spec format_price(Number :: number(), Precision :: precision(), CurrencySymbol_OR_Options :: format_number_opts() | binary() | string()) -> FormattedPrice :: formatted_number().
+-spec format_price(Number :: number(), Precision :: precision(), CurrencySymbol_OR_Options :: format_number_opts() | cur_symbol()) -> FormattedPrice :: formatted_number().
 %% @doc
 %% Formats Number in price-like style.
 %% Returns a binary containing FormattedPrice formatted with a specified precision as the second argument, decimal digits of 2,
@@ -124,8 +125,8 @@ format_price(Price, Precision, Opts) when is_map(Opts) ->
 	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, Opts);
 format_price(Price, Precision, CurSymbol) when is_binary(CurSymbol) orelse is_list(CurSymbol) ->
 	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, #{cur_symbol => CurSymbol});
-format_price(_, _, Other) ->
-	erlang:error({badarg, Other}).
+format_price(Price, Precision, Opts) ->
+	erlang:error({badarg, Opts}, [Price, Precision, Opts]).
 
 
 %%%------------------------------------------------------------------------------
@@ -182,7 +183,7 @@ format_number_with_currency(FmtNum, _) ->
 	FmtNum.
 
 %% maybe_to_binary/1
--spec maybe_to_binary(term()) -> binary() | no_return().
+-spec maybe_to_binary(binary() | string()) -> binary().
 maybe_to_binary(Sep) ->
 	case Sep of
 		_ when is_binary(Sep) -> Sep;
@@ -192,12 +193,12 @@ maybe_to_binary(Sep) ->
 
 
 %% split_thousands/1
--spec split_thousands(binary()) -> [binary()].
+-spec split_thousands(binary()) -> [<<_:24>>].
 split_thousands(Bin) ->
 	split_thousands(Bin, []).
 
 %% split_thousands/2
--spec split_thousands(binary(), [binary()]) -> [binary()].
+-spec split_thousands(binary(), [<<_:24>>]) -> [<<_:24>>].
 split_thousands(<<>>, List) ->
 	lists:reverse(List);
 split_thousands(Bin, List) ->

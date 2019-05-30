@@ -349,7 +349,7 @@ unix_time(Datetime) ->
 %%%------------------------------------------------------------------------------
 
 %% validate_datetime/1
--spec validate_datetime(date() | datetime()) -> ok | no_return.
+-spec validate_datetime(date() | datetime()) -> ok | no_return().
 validate_datetime({_, _, _} = Date) ->
 	validate_datetime({Date, {0, 0, 0}});
 validate_datetime({Date, {Hour, Min, Sec}}) ->
