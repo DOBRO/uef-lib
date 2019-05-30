@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.3] - 2019-05-30
+
+- Strict options added to rebar.config
+- Fixed some typespecs and dialyzer warnings
+
 ## [2.0.2] - 2019-05-29
 
 - Edoc tags added to all modules
