@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.4] - 2019-05-30
+
+- Fixed: `{get_warnings, true}` in rebar.config was the reason of high load when building PLT
+- `xref` options added to rebar.config
+- `cover` options added to rebar.config
+
 ## [2.0.3] - 2019-05-30
 
 - Strict options added to rebar.config
