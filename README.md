@@ -1741,6 +1741,14 @@ make test
 make dialyzer
 ```
 
+```bash
+make xref
+```
+
+```bash
+make cover
+```
+
 ### Test/dialyze with `rebar3`
 
 ```bash
@@ -1751,9 +1759,17 @@ rebar3 eunit
 rebar3 dialyzer
 ```
 
+```bash
+rebar3 xref
+```
+
+```bash
+rebar3 do eunit, cover
+```
+
 ## Build documentation
 
-### Build docs GNU `make`
+### Build docs with GNU `make`
 
 ```bash
 make docs
