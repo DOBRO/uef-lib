@@ -53,7 +53,7 @@
 -type formatted_number() :: binary().
 -type precision() :: integer().
 -type decimals() :: 0..253. % see types for erlang:float_to_binary/2
--type cur_symbol() :: binary() | [byte()].
+-type cur_symbol() :: binary() | string().
 -type format_number_opts() :: #{
 	thousands_sep => binary() | string(),
 	decimal_point => binary() | string(),
@@ -184,12 +184,15 @@ format_number_with_currency(FmtNum, _) ->
 
 %% maybe_to_binary/1
 -spec maybe_to_binary(binary() | string()) -> binary().
-maybe_to_binary(Sep) ->
-	case Sep of
-		_ when is_binary(Sep) -> Sep;
-		_ when is_list(Sep) -> erlang:list_to_binary(Sep);
+maybe_to_binary(B) when is_binary(B) ->
+	B;
+maybe_to_binary(L) when is_list(L) ->
+	case unicode:characters_to_binary(L, utf8, utf8) of
+		B when is_binary(B) -> B;
 		_ -> erlang:error(badarg)
-	end.
+	end;
+maybe_to_binary(_)->
+	erlang:error(badarg).
 
 
 %% split_thousands/1
@@ -226,6 +229,8 @@ format_number_test_() ->
 	?_assertEqual(<<"USD 1,234,567,890==4600">>, uef_format:format_number(1234567890.4567, 2, 4, #{thousands_sep => ",", decimal_point => "==", cur_symbol => "USD", cur_sep => " ", cur_pos => left})),
 	?_assertEqual(<<"$1000.88">>, format_price(1000.8767, 4, "$")),
 	?_assertEqual(<<"1000.88 руб."/utf8>>, format_price(1000.8767, 4, #{cur_symbol => <<"руб."/utf8>>, cur_sep => " ", cur_pos => right})),
+	?_assertEqual(<<"1000.88 руб."/utf8>>, format_price(1000.8767, 4, #{cur_symbol => "руб.", cur_sep => " ", cur_pos => right})),
+	?_assertEqual(<<"€€1000.00"/utf8>>, format_price(1000, 4, #{cur_symbol => "€", cur_sep => "€", cur_pos => left})),
 	?_assertEqual(format_number(100, 2, 3), format_number(100, 2, 3, #{})),
 	?_assertEqual(format_price(1000), format_price(1000, 2)),
 	?_assertEqual(format_price(1000), format_price(1000, 2, <<>>)),
