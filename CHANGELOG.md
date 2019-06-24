@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2019-06-24
+
+- New function `uef_num:popcount/1`.
+
 ## [2.0.5] - 2019-05-31
 
 - Fixed: call of function `uef_format:format_price/3` could fail with exception when currency symbol or separator was an UTF-8 string (not binary).
