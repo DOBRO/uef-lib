@@ -1125,6 +1125,42 @@ The call also fails with a `{badmap,Map1}` exception if `Map1` is not a map, or 
 
 ---
 
+#### *uef_num:popcount/1*
+
+```erlang
+uef_num:popcount(Integer) -> OneBits.
+```
+
+Returns the number of 1's (ones or one-bits) in the [binary representation](https://en.wikipedia.org/wiki/Binary_number#Representation) of a non-negative integer.
+Also known as population count, pop count, popcount, sideways sum, bit summation,
+or [Hamming weight](https://en.wikipedia.org/wiki/Hamming_weight).
+
+The call fails with a `{badarg,Integer}` exception if `Integer` is not a non-negative integer.
+
+**Examples:**
+
+```erlang
+> uef_num:popcount(7).
+3
+
+> uef_num:popcount(0).
+0
+
+> uef_num:popcount(2#1010101).
+4
+
+> uef_num:popcount(2#1000000000000000000000000000000000000000000000000000000000000000).
+1
+
+> uef_num:popcount(2#1111111111111111111111111111111111111111111111111111111111111111).
+64
+
+> uef_num:popcount(16#FFFFFFFFFFFFFFFF).
+64
+```
+
+---
+
 #### *uef_num:round_number/2*
 
 ```erlang

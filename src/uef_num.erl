@@ -23,6 +23,7 @@
 -module(uef_num).
 
 -export([round_price/1, round_number/2]).
+-export([popcount/1]).
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
@@ -49,6 +50,32 @@ round_number(Number, Precision) ->
 	erlang:round(Number * P) / P.
 
 
+%% popcount/1
+-spec popcount(Integer:: non_neg_integer()) -> OneBits :: non_neg_integer().
+%% @doc
+%% Returns the number of 1's (ones or one-bits) in the binary representation of a non-negative integer.
+%% Also known as population count, pop count, popcount, sideways sum, bit summation,
+%% or Hamming weight.
+%% The call fails with a {badarg,Integer} exception if Integer is not a non-negative integer.
+%% @end
+popcount(B) when is_integer(B) andalso (B > -1) ->
+	popcount(B, 0);
+popcount(B) ->
+	erlang:error({badarg, B}, [B]).
+
+%%%------------------------------------------------------------------------------
+%%%   Internal functions
+%%%------------------------------------------------------------------------------
+
+%% popcount/2
+-spec popcount(non_neg_integer(), non_neg_integer()) -> non_neg_integer().
+popcount(0, Cnt) ->
+	Cnt;
+popcount(B, Cnt) ->
+	popcount(B band (B - 1), Cnt + 1).
+
+
+
 %%%------------------------------------------------------------------------------
 %%%   Tests
 %%%------------------------------------------------------------------------------
@@ -69,6 +96,24 @@ round_number_test_() ->
 	?_assertEqual(-1.9999, round_number(-1.9999, 4)),
 	?_assertEqual(-2.0, round_number(-1.9999, 3)),
 	?_assertEqual(10000.0, round_number(9999.999999, 5))
+	].
+
+
+popcount_test_() ->
+	[
+		?_assertEqual(0, popcount(0)),
+		?_assertEqual(3, popcount(7)),
+		?_assertEqual(1, popcount(8)),
+		?_assertEqual(1, popcount(8)),
+		?_assertEqual(1, popcount(2#0000000000000000000000000000000000000000000000000000000000000001)),
+		?_assertEqual(1, popcount(2#1000000000000000000000000000000000000000000000000000000000000000)),
+		?_assertEqual(8, popcount(2#0000000100000001000000010000000100000001000000010000000100000001)),
+		?_assertEqual(8, popcount(2#0000000000000000000000000000000000000000000000000000000011111111)),
+		?_assertEqual(16, popcount(2#1111111100000000000000000000000000000000000000000000000011111111)),
+		?_assertEqual(64, popcount(2#1111111111111111111111111111111111111111111111111111111111111111)),
+		?_assertError({badarg, -1}, popcount(-1)),
+		?_assertError({badarg, 1.0}, popcount(1.0)),
+		?_assertError({badarg, 0.0}, popcount(0.0))
 	].
 
 -endif. % end of tests
