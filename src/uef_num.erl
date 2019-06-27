@@ -23,7 +23,7 @@
 -module(uef_num).
 
 -export([round_price/1, round_number/2]).
--export([popcount/1]).
+-export([popcount/1, msb_pos/1]).
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
@@ -58,10 +58,23 @@ round_number(Number, Precision) ->
 %% or Hamming weight.
 %% The call fails with a {badarg,Integer} exception if Integer is not a non-negative integer.
 %% @end
-popcount(B) when is_integer(B) andalso (B > -1) ->
-	popcount(B, 0);
-popcount(B) ->
-	erlang:error({badarg, B}, [B]).
+popcount(N) when is_integer(N) andalso (N > -1) ->
+	popcount(N, 0);
+popcount(N) ->
+	erlang:error({badarg, N}, [N]).
+
+
+%% msb_pos/1
+-spec msb_pos(Integer:: non_neg_integer()) -> Pos :: non_neg_integer().
+%% @doc
+%% Returns the position of the most significant bit in the binary representation of a non-negative integer.
+%% The call fails with a {badarg,Integer} exception if Integer is not a non-negative integer.
+%% @end
+msb_pos(N) when is_integer(N) andalso (N > -1) ->
+	msb_pos(N, 0);
+msb_pos(N) ->
+	erlang:error({badarg, N}, [N]).
+
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
@@ -71,9 +84,13 @@ popcount(B) ->
 -spec popcount(non_neg_integer(), non_neg_integer()) -> non_neg_integer().
 popcount(0, Cnt) ->
 	Cnt;
-popcount(B, Cnt) ->
-	popcount(B band (B - 1), Cnt + 1).
+popcount(N, Cnt) ->
+	popcount(N band (N - 1), Cnt + 1).
 
+
+%% msb_pos/2
+msb_pos(0, Cnt) -> Cnt;
+msb_pos(N, Cnt) -> msb_pos(N bsr 1, Cnt + 1).
 
 
 %%%------------------------------------------------------------------------------
