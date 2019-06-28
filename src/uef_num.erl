@@ -65,7 +65,7 @@ popcount(N) ->
 
 
 %% msb_pos/1
--spec msb_pos(Integer:: non_neg_integer()) -> Pos :: non_neg_integer().
+-spec msb_pos(Integer:: pos_integer()) -> Pos :: pos_integer().
 %% @doc
 %% Returns the position of the most significant bit in the binary representation of a positive integer.
 %% The call fails with a {badarg,Integer} exception if Integer is not a positive integer.
@@ -82,10 +82,8 @@ msb_pos(N) ->
 
 %% popcount/2
 -spec popcount(non_neg_integer(), non_neg_integer()) -> non_neg_integer().
-popcount(0, Cnt) ->
-	Cnt;
-popcount(N, Cnt) ->
-	popcount(N band (N - 1), Cnt + 1).
+popcount(0, Cnt) -> Cnt;
+popcount(N, Cnt) -> popcount(N band (N - 1), Cnt + 1).
 
 
 %% msb_pos/2
@@ -131,6 +129,28 @@ popcount_test_() ->
 		?_assertError({badarg, -1}, popcount(-1)),
 		?_assertError({badarg, 1.0}, popcount(1.0)),
 		?_assertError({badarg, 0.0}, popcount(0.0))
+	].
+
+
+msb_pos_test_() ->
+	[
+		?_assertEqual(1, msb_pos(2#1)),
+		?_assertEqual(1, msb_pos(2#01)),
+		?_assertEqual(2, msb_pos(2#10)),
+		?_assertEqual(3, msb_pos(2#100)),
+		?_assertEqual(3, msb_pos(2#0100)),
+		?_assertEqual(3, msb_pos(2#111)),
+		?_assertEqual(3, msb_pos(2#0111)),
+		?_assertEqual(1, msb_pos(2#0000000000000000000000000000000000000000000000000000000000000001)),
+		?_assertEqual(64, msb_pos(2#1000000000000000000000000000000000000000000000000000000000000000)),
+		?_assertEqual(57, msb_pos(2#0000000100000001000000010000000100000001000000010000000100000001)),
+		?_assertEqual(8, msb_pos(2#0000000000000000000000000000000000000000000000000000000011111111)),
+		?_assertEqual(64, msb_pos(2#1111111100000000000000000000000000000000000000000000000011111111)),
+		?_assertEqual(64, msb_pos(2#1111111111111111111111111111111111111111111111111111111111111111)),
+		?_assertError({badarg, 0}, msb_pos(0)),
+		?_assertError({badarg, -1}, msb_pos(-1)),
+		?_assertError({badarg, 1.0}, msb_pos(1.0)),
+		?_assertError({badarg, 0.0}, msb_pos(0.0))
 	].
 
 -endif. % end of tests
