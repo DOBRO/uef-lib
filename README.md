@@ -1125,13 +1125,47 @@ The call also fails with a `{badmap,Map1}` exception if `Map1` is not a map, or 
 
 ---
 
+#### *uef_num:lsb_pos/1*
+
+```erlang
+uef_num:lsb_pos(Integer) -> Position.
+```
+
+Returns the position of the [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) (**LSB**) in the binary representation of a positive integer.
+
+The call fails with a `{badarg,Integer}` exception if `Integer` is not a positive integer.
+
+**Examples:**
+
+```erlang
+> uef_num:lsb_pos(2#10001000).
+4
+
+> uef_num:lsb_pos(7).
+1
+
+> uef_num:lsb_pos(2#00101010).
+2
+
+> uef_num:lsb_pos(2#1000000000000000000000000000000000000000000000000000000000000000).
+64
+
+> uef_num:lsb_pos(2#1111111111111111111111111111111111111111111111111111111111111111).
+1
+
+> uef_num:lsb_pos(16#FFFFFFFFFFFFFFFF).
+1
+```
+
+---
+
 #### *uef_num:msb_pos/1*
 
 ```erlang
 uef_num:msb_pos(Integer) -> Position.
 ```
 
-Returns the position of the [most significant bit](https://en.wikipedia.org/wiki/Bit_numbering#Most_significant_bit) (**MSB**) in the binary representation of a positive integer.
+Returns the position of the [most significant bit](https://en.wikipedia.org/wiki/Bit_numbering) (**MSB**) in the binary representation of a positive integer.
 
 The call fails with a `{badarg,Integer}` exception if `Integer` is not a positive integer.
 

@@ -23,7 +23,7 @@
 -module(uef_num).
 
 -export([round_price/1, round_number/2]).
--export([popcount/1, msb_pos/1]).
+-export([popcount/1, msb_pos/1, lsb_pos/1]).
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
@@ -63,6 +63,16 @@ popcount(N) when is_integer(N) andalso (N > -1) ->
 popcount(N) ->
 	erlang:error({badarg, N}, [N]).
 
+%% lsb_pos/1
+-spec lsb_pos(Integer:: pos_integer()) -> Pos :: pos_integer().
+%% @doc
+%% Returns the position of the least significant bit in the binary representation of a positive integer.
+%% The call fails with a {badarg,Integer} exception if Integer is not a positive integer.
+%% @end
+lsb_pos(N) when is_integer(N) andalso (N > 0) ->
+	lsb_pos(N, 1);
+lsb_pos(N) ->
+	erlang:error({badarg, N}, [N]).
 
 %% msb_pos/1
 -spec msb_pos(Integer:: pos_integer()) -> Pos :: pos_integer().
@@ -85,6 +95,10 @@ msb_pos(N) ->
 popcount(0, Cnt) -> Cnt;
 popcount(N, Cnt) -> popcount(N band (N - 1), Cnt + 1).
 
+
+%% lsb_pos/2
+lsb_pos(N, Cnt) when ((N band 1) =:= 1) -> Cnt;
+lsb_pos(N, Cnt) -> lsb_pos(N bsr 1, Cnt + 1).
 
 %% msb_pos/2
 msb_pos(0, Cnt) -> Cnt;
@@ -151,6 +165,28 @@ msb_pos_test_() ->
 		?_assertError({badarg, -1}, msb_pos(-1)),
 		?_assertError({badarg, 1.0}, msb_pos(1.0)),
 		?_assertError({badarg, 0.0}, msb_pos(0.0))
+	].
+
+lsb_pos_test_() ->
+	[
+		?_assertEqual(1, lsb_pos(1)),
+		?_assertEqual(1, lsb_pos(2#01)),
+		?_assertEqual(2, lsb_pos(2#10)),
+		?_assertEqual(3, lsb_pos(2#100)),
+		?_assertEqual(3, lsb_pos(2#0100)),
+		?_assertEqual(1, lsb_pos(2#111)),
+		?_assertEqual(1, lsb_pos(2#0111)),
+		?_assertEqual(4, lsb_pos(2#0101000)),
+		?_assertEqual(1, lsb_pos(2#0000000000000000000000000000000000000000000000000000000000000001)),
+		?_assertEqual(64, lsb_pos(2#1000000000000000000000000000000000000000000000000000000000000000)),
+		?_assertEqual(9, lsb_pos(2#0000000100000001000000010000000100000001000000010000000100000000)),
+		?_assertEqual(1, lsb_pos(2#0000000000000000000000000000000000000000000000000000000011111111)),
+		?_assertEqual(1, lsb_pos(2#1111111100000000000000000000000000000000000000000000000011111111)),
+		?_assertEqual(1, lsb_pos(2#1111111111111111111111111111111111111111111111111111111111111111)),
+		?_assertError({badarg, 0}, lsb_pos(0)),
+		?_assertError({badarg, -1}, lsb_pos(-1)),
+		?_assertError({badarg, 1.0}, lsb_pos(1.0)),
+		?_assertError({badarg, 0.0}, lsb_pos(0.0))
 	].
 
 -endif. % end of tests

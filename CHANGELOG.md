@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+- New function `uef_num:lsb_pos/1`.
+- New function `uef_num:msb_pos/1`.
+
 ## [2.1.0] - 2019-06-24
 
 - New function `uef_num:popcount/1`.
