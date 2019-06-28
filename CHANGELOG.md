@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- New function `uef_num:ctz/1`.
 - New function `uef_num:lsb_pos/1`.
 - New function `uef_num:msb_pos/1`.
 

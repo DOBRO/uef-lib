@@ -1125,6 +1125,40 @@ The call also fails with a `{badmap,Map1}` exception if `Map1` is not a map, or 
 
 ---
 
+#### *uef_num:ctz/1*
+
+```erlang
+uef_num:ctz(Integer) -> TrailingZeros.
+```
+
+Counts [trailing zeros](https://en.wikipedia.org/wiki/Find_first_set) in the binary representation of a positive integer. Returns the number of zero bits following the least significant one bit.
+
+The call fails with a `{badarg,Integer}` exception if `Integer` is not a positive integer.
+
+**Examples:**
+
+```erlang
+> uef_num:ctz(2#10001000).
+3
+
+> uef_num:ctz(7).
+0
+
+> uef_num:ctz(2#00101010).
+1
+
+> uef_num:ctz(2#1000000000000000000000000000000000000000000000000000000000000000).
+63
+
+> uef_num:ctz(2#1111111111111111111111111111111111111111111111111111111111111111).
+0
+
+> uef_num:ctz(16#FFFFFFFFFFFFFFFF).
+0
+```
+
+---
+
 #### *uef_num:lsb_pos/1*
 
 ```erlang

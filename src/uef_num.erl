@@ -23,7 +23,7 @@
 -module(uef_num).
 
 -export([round_price/1, round_number/2]).
--export([popcount/1, msb_pos/1, lsb_pos/1]).
+-export([popcount/1, msb_pos/1, lsb_pos/1, ctz/1]).
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
@@ -84,6 +84,16 @@ msb_pos(N) when is_integer(N) andalso (N > 0) ->
 	msb_pos(N, 0);
 msb_pos(N) ->
 	erlang:error({badarg, N}, [N]).
+
+%% ctz/1
+-spec ctz(Integer:: pos_integer()) -> TrailingZeros :: non_neg_integer().
+%% @doc
+%% Counts trailing zeros in the binary representation of a positive integer.
+%% Returns the number of zero bits following the least significant one bit.
+%% The call fails with a {badarg,Integer} exception if Integer is not a positive integer.
+%% @end
+ctz(N) ->
+	lsb_pos(N) - 1.
 
 
 %%%------------------------------------------------------------------------------
@@ -187,6 +197,28 @@ lsb_pos_test_() ->
 		?_assertError({badarg, -1}, lsb_pos(-1)),
 		?_assertError({badarg, 1.0}, lsb_pos(1.0)),
 		?_assertError({badarg, 0.0}, lsb_pos(0.0))
+	].
+
+ctz_test_() ->
+	[
+		?_assertEqual(0, ctz(1)),
+		?_assertEqual(0, ctz(2#01)),
+		?_assertEqual(1, ctz(2#10)),
+		?_assertEqual(2, ctz(2#100)),
+		?_assertEqual(2, ctz(2#0100)),
+		?_assertEqual(0, ctz(2#111)),
+		?_assertEqual(0, ctz(2#0111)),
+		?_assertEqual(3, ctz(2#0101000)),
+		?_assertEqual(0, ctz(2#0000000000000000000000000000000000000000000000000000000000000001)),
+		?_assertEqual(63, ctz(2#1000000000000000000000000000000000000000000000000000000000000000)),
+		?_assertEqual(8, ctz(2#0000000100000001000000010000000100000001000000010000000100000000)),
+		?_assertEqual(0, ctz(2#0000000000000000000000000000000000000000000000000000000011111111)),
+		?_assertEqual(0, ctz(2#1111111100000000000000000000000000000000000000000000000011111111)),
+		?_assertEqual(0, ctz(2#1111111111111111111111111111111111111111111111111111111111111111)),
+		?_assertError({badarg, 0}, ctz(0)),
+		?_assertError({badarg, -1}, ctz(-1)),
+		?_assertError({badarg, 1.0}, ctz(1.0)),
+		?_assertError({badarg, 0.0}, ctz(0.0))
 	].
 
 -endif. % end of tests
