@@ -67,10 +67,10 @@ popcount(N) ->
 %% msb_pos/1
 -spec msb_pos(Integer:: non_neg_integer()) -> Pos :: non_neg_integer().
 %% @doc
-%% Returns the position of the most significant bit in the binary representation of a non-negative integer.
-%% The call fails with a {badarg,Integer} exception if Integer is not a non-negative integer.
+%% Returns the position of the most significant bit in the binary representation of a positive integer.
+%% The call fails with a {badarg,Integer} exception if Integer is not a positive integer.
 %% @end
-msb_pos(N) when is_integer(N) andalso (N > -1) ->
+msb_pos(N) when is_integer(N) andalso (N > 0) ->
 	msb_pos(N, 0);
 msb_pos(N) ->
 	erlang:error({badarg, N}, [N]).
