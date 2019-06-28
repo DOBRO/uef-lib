@@ -1125,6 +1125,40 @@ The call also fails with a `{badmap,Map1}` exception if `Map1` is not a map, or 
 
 ---
 
+#### *uef_num:msb_pos/1*
+
+```erlang
+uef_num:msb_pos(Integer) -> Position.
+```
+
+Returns the position of the [most significant bit](https://en.wikipedia.org/wiki/Bit_numbering#Most_significant_bit) (**MSB**) in the binary representation of a positive integer.
+
+The call fails with a `{badarg,Integer}` exception if `Integer` is not a positive integer.
+
+**Examples:**
+
+```erlang
+> uef_num:msb_pos(2#111).
+3
+
+> uef_num:msb_pos(7).
+3
+
+> uef_num:msb_pos(2#0010101).
+5
+
+> uef_num:msb_pos(2#1000000000000000000000000000000000000000000000000000000000000000).
+64
+
+> uef_num:msb_pos(2#1111111111111111111111111111111111111111111111111111111111111111).
+64
+
+> uef_num:msb_pos(16#FFFFFFFFFFFFFFFF).
+64
+```
+
+---
+
 #### *uef_num:popcount/1*
 
 ```erlang
