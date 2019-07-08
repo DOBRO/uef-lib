@@ -24,7 +24,7 @@
 
 -export([format_number/3, format_number/4]).
 -export([format_price/1, format_price/2, format_price/3]).
-
+-export([format_bytes/1, format_bytes/2]).
 
 %%%------------------------------------------------------------------------------
 %%%   EUnit
@@ -44,6 +44,7 @@
 -define(DECIMAL_POINT, <<".">>).
 -define(CURRENCY_POSITION, left).
 -define(CURRENCY_SEP, <<"">>).
+-define(MULTI_BYTE_UNITS, ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']).
 
 
 %%%------------------------------------------------------------------------------
@@ -61,6 +62,19 @@
 	cur_pos => left | right,
 	cur_sep => binary() | string()
 }.
+-type multi_byte_unit() :: 'KB' | 'MB' | 'GB' | 'TB' | 'PB' | 'EB' | 'ZB' | 'YB'.
+-type byte_opts_in() :: #{
+	base  => 2 | 10,
+	units => auto | multi_byte_unit(),
+	type  => bin | int
+}.
+-type valid_byte_opts() :: #{
+	base  => 1000 | 1024,
+	units => auto | multi_byte_unit(),
+	type  => bin | int
+}.
+-type formatted_bytes() :: binary() | integer() | {integer(), multi_byte_unit()}.
+-type byte_opts_error() :: {invalid_base|invalid_units|invalid_type, term()}.
 
 %%%------------------------------------------------------------------------------
 %%%   API
@@ -127,6 +141,30 @@ format_price(Price, Precision, CurSymbol) when is_binary(CurSymbol) orelse is_li
 	format_number(Price, Precision, ?DEFAULT_PRICE_DECIMALS, #{cur_symbol => CurSymbol});
 format_price(Price, Precision, Opts) ->
 	erlang:error({badarg, Opts}, [Price, Precision, Opts]).
+
+
+%% format_bytes/1
+-spec format_bytes(integer()) -> formatted_bytes().
+format_bytes(Bytes) ->
+	format_bytes(Bytes, auto).
+
+%% format_bytes/2
+-spec format_bytes(integer(), auto | byte_opts_in()) -> formatted_bytes().
+format_bytes(Bytes, auto) ->
+	format_bytes(Bytes, #{});
+format_bytes(Bytes, Opts0) when is_integer(Bytes), is_map(Opts0) ->
+	case validate_byte_opts(Opts0) of
+		{ok, Opts} ->
+			do_format_bytes(Bytes, Opts);
+		{error, Reason} ->
+			erlang:error(Reason, [Bytes, Opts0])
+	end;
+format_bytes(Bytes, Opts) ->
+	BadArg = case is_integer(Bytes) of
+		true  -> Opts;
+		false -> Bytes
+	end,
+	erlang:error({badarg, BadArg},  [Bytes, Opts]).
 
 
 %%%------------------------------------------------------------------------------
@@ -209,6 +247,83 @@ split_thousands(Bin, List) ->
 	split_thousands(Rest, [B | List]).
 
 
+%% do_format_bytes/2
+-spec do_format_bytes(integer(), valid_byte_opts()) -> formatted_bytes().
+do_format_bytes(Bytes, Opts) ->
+	#{base := Base, units := Units0, type := Type} = Opts,
+	{MultiBytes, Units} = bytes_to_multiple(Bytes, Units0, Base),
+	case Type of
+		bin ->
+			BinMultiBytes = erlang:integer_to_binary(MultiBytes),
+			BinUnits = erlang:atom_to_binary(Units, latin1),
+			<<BinMultiBytes/bits, BinUnits/bits>>;
+		int when (Units0 =:= auto) ->
+			{MultiBytes, Units};
+		int ->
+			MultiBytes
+	end.
+
+%% bytes_to_multiple/3
+-spec bytes_to_multiple(integer(), auto | multi_byte_unit(), 1000 | 1024) -> {integer(), multi_byte_unit()}.
+bytes_to_multiple(Bytes, Units, Base) ->
+	bytes_to_multiple(Bytes, Units, Base, ?MULTI_BYTE_UNITS, 0, 'KB', 1).
+
+
+%% bytes_to_multiple/7
+-spec bytes_to_multiple(integer(), auto | multi_byte_unit(), 1000 | 1024, [multi_byte_unit()], integer(), multi_byte_unit(), pos_integer()) ->
+	{integer(), multi_byte_unit()}.
+bytes_to_multiple(_Bytes, _Units0, _Base, [], MultiBytes, Units, _Pow) ->
+	{MultiBytes, Units};
+bytes_to_multiple(Bytes, Units0, Base, [CurUnits | Tail], MultiBytesBefore, UnitsBefore, Pow) ->
+	MultiBytes = erlang:trunc(Bytes/math:pow(Base, Pow)),
+	case Units0 of
+		CurUnits ->
+			{MultiBytes, Units0};
+		auto when (MultiBytes =:= 0) ->
+			{MultiBytesBefore, UnitsBefore};
+		_ ->
+			bytes_to_multiple(Bytes, Units0, Base, Tail, MultiBytes, CurUnits, Pow + 1)
+	end.
+
+
+%% validate_byte_opts/1
+-spec validate_byte_opts(byte_opts_in()) -> {ok, valid_byte_opts()} | {error, byte_opts_error()}.
+validate_byte_opts(Opts0) ->
+	validate_byte_opts([base, units, type], Opts0, #{}).
+
+%% validate_byte_opts/2
+-spec validate_byte_opts([base|units|type,...], byte_opts_in(), valid_byte_opts()) -> {ok, valid_byte_opts()} | {error, byte_opts_error()}.
+validate_byte_opts([], _Opts0, Acc) ->
+	{ok, Acc};
+validate_byte_opts([base|Tail], Opts0, Acc) -> % base
+	case maps:find(base, Opts0) of
+		error    -> validate_byte_opts(Tail, Opts0, Acc#{base => 1024}); % default
+		{ok, 2}  -> validate_byte_opts(Tail, Opts0, Acc#{base => 1024});
+		{ok, 10} -> validate_byte_opts(Tail, Opts0, Acc#{base => 1000});
+		{ok, Base} -> {error, {invalid_base, Base}}
+	end;
+validate_byte_opts([units|Tail], Opts0, Acc) -> % units
+	case maps:find(units, Opts0) of
+		error -> % Units not specified, set them to 'auto'
+			validate_byte_opts(Tail, Opts0, Acc#{units => auto});
+		{ok, auto} -> % auto
+			validate_byte_opts(Tail, Opts0, Acc#{units => auto});
+		{ok, Units} -> % Units specified, check them
+			case lists:member(Units, ?MULTI_BYTE_UNITS) of
+				true -> validate_byte_opts(Tail, Opts0, Acc#{units => Units});
+				false -> {error, {invalid_units, Units}}
+			end
+	end;
+validate_byte_opts([type|Tail], Opts0, Acc) -> % type
+	case maps:find(type, Opts0) of
+		error -> % Type not specified, set it to 'bin'
+			validate_byte_opts(Tail, Opts0, Acc#{type => 'bin'});
+		{ok, Type} when (Type =:= int) orelse (Type =:= bin) ->
+			validate_byte_opts(Tail, Opts0, Acc#{type => Type});
+		{ok, Type} ->
+			{error, {invalid_type, Type}}
+	end.
+
 %%%------------------------------------------------------------------------------
 %%%   Tests
 %%%------------------------------------------------------------------------------
@@ -235,6 +350,16 @@ format_number_test_() ->
 	?_assertEqual(format_price(1000), format_price(1000, 2)),
 	?_assertEqual(format_price(1000), format_price(1000, 2, <<>>)),
 	?_assertEqual(format_price(1000), format_number(1000, 2, 2, #{}))
+	].
+
+
+format_bytes_test_() ->
+	% Add more tests later
+	[
+	?_assertEqual(format_bytes(10000000), format_bytes(10000000, auto)),
+	?_assertEqual(format_bytes(10000000), format_bytes(10000000, #{})),
+	?_assertError({badarg, bad_int}, format_bytes(bad_int)),
+	?_assertError({badarg, bad_opts}, format_bytes(1, bad_opts))
 	].
 
 -endif. % end of tests
