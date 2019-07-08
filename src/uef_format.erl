@@ -146,12 +146,10 @@ format_price(Price, Precision, Opts) ->
 %% format_bytes/1
 -spec format_bytes(integer()) -> formatted_bytes().
 format_bytes(Bytes) ->
-	format_bytes(Bytes, auto).
+	format_bytes(Bytes, #{}).
 
 %% format_bytes/2
--spec format_bytes(integer(), auto | byte_opts_in()) -> formatted_bytes().
-format_bytes(Bytes, auto) ->
-	format_bytes(Bytes, #{});
+-spec format_bytes(integer(), byte_opts_in()) -> formatted_bytes().
 format_bytes(Bytes, Opts0) when is_integer(Bytes), is_map(Opts0) ->
 	case validate_byte_opts(Opts0) of
 		{ok, Opts} ->
@@ -356,7 +354,6 @@ format_number_test_() ->
 format_bytes_test_() ->
 	% Add more tests later
 	[
-	?_assertEqual(format_bytes(10000000), format_bytes(10000000, auto)),
 	?_assertEqual(format_bytes(10000000), format_bytes(10000000, #{})),
 	?_assertError({badarg, bad_int}, format_bytes(bad_int)),
 	?_assertError({badarg, bad_opts}, format_bytes(1, bad_opts))
