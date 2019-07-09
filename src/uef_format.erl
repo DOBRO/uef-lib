@@ -352,9 +352,30 @@ format_number_test_() ->
 
 
 format_bytes_test_() ->
-	% Add more tests later
+	KB10_1000 = 10 * 1000,
+	KB10_1024 = 10 * 1024,
+	MB10_1000 = 10 * 1000 * 1000,
+	MB10_1024 = 10 * 1024 * 1024,
 	[
-	?_assertEqual(format_bytes(10000000), format_bytes(10000000, #{})),
+	?_assertEqual(<<"0KB">>, format_bytes(1023)),
+	?_assertEqual(<<"1KB">>, format_bytes(1024)),
+	?_assertEqual(<<"0KB">>, format_bytes(999, #{base => 10})),
+	?_assertEqual(<<"1KB">>, format_bytes(1023, #{base => 10})),
+	?_assertEqual(<<"9KB">>, format_bytes(KB10_1000)),
+	?_assertEqual(<<"10KB">>, format_bytes(KB10_1024)),
+	?_assertEqual(format_bytes(KB10_1000), format_bytes(KB10_1000, #{})),
+	?_assertEqual(format_bytes(MB10_1000), format_bytes(MB10_1000, #{})),
+	?_assertEqual(format_bytes(KB10_1024), format_bytes(KB10_1024, #{})),
+	?_assertEqual(format_bytes(MB10_1024), format_bytes(MB10_1024, #{})),
+	?_assertEqual(format_bytes(10000), format_bytes(10000, #{base => 2, units => auto})),
+	?_assertEqual(format_bytes(10000), format_bytes(10000, #{base => 2, units => auto, to_type => bin})),
+	?_assertEqual({9, 'KB'}, format_bytes(10000, #{to_type => int})),
+	?_assertEqual(9, format_bytes(KB10_1000, #{to_type => int, units => 'KB'})),
+	?_assertEqual(9, format_bytes(MB10_1000, #{to_type => int, units => 'MB'})),
+	?_assertEqual({9, 'MB'}, format_bytes(MB10_1000, #{to_type => int, units => auto})),
+	?_assertEqual(10, format_bytes(MB10_1024, #{to_type => int, units => 'MB'})),
+	?_assertEqual({10, 'MB'}, format_bytes(MB10_1024, #{to_type => int})),
+	?_assertEqual(<<"0MB">>, format_bytes(1000, #{units => 'MB'})),
 	?_assertError({badarg, bad_int}, format_bytes(bad_int)),
 	?_assertError({badarg, bad_opts}, format_bytes(1, bad_opts))
 	].
