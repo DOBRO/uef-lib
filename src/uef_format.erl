@@ -66,15 +66,15 @@
 -type byte_opts_in() :: #{
 	base  => 2 | 10,
 	units => auto | multi_byte_unit(),
-	type  => bin | int
+	to_type  => bin | int
 }.
 -type valid_byte_opts() :: #{
 	base  => 1000 | 1024,
 	units => auto | multi_byte_unit(),
-	type  => bin | int
+	to_type  => bin | int
 }.
 -type formatted_bytes() :: binary() | integer() | {integer(), multi_byte_unit()}.
--type byte_opts_error() :: {invalid_base|invalid_units|invalid_type, term()}.
+-type byte_opts_error() :: {invalid_base|invalid_units|invalid_output_type, term()}.
 
 %%%------------------------------------------------------------------------------
 %%%   API
@@ -248,7 +248,7 @@ split_thousands(Bin, List) ->
 %% do_format_bytes/2
 -spec do_format_bytes(integer(), valid_byte_opts()) -> formatted_bytes().
 do_format_bytes(Bytes, Opts) ->
-	#{base := Base, units := Units0, type := Type} = Opts,
+	#{base := Base, units := Units0, to_type := Type} = Opts,
 	{MultiBytes, Units} = bytes_to_multiple(Bytes, Units0, Base),
 	case Type of
 		bin ->
@@ -287,10 +287,10 @@ bytes_to_multiple(Bytes, Units0, Base, [CurUnits | Tail], MultiBytesBefore, Unit
 %% validate_byte_opts/1
 -spec validate_byte_opts(byte_opts_in()) -> {ok, valid_byte_opts()} | {error, byte_opts_error()}.
 validate_byte_opts(Opts0) ->
-	validate_byte_opts([base, units, type], Opts0, #{}).
+	validate_byte_opts([base, units, to_type], Opts0, #{}).
 
 %% validate_byte_opts/2
--spec validate_byte_opts([base|units|type,...], byte_opts_in(), valid_byte_opts()) -> {ok, valid_byte_opts()} | {error, byte_opts_error()}.
+-spec validate_byte_opts([base|units|to_type,...], byte_opts_in(), valid_byte_opts()) -> {ok, valid_byte_opts()} | {error, byte_opts_error()}.
 validate_byte_opts([], _Opts0, Acc) ->
 	{ok, Acc};
 validate_byte_opts([base|Tail], Opts0, Acc) -> % base
@@ -312,14 +312,14 @@ validate_byte_opts([units|Tail], Opts0, Acc) -> % units
 				false -> {error, {invalid_units, Units}}
 			end
 	end;
-validate_byte_opts([type|Tail], Opts0, Acc) -> % type
-	case maps:find(type, Opts0) of
-		error -> % Type not specified, set it to 'bin'
-			validate_byte_opts(Tail, Opts0, Acc#{type => 'bin'});
+validate_byte_opts([to_type|Tail], Opts0, Acc) -> % to_type
+	case maps:find(to_type, Opts0) of
+		error -> % Output type not specified, set it to 'bin'
+			validate_byte_opts(Tail, Opts0, Acc#{to_type => 'bin'});
 		{ok, Type} when (Type =:= int) orelse (Type =:= bin) ->
-			validate_byte_opts(Tail, Opts0, Acc#{type => Type});
+			validate_byte_opts(Tail, Opts0, Acc#{to_type => Type});
 		{ok, Type} ->
-			{error, {invalid_type, Type}}
+			{error, {invalid_output_type, Type}}
 	end.
 
 %%%------------------------------------------------------------------------------
