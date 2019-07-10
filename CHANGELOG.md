@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 2019-07-10
+
+- New function `uef_format:format_bytes/1`.
+- New function `uef_format:format_bytes/2`.
+
 ## [2.2.0] - 2019-06-28
 
 - New function `uef_num:ctz/1`.
