@@ -402,7 +402,7 @@ Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, wher
 uef_format:format_bytes(Bytes) -> FormattedBytes.
 ```
 
-The same as `uef_format:format_bytes(Bytes, #{})`. See See [uef_format:format_bytes/2](#uef_formatformat_bytes2) docs.
+The same as `uef_format:format_bytes(Bytes, #{})`. See [uef_format:format_bytes/2](#uef_formatformat_bytes2) docs.
 
 **Examples:**
 
