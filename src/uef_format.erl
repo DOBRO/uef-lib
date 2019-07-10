@@ -145,10 +145,15 @@ format_price(Price, Precision, Opts) ->
 
 %% format_bytes/1
 -spec format_bytes(integer()) -> formatted_bytes().
+%% @equiv format_bytes(Bytes, #{})
 format_bytes(Bytes) ->
 	format_bytes(Bytes, #{}).
 
 %% format_bytes/2
+%% @doc
+%% Converts bytes to multiples of bytes (KB, MB, GB, TB, PB, EB, ZB, YB).
+%% See README for details.
+%% @end
 -spec format_bytes(integer(), byte_opts_in()) -> formatted_bytes().
 format_bytes(Bytes, Opts0) when is_integer(Bytes), is_map(Opts0) ->
 	case validate_byte_opts(Opts0) of
