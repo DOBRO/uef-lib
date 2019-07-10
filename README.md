@@ -396,6 +396,100 @@ Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, wher
 
 ---
 
+#### *uef_format:format_bytes/1*
+
+```erlang
+uef_format:format_bytes(Bytes) -> FormattedBytes.
+```
+
+The same as `uef_format:format_bytes(Bytes, #{})`. See See [uef_format:format_bytes/2](#uef_formatformat_bytes2) docs.
+
+**Examples:**
+
+```erlang
+> uef_format:format_bytes(1024).
+<<"1KB">>
+
+> uef_format:format_bytes(1000).
+<<"0KB">>
+
+> uef_format:format_bytes(1048576).
+<<"1MB">>
+
+> uef_format:format_bytes(10485760).
+<<"10MB">>
+```
+
+---
+
+#### *uef_format:format_bytes/2*
+
+```erlang
+uef_format:format_bytes(Bytes, Options) -> FormattedBytes.
+```
+
+**Types:**
+
+```erlang
+Bytes :: integer().
+
+Options :: #{
+    units => Units,
+    base => Base,
+    to_type => ToType
+}.
+
+Units :: auto | MultiUnits.
+MultiUnits :: 'KB' | 'MB' | 'GB' | 'TB' | 'PB' | 'EB' | 'ZB' | 'YB'.
+Base :: 2 | 10.
+ToType :: bin | int.
+
+FormattedBytes :: binary() | integer() | {integer(), MultiUnits}.
+```
+
+Default `Options`:
+
+```erlang
+#{ units => auto, base => 2, to_type => bin }.
+```
+
+Converts bytes `Bytes` to [multiples of bytes](https://en.wikipedia.org/wiki/Megabyte). The datatype of the return value depends on `ToType` and `Units`:
+
+* if `ToType` is `bin`, it returns `binary()`;
+* if `ToType` is `int`, it returns `integer()`;
+* if `ToType` is `int` and `Units` is `auto`, tuple `{integer(), MultiUnits}` is returned.
+
+The value of `Base` affects the conversion of `Bytes` to multiples:
+
+* `Base = 2` means that `1KB = 1024 bytes`, `1MB = 1048576 bytes`, ...;
+* `Base = 10` means that `1KB = 1000 bytes`, `1MB = 1000000 bytes`, ...
+
+If the value of `Units` is `auto`, bytes are converted to the most reasonable multiples of bytes.
+
+**Examples:**
+
+```erlang
+> uef_format:format_bytes(1000000, #{units => auto, base => 2}).
+<<"976KB">>
+
+> uef_format:format_bytes(1048576, #{units => auto, base => 2}).
+<<"1MB">>
+
+> uef_format:format_bytes(1048576, #{units => 'KB', base => 2}).
+<<"1024KB">>
+
+> uef_format:format_bytes(1048576, #{units => 'KB', base => 10}).
+<<"1048KB">>
+
+> uef_format:format_bytes(1048576, #{units => auto, base => 2, to_type => int}).
+{1,'MB'}
+
+> uef_format:format_bytes(1048576, #{units => 'KB', base => 2, to_type => int}).
+1024
+```
+
+---
+
 #### *uef_format:format_number/3*
 
 ```erlang
