@@ -774,6 +774,18 @@ Transforms three lists into one list of three-tuples, where the first element of
 
 ---
 
+#### *uef_lists:search/2*
+
+```erlang
+uef_lists:search(Pred, List) -> {value, Value} | false.
+```
+
+If there is a `Value` in `List` such that `Pred(Value)` returns `true`, returns `{value, Value}` for the first such `Value`, otherwise returns `false`.
+
+**Note:** Since OTP **21.0** use BIF `lists:search/2` instead.
+
+---
+
 ### Module `uef_maps`
 
 ---

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0] - 2019-07-28
+
+- New function `uef_lists:search/2`.
+
 ## [2.3.0] - 2019-07-10
 
 - New function `uef_format:format_bytes/1`.
