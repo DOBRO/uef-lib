@@ -24,6 +24,7 @@
 
 -export([split_list_into_chunks/2]).
 -export([lists_to_list_of_tuples/2, lists_to_list_of_tuples/3]).
+-export([search/2]).
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
@@ -94,6 +95,23 @@ lists_to_list_of_tuples(List1, List2, List3) ->
 		[], List1
 	),
 	lists:reverse(List).
+
+%% search/2
+-spec search(Pred, List) -> {value, Value} | false when
+	  Pred :: fun((T) -> boolean()),
+	  List :: [T],
+	  Value :: T.
+%% @doc
+%% If there is a Value in List such that Pred(Value) returns true, returns {value, Value} for the first such Value, otherwise returns false.
+%% Since OTP 21.0 use BIF lists:search/2 instead.
+%% @end
+search(Pred, [Hd|Tail]) ->
+	case Pred(Hd) of
+		true -> {value, Hd};
+		false -> search(Pred, Tail)
+	end;
+search(Pred, []) when is_function(Pred, 1) ->
+	false.
 
 
 %%%------------------------------------------------------------------------------
