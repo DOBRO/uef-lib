@@ -436,13 +436,15 @@ Bytes :: integer().
 Options :: #{
     units => Units,
     base => Base,
-    to_type => ToType
+    to_type => ToType,
+    sep => Separator
 }.
 
 Units :: auto | MultiUnits.
 MultiUnits :: 'KB' | 'MB' | 'GB' | 'TB' | 'PB' | 'EB' | 'ZB' | 'YB'.
 Base :: 2 | 10.
 ToType :: bin | int.
+Separator :: binary().
 
 FormattedBytes :: binary() | integer() | {integer(), MultiUnits}.
 ```
@@ -450,7 +452,7 @@ FormattedBytes :: binary() | integer() | {integer(), MultiUnits}.
 Default `Options`:
 
 ```erlang
-#{ units => auto, base => 2, to_type => bin }.
+#{ units => auto, base => 2, to_type => bin, sep => <<>> }.
 ```
 
 Converts bytes `Bytes` to [multiples of bytes](https://en.wikipedia.org/wiki/Megabyte). The datatype of the return value depends on `ToType` and `Units`:
@@ -465,6 +467,8 @@ The value of `Base` affects the conversion of `Bytes` to multiples:
 * `Base = 10` means that `1KB = 1000 bytes`, `1MB = 1000000 bytes`, ...
 
 If the value of `Units` is `auto`, bytes are converted to the most reasonable multiples of bytes.
+
+`Separator` is a separator between _integer value_ and `Units`. This option affects the result when `ToType` is `bin`.
 
 **Examples:**
 
@@ -486,6 +490,12 @@ If the value of `Units` is `auto`, bytes are converted to the most reasonable mu
 
 > uef_format:format_bytes(1048576, #{units => 'KB', base => 2, to_type => int}).
 1024
+
+> uef_format:format_bytes(1048576, #{units => 'KB', to_type => bin, sep => <<" ">>}).
+<<"1024 KB">>
+
+> uef_format:format_bytes(1048576, #{units => 'KB', to_type => bin, sep => <<"|">>}).
+<<"1024|KB">>
 ```
 
 ---
