@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.0] - 2019-08-09
+
+- Separator option `sep` added for function `uef_format:format_bytes/2`.
+
 ## [2.4.0] - 2019-07-28
 
 - New function `uef_lists:search/2`.
