@@ -66,15 +66,17 @@
 -type byte_opts_in() :: #{
 	base  => 2 | 10,
 	units => auto | multi_byte_unit(),
-	to_type  => bin | int
+	to_type  => bin | int,
+	sep => binary()
 }.
 -type valid_byte_opts() :: #{
 	base  => 1000 | 1024,
 	units => auto | multi_byte_unit(),
-	to_type  => bin | int
+	to_type  => bin | int,
+	sep => binary()
 }.
 -type formatted_bytes() :: binary() | integer() | {integer(), multi_byte_unit()}.
--type byte_opts_error() :: {invalid_base|invalid_units|invalid_output_type, term()}.
+-type byte_opts_error() :: {invalid_base|invalid_units|invalid_output_type|invalid_separator, term()}.
 
 %%%------------------------------------------------------------------------------
 %%%   API
@@ -253,13 +255,13 @@ split_thousands(Bin, List) ->
 %% do_format_bytes/2
 -spec do_format_bytes(integer(), valid_byte_opts()) -> formatted_bytes().
 do_format_bytes(Bytes, Opts) ->
-	#{base := Base, units := Units0, to_type := Type} = Opts,
+	#{base := Base, units := Units0, to_type := Type, sep := Sep} = Opts,
 	{MultiBytes, Units} = bytes_to_multiple(Bytes, Units0, Base),
 	case Type of
 		bin ->
 			BinMultiBytes = erlang:integer_to_binary(MultiBytes),
 			BinUnits = erlang:atom_to_binary(Units, latin1),
-			<<BinMultiBytes/bits, BinUnits/bits>>;
+			<<BinMultiBytes/bits, Sep/bits , BinUnits/bits>>;
 		int when (Units0 =:= auto) ->
 			{MultiBytes, Units};
 		int ->
@@ -292,10 +294,10 @@ bytes_to_multiple(Bytes, Units0, Base, [CurUnits | Tail], MultiBytesBefore, Unit
 %% validate_byte_opts/1
 -spec validate_byte_opts(byte_opts_in()) -> {ok, valid_byte_opts()} | {error, byte_opts_error()}.
 validate_byte_opts(Opts0) ->
-	validate_byte_opts([base, units, to_type], Opts0, #{}).
+	validate_byte_opts([base, units, to_type, sep], Opts0, #{}).
 
 %% validate_byte_opts/2
--spec validate_byte_opts([base|units|to_type,...], byte_opts_in(), valid_byte_opts()) -> {ok, valid_byte_opts()} | {error, byte_opts_error()}.
+-spec validate_byte_opts([base|units|to_type|sep,...], byte_opts_in(), valid_byte_opts()) -> {ok, valid_byte_opts()} | {error, byte_opts_error()}.
 validate_byte_opts([], _Opts0, Acc) ->
 	{ok, Acc};
 validate_byte_opts([base|Tail], Opts0, Acc) -> % base
@@ -325,7 +327,17 @@ validate_byte_opts([to_type|Tail], Opts0, Acc) -> % to_type
 			validate_byte_opts(Tail, Opts0, Acc#{to_type => Type});
 		{ok, Type} ->
 			{error, {invalid_output_type, Type}}
+	end;
+validate_byte_opts([sep|Tail], Opts0, Acc) -> % separator
+	case maps:find(sep, Opts0) of
+		error -> % Separator not specified, set it to <<>> (empty binary)
+			validate_byte_opts(Tail, Opts0, Acc#{sep => <<>>});
+		{ok, Sep} when is_binary(Sep) ->
+			validate_byte_opts(Tail, Opts0, Acc#{sep => Sep});
+		{ok, Sep} ->
+			{error, {invalid_separator, Sep}}
 	end.
+
 
 %%%------------------------------------------------------------------------------
 %%%   Tests
