@@ -247,8 +247,7 @@ split_thousands(Bin) ->
 -spec split_thousands(binary(), [<<_:24>>]) -> [<<_:24>>].
 split_thousands(<<>>, List) ->
 	lists:reverse(List);
-split_thousands(Bin, List) ->
-	<<B:3/binary, Rest/binary>> = Bin,
+split_thousands(<<B:3/binary, Rest/binary>>, List) ->
 	split_thousands(Rest, [B | List]).
 
 
