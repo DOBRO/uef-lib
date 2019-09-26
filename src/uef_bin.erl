@@ -72,7 +72,8 @@ split(B, Splitter) ->
 split(<<>>, _, _) -> [];
 split(B, <<>>, _) -> [B];
 split(B, Splitter, Option) ->
-	List = do_split(B, {erlang:bit_size(Splitter), Splitter}, []),
+	SplitterBitSize = erlang:bit_size(Splitter),
+	List = do_split(B, Splitter, SplitterBitSize, []),
 	case Option of
 		trim_all -> lists:filter(fun(<<>>) -> false; (_) -> true end, List);
 		_ -> List
@@ -114,7 +115,8 @@ reverse_utf8(Bin) ->
 replace(<<>>, _, _) -> <<>>;
 replace(B, <<>>, _) -> B;
 replace(B, C1, C2) ->
-	replace(B, {erlang:bit_size(C1), C1}, C2, <<>>).
+	C1BitSize = erlang:bit_size(C1),
+	replace(B, C1, C1BitSize, C2, <<>>).
 
 
 %% replace_chars/3
@@ -182,15 +184,15 @@ repeat(Bin, N, Acc) ->
 
 
 %% replace/4
--spec replace(binary(), {pos_integer(), binary()}, binary(), binary()) -> binary().
-replace(B, {BitSize, C1}, C2, Acc) ->
+-spec replace(binary(), binary(), pos_integer(), binary(), binary()) -> binary().
+replace(B, C1, C1BitSize, C2, Acc) ->
 	case B of
 		<<>> ->
 			Acc;
-		<<C1:BitSize/bits, Rest/bits>> ->
-			replace(Rest, {BitSize, C1}, C2, <<Acc/bits, C2/bits>>); % replacement
+		<<C1:C1BitSize/bits, Rest/bits>> ->
+			replace(Rest, C1, C1BitSize, C2, <<Acc/bits, C2/bits>>); % replacement
 		<<C, Rest/bits>> ->
-			replace(Rest, {BitSize, C1}, C2, <<Acc/bits, C>>)
+			replace(Rest, C1, C1BitSize, C2, <<Acc/bits, C>>)
 	end.
 
 
@@ -204,22 +206,22 @@ reverse_utf8(<<C, Rest/bits>>, Acc) ->
 
 
 %% do_split/3
--spec do_split(binary(), {pos_integer(), binary()}, [binary()]) -> [binary()].
-do_split(B, {BitSize, Splitter}, List) ->
+-spec do_split(binary(), binary(), pos_integer(), [binary()]) -> [binary()].
+do_split(B, Splitter, SplitterBitSize, List) ->
 	case B of
 		<<>> ->
 			lists:reverse(List);
-		<<Splitter:BitSize/bits, Rest/bits>> ->
+		<<Splitter:SplitterBitSize/bits, Rest/bits>> ->
 			case List of
-				[_|_] -> do_split(Rest, {BitSize, Splitter}, [<<>> | List]);
-				[] -> do_split(Rest, {BitSize, Splitter}, [<<>>, <<>> | List])
+				[_|_] -> do_split(Rest, Splitter, SplitterBitSize, [<<>> | List]);
+				[] -> do_split(Rest, Splitter, SplitterBitSize, [<<>>, <<>> | List])
 			end;
 		<<C, Rest/bits>> ->
 			List2 = case List of
 				[H|T] -> [<<H/bits, C>> | T];
 				[] -> [<< C >>]
 			end,
-			do_split(Rest, {BitSize, Splitter}, List2)
+			do_split(Rest, Splitter, SplitterBitSize, List2)
 	end.
 
 
