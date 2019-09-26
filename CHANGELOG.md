@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.1] - 2019-09-26
+
+- Some binary optimizations in `uef_bin` and `uef_format` modules.
+
 ## [2.5.0] - 2019-08-09
 
 - Separator option `sep` added for function `uef_format:format_bytes/2`.
