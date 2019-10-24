@@ -35,7 +35,7 @@ toc::[]
 
 === Module `uef_bin`
 
----
+'''
 
 ==== uef_bin:binary_join/2
 
@@ -54,7 +54,7 @@ Joins a list of binaries with separator into a single binary. Returns binary.
 <<"www.example.com">>
 ----
 
----
+'''
 
 ==== uef_bin:repeat/2
 
@@ -85,7 +85,7 @@ Returns binary `Binary2` consisting of `Binary1` repeated `N` times.
 <<"abcabcabc">>
 ----
 
----
+'''
 
 ==== uef_bin:reverse/1
 
@@ -112,7 +112,7 @@ Returns a binary in reverse *byte* order.
 <<>>
 ----
 
----
+'''
 
 ==== uef_bin:reverse_utf8/1
 
@@ -149,7 +149,7 @@ true
 true
 ----
 
----
+'''
 
 ==== uef_bin:split/2
 
@@ -174,7 +174,7 @@ Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works a
 [<<"www.example.com">>]
 ----
 
----
+'''
 
 ==== uef_bin:split/3
 
@@ -193,7 +193,7 @@ Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works a
 [<<"www">>,<<"example">>,<<"com">>]
 ----
 
----
+'''
 
 ==== uef_bin:replace/3
 
@@ -215,7 +215,7 @@ Replaces chars `Chars` with other chars `OtherChars` in binary `Binary1` and ret
 <<"abcZZefgbc">>
 ----
 
----
+'''
 
 ==== uef_bin:replace_chars/3
 
@@ -237,7 +237,7 @@ uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>).
 <<"examplecom">>
 ----
 
----
+'''
 
 ==== uef_bin:random_latin_binary/2
 
@@ -262,7 +262,7 @@ Returns a random binary of size `Length` consisting of latins `[a-zA-Z]` and dig
 <<"mTa9Lj7KUN">>
 ----
 
----
+'''
 
 ==== uef_bin:random_binary_from_chars/2
 
@@ -281,7 +281,7 @@ Generates and returns a binary of size `Length` which consists of the given char
 <<"eFveerorreravgng">>
 ----
 
----
+'''
 
 ==== uef_bin:numeric_prefix/1
 
@@ -303,11 +303,11 @@ Returns new binary `DigitsOnlyBinary` which consists of digits [0-9] wich are at
 <<>>
 ----
 
----
+'''
 
 === Module `uef_crypt`
 
----
+'''
 
 ==== uef_crypt:md5_hex/1
 
@@ -332,11 +332,11 @@ Returns binary `Binary` in hexadecimal form of md5 hash of the argument `IoData`
 <<"eb89df06495cef83e3ec185aefe81d0e">>
 ----
 
----
+'''
 
 === Module `uef_encode`
 
----
+'''
 
 ==== uef_encode:html_encode_bin/1
 
@@ -358,7 +358,7 @@ Takes argument `Html`, replaces some unsafe symbols with their appropriate HTML 
 <<"&#9830;&plusmn;&Sigma;">>
 ----
 
----
+'''
 
 ==== uef_encode:html_encode_list/1
 
@@ -380,7 +380,7 @@ Takes argument Html, replaces some unsafe symbols with their appropriate HTML en
 [<<"&#9830;">>,<<"&plusmn;">>,<<"&Sigma;">>]
 ----
 
----
+'''
 
 ==== uef_encode:win_to_utf8/1
 
@@ -403,7 +403,7 @@ file_1251_to_utf8() ->
     file:write_file(FileUtf8, BinUtf8).
 ----
 
----
+'''
 
 === Module `uef_file`
 
@@ -420,7 +420,7 @@ Retrieves information about **local** file. Returns `{ok, FileInfo}` if successf
 
 `file:read_file_info(Filename, [raw, {time, posix}])`.
 
----
+'''
 
 ==== uef_file:read_file_fast/1
 
@@ -431,11 +431,11 @@ uef_file:read_file_fast(Filename) -> {ok, BinaryData} | {error, Reason}.
 
 Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, where `BinaryData` is a binary data object that contains the contents of `Filename`, or `{error, Reason}` if an error occurs. This function is optimized for reading contents of **local** files, as no Erlang process is used. It calls http://erlang.org/doc/man/file.html#open-2[file:open/2] with options `[read, raw, binary]`.
 
----
+'''
 
 === Module `uef_format`
 
----
+'''
 
 ==== uef_format:format_bytes/1
 
@@ -463,7 +463,7 @@ The same as `uef_format:format_bytes(Bytes, #{})`. See link:#uef_formatformat_by
 <<"10MB">>
 ----
 
----
+'''
 
 ==== uef_format:format_bytes/2
 
@@ -545,7 +545,7 @@ If the value of `Units` is `auto`, bytes are converted to the most reasonable mu
 <<"1024|KB">>
 ----
 
----
+'''
 
 ==== uef_format:format_number/3
 
@@ -573,7 +573,7 @@ The same as `uef_format:format_number/4` with `#{}` as the forth argument. See l
 <<"200.00">>
 ----
 
----
+'''
 
 ==== uef_format:format_number/4
 
@@ -643,7 +643,7 @@ FormattedNumber :: binary().
 <<"USD 1,234,567,890.4600">>
 ----
 
----
+'''
 
 ==== uef_format:format_price/1
 
@@ -667,7 +667,7 @@ The same as `uef_format:format_price/2` with a precision of `2` as the second ar
 <<"199.99">>
 ----
 
----
+'''
 
 ==== uef_format:format_price/2
 
@@ -688,7 +688,7 @@ The same as `uef_format:format_price/3` with `#{}` as the third argument. See li
 <<"1999.99">>
 ----
 
----
+'''
 
 ==== uef_format:format_price/3
 
@@ -744,11 +744,11 @@ If `CurrencySymbol_OR_Options` is a `binary` or a `string`, the corresponding cu
 
 ----
 
----
+'''
 
 === Module `uef_lists`
 
----
+'''
 
 ==== uef_lists:split_list_into_chunks/2
 
@@ -785,7 +785,7 @@ Splits `List` into list of lists `[List1, List2, ..., ListN]` where `List1, List
 [[1,2,3,4,5,6,7,8]]
 ----
 
----
+'''
 
 ==== uef_lists:lists_to_list_of_tuples/2
 
@@ -807,7 +807,7 @@ Transforms two lists into one list of two-tuples, where the first element of eac
 [{a,1},{a,2},{a,3},{b,1},{b,2},{b,3},{c,1},{c,2},{c,3}]
 ----
 
----
+'''
 
 ==== uef_lists:lists_to_list_of_tuples/3
 
@@ -847,7 +847,7 @@ Transforms three lists into one list of three-tuples, where the first element of
  {b1,c2,b3}]
 ----
 
----
+'''
 
 ==== uef_lists:search/2
 
@@ -860,11 +860,11 @@ If there is a `Value` in `List` such that `Pred(Value)` returns `true`, returns 
 
 **Note:** Since OTP **21.0** use BIF `lists:search/2` instead.
 
----
+'''
 
 === Module `uef_maps`
 
----
+'''
 
 ==== uef_maps:delete_nested/2
 
@@ -920,7 +920,7 @@ See also: link:#uef_mapsremove_nested2[uef_maps:remove_nested/2], link:#uef_maps
 {error,{badkey,4}} % 4, not 5!
 ----
 
----
+'''
 
 ==== uef_maps:find_nested/2
 
@@ -965,7 +965,7 @@ error
 ** exception error: {badmap,abc}
 ----
 
----
+'''
 
 ==== uef_maps:get_nested/2
 
@@ -999,7 +999,7 @@ abc % Value
 
 ----
 
----
+'''
 
 ==== uef_maps:get_nested/3
 
@@ -1032,7 +1032,7 @@ default % Default
 default % Default anyway. Doesn't fail
 ----
 
----
+'''
 
 ==== uef_maps:is_key_nested/2
 
@@ -1077,7 +1077,7 @@ false
 false
 ----
 
----
+'''
 
 ==== uef_maps:new_nested/1
 
@@ -1088,7 +1088,7 @@ uef_maps:new_nested(Keys) -> Map.
 
 Same as `uef_maps:new_nested(Keys, #{})`. See docs of link:#uef_mapsnew_nested2[uef_maps:new_nested/2].
 
----
+'''
 
 ==== uef_maps:new_nested/2
 
@@ -1118,7 +1118,7 @@ The call fails with a `{badlist,Keys}` exception if `Keys` is not a list.
 #{key1 => #{key2 => #{key3 => value}}}
 ----
 
----
+'''
 
 ==== uef_maps:put_nested/3
 
@@ -1171,7 +1171,7 @@ See also: link:#uef_mapsupdate_nested3[uef_maps:update_nested/3].
 #{1 => #{2 => #{3 => #{-4 => new_value}}}}
 ----
 
----
+'''
 
 ==== uef_maps:remove_nested/2
 
@@ -1221,7 +1221,7 @@ See also: link:#uef_mapsdelete_nested2[uef_maps:delete_nested/2], link:#uef_maps
 #{1 => #{2 => #{3 => val3,33 => val33}}}  % Map1
 ----
 
----
+'''
 
 ==== uef_maps:take_nested/2
 
@@ -1271,7 +1271,7 @@ error
 error
 ----
 
----
+'''
 
 ==== uef_maps:update_nested/3
 
@@ -1322,11 +1322,11 @@ The call also fails with a `{badmap,Map1}` exception if `Map1` is not a map, or 
 ** exception error: {badkey,-4}
 ----
 
----
+'''
 
 === Module `uef_num`
 
----
+'''
 
 ==== uef_num:ctz/1
 
@@ -1362,7 +1362,7 @@ The call fails with a `{badarg,Integer}` exception if `Integer` is not a positiv
 0
 ----
 
----
+'''
 
 ==== uef_num:lsb_pos/1
 
@@ -1398,7 +1398,7 @@ The call fails with a `{badarg,Integer}` exception if `Integer` is not a positiv
 1
 ----
 
----
+'''
 
 ==== uef_num:msb_pos/1
 
@@ -1434,7 +1434,7 @@ The call fails with a `{badarg,Integer}` exception if `Integer` is not a positiv
 64
 ----
 
----
+'''
 
 ==== uef_num:popcount/1
 
@@ -1472,7 +1472,7 @@ The call fails with a `{badarg,Integer}` exception if `Integer` is not a non-neg
 64
 ----
 
----
+'''
 
 ==== uef_num:round_number/2
 
@@ -1494,7 +1494,7 @@ Rounds the number to the specified precision.
 123.79
 ----
 
----
+'''
 
 ==== uef_num:round_price/1
 
@@ -1505,11 +1505,11 @@ uef_num:round_price(Number) -> Float.
 
 Rounds the number to the precision of **2**. The same as `uef_num:round_number(Number, 2)`.
 
----
+'''
 
 === Module `uef_time`
 
----
+'''
 
 ==== uef_time:add_seconds/1
 
@@ -1528,7 +1528,7 @@ Seconds :: integer().
 NewDateTime :: calendar:datetime().
 ----
 
----
+'''
 
 ==== uef_time:add_seconds/2
 
@@ -1565,7 +1565,7 @@ NewDateTime :: calendar:datetime().
 {{2019,1,1},{23,58,50}}
 ----
 
----
+'''
 
 ==== uef_time:add_minutes/1
 
@@ -1584,7 +1584,7 @@ Minutes :: integer().
 NewDateTime :: calendar:datetime().
 ----
 
----
+'''
 
 ==== uef_time:add_minutes/2
 
@@ -1621,7 +1621,7 @@ NewDateTime :: calendar:datetime().
 {{2018,12,31},{23,51,0}}
 ----
 
----
+'''
 
 ==== uef_time:add_hours/1
 
@@ -1640,7 +1640,7 @@ Hours :: integer().
 NewDateTime :: calendar:datetime().
 ----
 
----
+'''
 
 ==== uef_time:add_hours/2
 
@@ -1677,7 +1677,7 @@ NewDateTime :: calendar:datetime().
 {{2018,12,31},{14,1,0}}
 ----
 
----
+'''
 
 ==== uef_time:add_days/1
 
@@ -1696,7 +1696,7 @@ Days :: integer().
 NewDateTime :: calendar:datetime().
 ----
 
----
+'''
 
 ==== uef_time:add_days/2
 
@@ -1733,7 +1733,7 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 {{2018,12,22},{0,1,0}}
 ----
 
----
+'''
 
 ==== uef_time:add_weeks/1
 
@@ -1752,7 +1752,7 @@ Weeks :: integer().
 NewDateTime :: calendar:datetime().
 ----
 
----
+'''
 
 ==== uef_time:add_weeks/2
 
@@ -1789,7 +1789,7 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 {{2018,12,4},{0,1,0}}
 ----
 
----
+'''
 
 ==== uef_time:add_months/1
 
@@ -1808,7 +1808,7 @@ Months :: integer().
 NewDateTime :: calendar:datetime().
 ----
 
----
+'''
 
 ==== uef_time:add_months/2
 
@@ -1848,7 +1848,7 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 {{2018,12,1},{0,1,0}}
 ----
 
----
+'''
 
 ==== uef_time:add_years/1
 
@@ -1867,7 +1867,7 @@ Years :: integer().
 NewDateTime :: calendar:datetime().
 ----
 
----
+'''
 
 ==== uef_time:add_years/2
 
@@ -1904,7 +1904,7 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 {{2018,1,1},{0,1,0}}
 ----
 
----
+'''
 
 ==== uef_time:add_time/1
 
@@ -1915,7 +1915,7 @@ uef_time:add_time(Periods) -> NewDateTime.
 
 Same as `uef_time:add_time(erlang:localtime(), Periods)`. See docs of link:#uef_timeadd_time2[uef_time:add_time/2]. `NewDateTime` is of type `calendar:datetime()`. See types for `Periods` in *Types* section of function `uef_time:add_time/2`.
 
----
+'''
 
 ==== uef_time:add_time/2
 
@@ -1977,7 +1977,7 @@ true
 true
 ----
 
----
+'''
 
 ==== uef_time:today/0
 
@@ -1988,7 +1988,7 @@ uef_time:today() -> CurrentDate.
 
 Returns the current date as *{Year, Month, Day}*. Same as http://erlang.org/doc/man/erlang.html#date-0[erlang:date()]. `CurrentDate` is of type `calendar:date()`.
 
----
+'''
 
 ==== uef_time:tomorrow/0
 
@@ -1999,7 +1999,7 @@ uef_time:tomorrow() -> TomorrowDate.
 
 Returns tomorrow's date as *{Year, Month, Day}*. `TomorrowDate` is of type `calendar:date()`.
 
----
+'''
 
 ==== uef_time:yesterday/0
 
@@ -2010,7 +2010,7 @@ uef_time:yesterday() -> YesterdayDate.
 
 Returns yesterday's date as *{Year, Month, Day}*. `YesterdayDate` is of type `calendar:date()`.
 
----
+'''
 
 ==== uef_time:unix_time/0
 
@@ -2029,7 +2029,7 @@ Returns the current number of seconds since 00:00:00 (UTC), 1 January 1970. It a
 1557670215
 ----
 
----
+'''
 
 ==== uef_time:unix_time/1
 
@@ -2051,7 +2051,7 @@ Returns the number of seconds elapsed between *00:00:00 (UTC), 1 January 1970* a
 946771199
 ----
 
----
+'''
 
 ==== uef_time:days_diff/1
 
@@ -2062,7 +2062,7 @@ uef_time:days_diff(Date) -> Days.
 
 Returns the difference ***in days*** between `Date` and the current local date provided by function http://erlang.org/doc/man/erlang.html#date-0[erlang:date()]. `Date` must be of type `calendar:date()` (`{Year, Month, Day}`). `Days` is a positive value if `Date` is after `erlang:date()` or a negative value otherwise.
 
----
+'''
 
 ==== uef_time:days_diff/2
 
@@ -2084,7 +2084,7 @@ Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `D
 -7639
 ----
 
----
+'''
 
 ==== uef_time:seconds_diff/1
 
@@ -2095,7 +2095,7 @@ uef_time:seconds_diff(DateTime) -> Seconds.
 
 Returns the difference ***in seconds*** between `Date` and the current local time provided by function http://erlang.org/doc/man/erlang.html#localtime-0[erlang:localtime()]. `DateTime` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`). `Seconds` is a positive value if `DateTime` is after `erlang:localtime()` or a negative value otherwise.
 
----
+'''
 
 ==== uef_time:seconds_diff/2
 
@@ -2117,7 +2117,7 @@ Returns the difference ***in seconds*** between `DateTime2` and `DateTime1`.  `D
 -660009600
 ----
 
----
+'''
 
 == Build
 
