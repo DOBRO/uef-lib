@@ -1,61 +1,74 @@
-# uef-lib
+= uef-lib
+:toc: macro
+:toclevels: 4
 
-[![Hex pm](https://img.shields.io/hexpm/v/uef.svg?color=yellow)](https://hex.pm/packages/uef)
-[![Build Status](https://travis-ci.com/DOBRO/uef-lib.svg?branch=master)](https://travis-ci.com/DOBRO/uef-lib)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+image:https://img.shields.io/hexpm/v/uef.svg?color=yellow["uef-lib on Hex.pm", link="https://hex.pm/packages/uef"]
+image:https://travis-ci.com/DOBRO/uef-lib.svg?branch=master["Build Status", link="https://travis-ci.com/DOBRO/uef-lib"]
+image:https://img.shields.io/badge/license-MIT-blue.svg["License", link="LICENSE"]
+
 
 *uef-lib* is a **U**seful **E**rlang **F**unctions **Lib**rary. It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
 
 Erlang/OTP 19 or higher is required.
 
-See how to [build](#build) and [test](#test-and-dialyze).
+See how to link:#build[build] and link:#test-and-dialyze[test].
 
-## Modules
+'''
 
-* **[uef_bin](#module-uef_bin)** - for binaries.
-* **[uef_crypt](#module-uef_crypt)** - some crypto functions.
-* **[uef_encode](#module-uef_encode)** - working with encodings.
-* **[uef_file](#module-uef_file)** - working with files.
-* **[uef_format](#module-uef_format)** - formatting numbers.
-* **[uef_lists](#module-uef_lists)** - lists transformations.
-* **[uef_maps](#module-uef_maps)** - functions for maps processing.
-* **[uef_num](#module-uef_num)** - helpful functions for numbers.
-* **[uef_time](#module-uef_time)** - datetime functions.
+toc::[]
 
-## Documentation
+'''
 
-### Module `uef_bin`
+== Modules
+
+* *link:#module-uef_bin[uef_bin]* - for binaries.
+* *link:#module-uef_crypt[uef_crypt]* - some crypto functions.
+* *link:#module-uef_encode[uef_encode]* - working with encodings.
+* *link:#module-uef_file[uef_file]* - working with files.
+* *link:#module-uef_format[uef_format]* - formatting numbers.
+* *link:#module-uef_lists[uef_lists]* - lists transformations.
+* *link:#module-uef_maps[uef_maps]* - functions for maps processing.
+* *link:#module-uef_num[uef_num]* - helpful functions for numbers.
+* *link:#module-uef_time[uef_time]* - datetime functions.
+
+== Documentation
+
+=== Module `uef_bin`
 
 ---
 
-#### *uef_bin:binary_join/2*
+==== uef_bin:binary_join/2
 
-```erlang
+[source,erlang]
+----
 uef_bin:binary_join(ListOfBinaries, Separator) -> Binary.
-```
+----
 
 Joins a list of binaries with separator into a single binary. Returns binary.
 
-**Example:**
+*Example:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:binary_join([<<"www">>, <<"example">>, <<"com">>], <<".">>).
 <<"www.example.com">>
-```
+----
 
 ---
 
-#### *uef_bin:repeat/2*
+==== uef_bin:repeat/2
 
-```erlang
+[source,erlang]
+----
 uef_bin:repeat(Binary1, N) -> Binary2.
-```
+----
 
 Returns binary `Binary2` consisting of `Binary1` repeated `N` times.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:repeat(<<"a">>, 10).
 <<"aaaaaaaaaa">>
 
@@ -70,23 +83,25 @@ Returns binary `Binary2` consisting of `Binary1` repeated `N` times.
 
 > uef_bin:repeat(<<"abc">>, 3).
 <<"abcabcabc">>
-```
+----
 
 ---
 
-#### *uef_bin:reverse/1*
+==== uef_bin:reverse/1
 
-```erlang
+[source,erlang]
+----
 uef_bin:reverse(Binary1) -> Binary2.
-```
+----
 
 Returns a binary in reverse *byte* order.
 
-**Note:** this function is **not** intended to work with UTF-8 binary strings. To get a binary in reverse *character* order, use [uef_bin:reverse_utf8/1](#uef_binreverse_utf81) instead.
+**Note:** this function is **not** intended to work with UTF-8 binary strings. To get a binary in reverse *character* order, use link:#uef_binreverse_utf81[uef_bin:reverse_utf8/1] instead.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:reverse(<<"ABCDEFGH">>).
 <<"HGFEDCBA">>
 
@@ -95,21 +110,23 @@ Returns a binary in reverse *byte* order.
 
 > uef_bin:reverse(<<>>).
 <<>>
-```
+----
 
 ---
 
-#### *uef_bin:reverse_utf8/1*
+==== uef_bin:reverse_utf8/1
 
-```erlang
+[source,erlang]
+----
 uef_bin:reverse_utf8(UTF8_Binary1) -> UTF8_Binary2.
-```
+----
 
 Returns a binary in reverse character order. Intended to work with UTF-8 binary strings.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:reverse_utf8(<<"ABCDEFGH">>).
 <<"HGFEDCBA">>
 
@@ -130,21 +147,23 @@ true
 
 > uef_bin:reverse_utf8(<<"こんにちは"/utf8>>) =:= <<"はちにんこ"/utf8>>.
 true
-```
+----
 
 ---
 
-#### *uef_bin:split/2*
+==== uef_bin:split/2
 
-```erlang
+[source,erlang]
+----
 uef_bin:split(Binary, Splitter) -> ListOfBinaries.
-```
+----
 
-Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works as [binary:split/2](http://erlang.org/doc/man/binary.html#split-2) but is more performant in simple cases.
+Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works as http://erlang.org/doc/man/binary.html#split-2[binary:split/2] but is more performant in simple cases.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:split(<<".www.example.com.">>, <<".">>).
 [<<>>,<<"www">>,<<"example">>,<<"com">>,<<>>]
 
@@ -153,78 +172,86 @@ Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works a
 
 > uef_bin:split(<<"www.example.com">>, <<"A">>).
 [<<"www.example.com">>]
-```
+----
 
 ---
 
-#### *uef_bin:split/3*
+==== uef_bin:split/3
 
-```erlang
+[source,erlang]
+----
 uef_bin:split(Binary, Splitter, 'trim_all') -> ListOfBinaries.
-```
+----
 
-Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works as `uef_bin:split/2` but removes all epmty (`<<>>`) chunks. It can be used in simple cases instead of  [binary:split/3](http://erlang.org/doc/man/binary.html#split-3) for the reason that it's more performant.
+Splits binary `Binary` with splitter `Splitter` into a list of binaries. Works as `uef_bin:split/2` but removes all epmty (`<<>>`) chunks. It can be used in simple cases instead of http://erlang.org/doc/man/binary.html#split-3[binary:split/3] for the reason that it's more performant.
 
-**Example:**
+*Example:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:split(<<"..www.example.com.">>, <<".">>, trim_all).
 [<<"www">>,<<"example">>,<<"com">>]
-```
+----
 
 ---
 
-#### *uef_bin:replace/3*
+==== uef_bin:replace/3
 
-```erlang
+[source,erlang]
+----
 uef_bin:replace(Binary1, Chars, OtherChars) -> Binary2.
-```
+----
 
-Replaces chars `Chars` with other chars `OtherChars` in binary `Binary1` and returns another binary `Binary2`. Works as [binary:replace/3](http://erlang.org/doc/man/binary.html#replace-3) but more permormant and can be used in simple cases.
+Replaces chars `Chars` with other chars `OtherChars` in binary `Binary1` and returns another binary `Binary2`. Works as http://erlang.org/doc/man/binary.html#replace-3[binary:replace/3] but more permormant and can be used in simple cases.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:replace(<<"abcdefgbc">>, <<"bc">>, <<"ZZ">>).
 <<"aZZdefgZZ">>
 
 > uef_bin:replace(<<"abcdefgbc">>, <<"d">>, <<"ZZ">>).
 <<"abcZZefgbc">>
-```
+----
 
 ---
 
-#### *uef_bin:replace_chars/3*
+==== uef_bin:replace_chars/3
 
-```erlang
+[source,erlang]
+----
 uef_bin:replace_chars(Binary1, ListOfCharsToReplace, OtherChars) -> Binary2.
-```
+----
 
 Replaces chars inluded in list `ListOfCharsToReplace` with other chars `OtherChars` in binary `Binary1` and returns another binary `Binary2`.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>], <<>>).
 <<"wwwexamplecom">>
 
 uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>).
 <<"examplecom">>
-```
+----
 
 ---
 
-#### *uef_bin:random_latin_binary/2*
+==== uef_bin:random_latin_binary/2
 
-```erlang
+[source,erlang]
+----
 uef_bin:random_latin_binary(Length, CaseFlag) -> RandomLatinBinary.
-```
+----
 
 Returns a random binary of size `Length` consisting of latins `[a-zA-Z]` and digits `[0-9]`. The second argument `CaseFlag` corresponds to a letter case, an atom `'lower'`, `'upper'` or `'any'`.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:random_latin_binary(10, lower).
 <<"n0ui89sfsb">>
 
@@ -233,62 +260,68 @@ Returns a random binary of size `Length` consisting of latins `[a-zA-Z]` and dig
 
 > uef_bin:random_latin_binary(10, any).
 <<"mTa9Lj7KUN">>
-```
+----
 
 ---
 
-#### *uef_bin:random_binary_from_chars/2*
+==== uef_bin:random_binary_from_chars/2
 
-```erlang
+[source,erlang]
+----
 uef_bin:random_binary_from_chars(Length, Chars) -> RandomCharsBinary.
-```
+----
 
 Generates and returns a binary of size `Length` which consists of the given characters `Chars`.
 
-**Example:**
+*Example:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:random_binary_from_chars(16, <<"ErlangForever">>).
 <<"eFveerorreravgng">>
-```
+----
 
 ---
 
-#### *uef_bin:numeric_prefix/1*
+==== uef_bin:numeric_prefix/1
 
-```erlang
+[source,erlang]
+----
 uef_bin:numeric_prefix(Binary) -> DigitsOnlyOrEmptyBinary.
-```
+----
 
 Returns new binary `DigitsOnlyBinary` which consists of digits [0-9] wich are at the beginning in the given binary `Binary`. If `Binary` does not begin with digit, this function returns empty binary (`<<>>`).
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_bin:numeric_prefix(<<"3456sld1knskjd">>).
 <<"3456">>
 
 > uef_bin:numeric_prefix(<<"ddd3456sld1knskjd">>).
 <<>>
-```
+----
 
 ---
 
-### Module `uef_crypt`
+=== Module `uef_crypt`
 
 ---
 
-#### *uef_crypt:md5_hex/1*
+==== uef_crypt:md5_hex/1
 
-```erlang
+[source,erlang]
+----
 uef_crypt:md5_hex(IoData) -> Binary.
-```
+----
 
 Returns binary `Binary` in hexadecimal form of md5 hash of the argument `IoData`.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_crypt:md5_hex("abcd").
 <<"e2fc714c4727ee9395f324cd2e7f331f">>
 
@@ -297,116 +330,126 @@ Returns binary `Binary` in hexadecimal form of md5 hash of the argument `IoData`
 
 > uef_crypt:md5_hex(["how", ["is", ["it"]], "going", $?]).
 <<"eb89df06495cef83e3ec185aefe81d0e">>
-```
+----
 
 ---
 
-### Module `uef_encode`
+=== Module `uef_encode`
 
 ---
 
-#### *uef_encode:html_encode_bin/1*
+==== uef_encode:html_encode_bin/1
 
-```erlang
+[source,erlang]
+----
 uef_encode:html_encode_bin(Html) -> EncodedBinary.
-```
+----
 
 Takes argument `Html`, replaces some unsafe symbols with their appropriate HTML entities and returns binary.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_encode:html_encode_bin("<>&©\n™").
 <<"&lt;&gt;&amp;&copy;<br/>&trade;">>
 
 > uef_encode:html_encode_bin("♦±Σ").
 <<"&#9830;&plusmn;&Sigma;">>
-```
+----
 
 ---
 
-#### *uef_encode:html_encode_list/1*
+==== uef_encode:html_encode_list/1
 
-```erlang
+[source,erlang]
+----
 uef_encode:html_encode_list(Html) -> EncodedList.
-```
+----
 
 Takes argument Html, replaces some unsafe symbols with their appropriate HTML entities and returns list of binaries.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_encode:html_encode_list("<>&©\n™").
 [<<"&lt;">>,<<"&gt;">>,<<"&amp;">>,<<"&copy;">>,<<"<br/>">>,<<"&trade;">>]
 
 > uef_encode:html_encode_list("♦±Σ").
 [<<"&#9830;">>,<<"&plusmn;">>,<<"&Sigma;">>]
-```
+----
 
 ---
 
-#### *uef_encode:win_to_utf8/1*
+==== uef_encode:win_to_utf8/1
 
-```erlang
+[source,erlang]
+----
 uef_encode:win_to_utf8(Binary1251) -> BinaryUtf8.
-```
+----
 
 Converts *cp1251* binary to *utf-8* binary.
 
-**Example:**
+*Example:*
 
-```erlang
+[source,erlang]
+----
 file_1251_to_utf8() ->
     File1251 = "1251.txt",
     FileUtf8 = "utf8.txt",
     {ok, Bin1251} = file:read_file(File1251),
     BinUtf8 = uef_encode:win_to_utf8(Bin1251), %converting
     file:write_file(FileUtf8, BinUtf8).
-```
+----
 
 ---
 
-### Module `uef_file`
+=== Module `uef_file`
 
 ---
 
-#### *uef_file:read_file_info_fast/1*
+==== uef_file:read_file_info_fast/1
 
-```erlang
+[source,erlang]
+----
 uef_file:read_file_info_fast(Filename) -> {ok, FileInfo} | {error, Reason}.
-```
+----
 
-Retrieves information about **local** file. Returns `{ok, FileInfo}` if successful, otherwise `{error, Reason}`. Works as [file:read_file_info/2](http://erlang.org/doc/man/file.html#read_file_info-2) but optimized for **local** files. This is a wrapper of:
+Retrieves information about **local** file. Returns `{ok, FileInfo}` if successful, otherwise `{error, Reason}`. Works as http://erlang.org/doc/man/file.html#read_file_info-2[file:read_file_info/2] but optimized for **local** files. This is a wrapper of:
 
 `file:read_file_info(Filename, [raw, {time, posix}])`.
 
 ---
 
-#### *uef_file:read_file_fast/1*
+==== uef_file:read_file_fast/1
 
-```erlang
+[source,erlang]
+----
 uef_file:read_file_fast(Filename) -> {ok, BinaryData} | {error, Reason}.
-```
+----
 
-Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, where `BinaryData` is a binary data object that contains the contents of `Filename`, or `{error, Reason}` if an error occurs. This function is optimized for reading contents of **local** files, as no Erlang process is used. It calls [file:open/2](http://erlang.org/doc/man/file.html#open-2) with options `[read, raw, binary]`.
-
----
-
-### Module `uef_format`
+Reads contents of **local** file `Filename` and returns `{ok, BinaryData}`, where `BinaryData` is a binary data object that contains the contents of `Filename`, or `{error, Reason}` if an error occurs. This function is optimized for reading contents of **local** files, as no Erlang process is used. It calls http://erlang.org/doc/man/file.html#open-2[file:open/2] with options `[read, raw, binary]`.
 
 ---
 
-#### *uef_format:format_bytes/1*
+=== Module `uef_format`
 
-```erlang
+---
+
+==== uef_format:format_bytes/1
+
+[source,erlang]
+----
 uef_format:format_bytes(Bytes) -> FormattedBytes.
-```
+----
 
-The same as `uef_format:format_bytes(Bytes, #{})`. See [uef_format:format_bytes/2](#uef_formatformat_bytes2) docs.
+The same as `uef_format:format_bytes(Bytes, #{})`. See link:#uef_formatformat_bytes2[uef_format:format_bytes/2] docs.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_format:format_bytes(1024).
 <<"1KB">>
 
@@ -418,19 +461,21 @@ The same as `uef_format:format_bytes(Bytes, #{})`. See [uef_format:format_bytes/
 
 > uef_format:format_bytes(10485760).
 <<"10MB">>
-```
+----
 
 ---
 
-#### *uef_format:format_bytes/2*
+==== uef_format:format_bytes/2
 
-```erlang
+[source,erlang]
+----
 uef_format:format_bytes(Bytes, Options) -> FormattedBytes.
-```
+----
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Bytes :: integer().
 
 Options :: #{
@@ -447,15 +492,16 @@ ToType :: bin | int.
 Separator :: binary().
 
 FormattedBytes :: binary() | integer() | {integer(), MultiUnits}.
-```
+----
 
 Default `Options`:
 
-```erlang
+[source,erlang]
+----
 #{ units => auto, base => 2, to_type => bin, sep => <<>> }.
-```
+----
 
-Converts bytes `Bytes` to [multiples of bytes](https://en.wikipedia.org/wiki/Megabyte). The datatype of the return value depends on `ToType` and `Units`:
+Converts bytes `Bytes` to https://en.wikipedia.org/wiki/Megabyte[multiples of bytes]. The datatype of the return value depends on `ToType` and `Units`:
 
 * if `ToType` is `bin`, it returns `binary()`;
 * if `ToType` is `int`, it returns `integer()`;
@@ -470,9 +516,10 @@ If the value of `Units` is `auto`, bytes are converted to the most reasonable mu
 
 `Separator` is a separator between _integer value_ and `Units`. This option affects the result when `ToType` is `bin`.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_format:format_bytes(1000000, #{units => auto, base => 2}).
 <<"976KB">>
 
@@ -496,21 +543,23 @@ If the value of `Units` is `auto`, bytes are converted to the most reasonable mu
 
 > uef_format:format_bytes(1048576, #{units => 'KB', to_type => bin, sep => <<"|">>}).
 <<"1024|KB">>
-```
+----
 
 ---
 
-#### *uef_format:format_number/3*
+==== uef_format:format_number/3
 
-```erlang
+[source,erlang]
+----
 uef_format:format_number(Number, Precision, Decimals) -> FormattedNumber.
-```
+----
 
-The same as `uef_format:format_number/4` with `#{}` as the forth argument. See [uef_format:format_number/4](#uef_formatformat_number4) docs.
+The same as `uef_format:format_number/4` with `#{}` as the forth argument. See link:#uef_formatformat_number4[uef_format:format_number/4] docs.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_format:format_number(199.4567, 2, 3).
 <<"199.460">>
 
@@ -522,30 +571,33 @@ The same as `uef_format:format_number/4` with `#{}` as the forth argument. See [
 
 > uef_format:format_number(199.4567, -1, 2).
 <<"200.00">>
-```
+----
 
 ---
 
-#### *uef_format:format_number/4*
+==== uef_format:format_number/4
 
-```erlang
+[source,erlang]
+----
 uef_format:format_number(Number, Precision, Decimals, Options) -> FormattedNumber.
-```
+----
 
 Formats `Number` by adding thousands separator between each set of 3 digits to the left of the decimal point, substituting `Decimals` for the decimal point, and rounding to the specified `Precision`. Returns a **binary** value.
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Number :: number().
 Precision :: integer().
 Decimals :: non_neg_integer().
 FormattedNumber :: binary().
-```
+----
 
 `Options` is a map:
 
-```erlang
+[source,erlang]
+----
 #{
     thousands_sep => binary() | string(), % Thousands separator
     decimal_point => binary() | string(), % Decimal point
@@ -553,13 +605,14 @@ FormattedNumber :: binary().
     cur_pos => 'left' | 'right', % Currency position against price (left or right)
     cur_sep => binary() | string() % Separator between currency and price
 }
-```
+----
 
 **Note:** to get maximum performance use **binary** values for options `thousands_sep`, `decimal_point`, `cur_symbol` and `cur_sep` instead of strings.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_format:format_number(1234567890.4567, 2, 2, #{}).
 <<"1234567890.46">>
 
@@ -588,66 +641,72 @@ FormattedNumber :: binary().
     cur_sep => <<" ">>, % binary()
     cur_pos => left}).
 <<"USD 1,234,567,890.4600">>
-```
+----
 
 ---
 
-#### *uef_format:format_price/1*
+==== uef_format:format_price/1
 
-```erlang
+[source,erlang]
+----
 uef_format:format_price(Number) -> FormattedPrice.
-```
+----
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a precision of `2` and decimal digits of `2`.
 
-The same as `uef_format:format_price/2` with a precision of `2` as the second argument. See [uef_format:format_price/2](#uef_formatformat_price2) docs.
+The same as `uef_format:format_price/2` with a precision of `2` as the second argument. See link:#uef_formatformat_price2[uef_format:format_price/2] docs.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_format:format_price(199).
 <<"199.00">>
 
 > uef_format:format_price(199.9876).
 <<"199.99">>
-```
+----
 
 ---
 
-#### *uef_format:format_price/2*
+==== uef_format:format_price/2
 
-```erlang
+[source,erlang]
+----
 uef_format:format_price(Number, Precision) -> FormattedPrice.
-```
+----
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a specified precision as the second argument and decimal digits of `2`.
 
-The same as `uef_format:format_price/3` with `#{}` as the third argument. See [uef_format:format_price/3](#uef_formatformat_price3) docs.
+The same as `uef_format:format_price/3` with `#{}` as the third argument. See link:#uef_formatformat_price3[uef_format:format_price/3] docs.
 
-**Example:**
+*Example:*
 
-```erlang
+[source,erlang]
+----
 > uef_format:format_price(1999.9876, 4).
 <<"1999.99">>
-```
+----
 
 ---
 
-#### *uef_format:format_price/3*
+==== uef_format:format_price/3
 
-```erlang
+[source,erlang]
+----
 uef_format:format_price(Number, Precision, CurrencySymbol_OR_Options) -> FormattedPrice.
-```
+----
 
 Formats `Number` in price-like style. Returns a binary containing `FormattedPrice` formatted with a specified precision as the second argument, decimal digits of `2`, and with currency symbol (or options) as the third argument.
 
-If `CurrencySymbol_OR_Options` is a `map` the functions works as [uef_format:format_number/4](#uef_formatformat_number4) with decimal digits of `2` as the third argument and with options as the forth one.
+If `CurrencySymbol_OR_Options` is a `map` the functions works as link:#uef_formatformat_number4[uef_format:format_number/4] with decimal digits of `2` as the third argument and with options as the forth one.
 
 If `CurrencySymbol_OR_Options` is a `binary` or a `string`, the corresponding currency symbol is added to the left.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_format:format_price(1000.8767, 4, #{}).
 <<"1000.88">>
 
@@ -683,25 +742,27 @@ If `CurrencySymbol_OR_Options` is a `binary` or a `string`, the corresponding cu
 > uef_format:format_price(99.99, 2, <<"€"/utf8>>).
 <<226,130,172,57,57,46,57,57>> % <<"€99.99"/utf8>>
 
-```
+----
 
 ---
 
-### Module `uef_lists`
+=== Module `uef_lists`
 
 ---
 
-#### *uef_lists:split_list_into_chunks/2*
+==== uef_lists:split_list_into_chunks/2
 
-```erlang
+[source,erlang]
+----
 uef_lists:split_list_into_chunks(List, MaxLen) -> [List1, List2, ..., ListN].
-```
+----
 
 Splits `List` into list of lists `[List1, List2, ..., ListN]` where `List1, List2, ..., ListN` are lists with maximum `MaxLen` elements.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 1).
 [[1],[2],[3],[4],[5],[6],[7],[8]]
 
@@ -722,41 +783,45 @@ Splits `List` into list of lists `[List1, List2, ..., ListN]` where `List1, List
 
 > uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 99).
 [[1,2,3,4,5,6,7,8]]
-```
+----
 
 ---
 
-#### *uef_lists:lists_to_list_of_tuples/2*
+==== uef_lists:lists_to_list_of_tuples/2
 
-```erlang
+[source,erlang]
+----
 uef_lists:lists_to_list_of_tuples(List1, List2) -> List3.
-```
+----
 
 Transforms two lists into one list of two-tuples, where the first element of each tuple is taken from the first list and the second element is taken from the second list one by one.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_lists:lists_to_list_of_tuples([a,b,c], [1,2]).
 [{a,1},{a,2},{b,1},{b,2},{c,1},{c,2}]
 
 > uef_lists:lists_to_list_of_tuples([a,b,c], [1,2,3]).
 [{a,1},{a,2},{a,3},{b,1},{b,2},{b,3},{c,1},{c,2},{c,3}]
-```
+----
 
 ---
 
-#### *uef_lists:lists_to_list_of_tuples/3*
+==== uef_lists:lists_to_list_of_tuples/3
 
-```erlang
+[source,erlang]
+----
 uef_lists:lists_to_list_of_tuples(List1, List2, List3) -> List4.
-```
+----
 
 Transforms three lists into one list of three-tuples, where the first element of each tuple is taken from the first list, the second element is taken from the second list one by one, and the third element is taken from the third list one by one.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_lists:lists_to_list_of_tuples([a1,b1], [a2,b2], [a3,b3]).
 [{a1,a2,a3},
  {a1,a2,b3},
@@ -780,15 +845,16 @@ Transforms three lists into one list of three-tuples, where the first element of
  {b1,b2,b3},
  {b1,c2,a3},
  {b1,c2,b3}]
-```
+----
 
 ---
 
-#### *uef_lists:search/2*
+==== uef_lists:search/2
 
-```erlang
+[source,erlang]
+----
 uef_lists:search(Pred, List) -> {value, Value} | false.
-```
+----
 
 If there is a `Value` in `List` such that `Pred(Value)` returns `true`, returns `{value, Value}` for the first such `Value`, otherwise returns `false`.
 
@@ -796,15 +862,16 @@ If there is a `Value` in `List` such that `Pred(Value)` returns `true`, returns 
 
 ---
 
-### Module `uef_maps`
+=== Module `uef_maps`
 
 ---
 
-#### *uef_maps:delete_nested/2*
+==== uef_maps:delete_nested/2
 
-```erlang
+[source,erlang]
+----
 uef_maps:delete_nested(Keys, Map1) -> {ok, Map2} | {error, {badkey, SomeKey}} | {error, empty_keys}.
-```
+----
 
 Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has internal structure `#{Key1 => #{Key2 => #{... => #{KeyN => ValueN}}}}`. The function removes key `KeyN`, if it exists, and its associated value from the corresponding internal map and updates the entire structure of map `Map1` getting new map `Map2`. There are three possible return values:
 
@@ -816,11 +883,12 @@ Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has interna
 
 The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-See also: [uef_maps:remove_nested/2](#uef_mapsremove_nested2), [uef_maps:take_nested/2](#uef_mapstake_nested2).
+See also: link:#uef_mapsremove_nested2[uef_maps:remove_nested/2], link:#uef_mapstake_nested2[uef_maps:take_nested/2].
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > Map1 = #{1 => #{2 => #{3 => val3, 33 => val33}}}.
 #{1 => #{2 => #{3 => val3,33 => val33}}}
 
@@ -850,23 +918,25 @@ See also: [uef_maps:remove_nested/2](#uef_mapsremove_nested2), [uef_maps:take_ne
 
 > uef_maps:delete_nested([1,2,3,4,5], Map1).
 {error,{badkey,4}} % 4, not 5!
-```
+----
 
 ---
 
-#### *uef_maps:find_nested/2*
+==== uef_maps:find_nested/2
 
-```erlang
+[source,erlang]
+----
 uef_maps:find_nested(Keys, Map) -> {ok, Value} | error.
-```
+----
 
 Traverses nested map `Map` (*map of maps*) deep through the keys that are elements of list `Keys`. Returns tuple `{ok, Value}`, where `Value` is the value associated with the last element of list `Keys`, or `error` if no value is found.
 
 The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > Value = abc, M3 = #{key4 => Value}, M2 = #{key3 => M3}, M1 = #{key2 => M2}, M0 = #{key1 => M1}.
 #{key1 => #{key2 => #{key3 => #{key4 => abc}}}} % M0
 
@@ -893,23 +963,25 @@ error
 
 > uef_maps:find_nested([key1,key2,key3,key4,key5], M0).
 ** exception error: {badmap,abc}
-```
+----
 
 ---
 
-#### *uef_maps:get_nested/2*
+==== uef_maps:get_nested/2
 
-```erlang
+[source,erlang]
+----
 uef_maps:get_nested(Keys, Map) -> Value.
-```
+----
 
 Traverses nested map `Map` (*map of maps*) deep through the keys that are elements of list `Keys`. Returns value `Value` associated with the last element of list `Keys`.
 
 The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badkeys,Keys}` exception if no value is found, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > Value = abc, M3 = #{key4 => Value}, M2 = #{key3 => M3}, M1 = #{key2 => M2}, M0 = #{key1 => M1}.
 #{key1 => #{key2 => #{key3 => #{key4 => abc}}}} % M0
 
@@ -925,23 +997,25 @@ The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a 
 > uef_maps:get_nested([key1,key2,key3,key4], M0).
 abc % Value
 
-```
+----
 
 ---
 
-#### *uef_maps:get_nested/3*
+==== uef_maps:get_nested/3
 
-```erlang
+[source,erlang]
+----
 uef_maps:get_nested(Keys, Map, Default) -> Value | Default.
-```
+----
 
 Traverses nested map `Map` (*map of maps*) deep through the keys that are elements of list `Keys`. Returns value `Value` associated with the last element of list `Keys`. If no value is found, `Default` is returned.
 
 The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list. It **does not** fail if any internal value associated with any element of list `Keys` is not a map.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > Value = abc, Default = default, M3 = #{key4 => Value}, M2 = #{key3 => M3}, M1 = #{key2 => M2}, M0 = #{key1 => M1}.
 #{key1 => #{key2 => #{key3 => #{key4 => abc}}}} % M0.
 
@@ -956,23 +1030,25 @@ default % Default
 
 > uef_maps:get_nested([key1,key2,key3,key4,key5], M0, Default).
 default % Default anyway. Doesn't fail
-```
+----
 
 ---
 
-#### *uef_maps:is_key_nested/2*
+==== uef_maps:is_key_nested/2
 
-```erlang
+[source,erlang]
+----
 uef_maps:is_key_nested(Keys, Map) -> true | false.
-```
+----
 
 Returns `true` if map `Map` contains submaps as values associated with their own key corresponding to the element of list `Keys`, and returns `false` otherwise.
 
 The call fails with a `{badmap,Map}` exception if `Map` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > M3 = #{key4 => value}, M2 = #{key3 => M3}, M1 = #{key2 => M2}, M0 = #{key1 => M1}.
 #{key1 => #{key2 => #{key3 => #{key4 => value}}}} % M0
 
@@ -999,33 +1075,36 @@ false
 
 > uef_maps:is_key_nested([key1,-2,key3,key4], M0).
 false
-```
+----
 
 ---
 
-#### *uef_maps:new_nested/1*
+==== uef_maps:new_nested/1
 
-```erlang
+[source,erlang]
+----
 uef_maps:new_nested(Keys) -> Map.
-```
+----
 
-Same as `uef_maps:new_nested(Keys, #{})`. See docs of [uef_maps:new_nested/2](#uef_mapsnew_nested2).
+Same as `uef_maps:new_nested(Keys, #{})`. See docs of link:#uef_mapsnew_nested2[uef_maps:new_nested/2].
 
 ---
 
-#### *uef_maps:new_nested/2*
+==== uef_maps:new_nested/2
 
-```erlang
+[source,erlang]
+----
 uef_maps:new_nested(Keys, Value) -> Map.
-```
+----
 
 Returns new nested map `Map` with the deepest map `#{LastKey => Value}`, where `LastKey` is the last element of list `Keys`.
 
 The call fails with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_maps:new_nested([], value).
 #{}
 
@@ -1037,25 +1116,27 @@ The call fails with a `{badlist,Keys}` exception if `Keys` is not a list.
 
 > uef_maps:new_nested([key1, key2, key3], value).
 #{key1 => #{key2 => #{key3 => value}}}
-```
+----
 
 ---
 
-#### *uef_maps:put_nested/3*
+==== uef_maps:put_nested/3
 
-```erlang
+[source,erlang]
+----
 uef_maps:put_nested(Keys, Value, Map1) -> Map2.
-```
+----
 
 Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has internal structure `#{Key1 => #{Key2 => #{... => #{KeyN => ValueN}}}}`. The function associates `KeyN` with value `Value` and updates the entire structure of map `Map1` returning new map `Map2`. If some keys from list `Keys` are not in the structure of map `Map1`, they will be inserted into the structure of map `Map2` in the same order.
 
 The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-See also: [uef_maps:update_nested/3](#uef_mapsupdate_nested3)
+See also: link:#uef_mapsupdate_nested3[uef_maps:update_nested/3].
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > Map1 = #{1 => #{2 => #{3 => val3}}}.
 #{1 => #{2 => #{3 => val3}}} % Map1
 
@@ -1088,25 +1169,27 @@ See also: [uef_maps:update_nested/3](#uef_mapsupdate_nested3)
 
 > uef_maps:put_nested([1,2,3,-4], new_value, Map1).
 #{1 => #{2 => #{3 => #{-4 => new_value}}}}
-```
+----
 
 ---
 
-#### *uef_maps:remove_nested/2*
+==== uef_maps:remove_nested/2
 
-```erlang
+[source,erlang]
+----
 uef_maps:remove_nested(Keys, Map1) -> Map2.
-```
+----
 
 Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has internal structure `#{Key1 => #{Key2 => #{... => #{KeyN => ValueN}}}}`. The function removes key `KeyN`, if it exists, and its associated value from the corresponding internal map and updates the entire structure of map `Map1` returning new map `Map2`. If some keys from list `Keys` are not in the structure of map `Map1` the function returns a map without changes.
 
 The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-See also: [uef_maps:delete_nested/2](#uef_mapsdelete_nested2), [uef_maps:take_nested/2](#uef_mapstake_nested2).
+See also: link:#uef_mapsdelete_nested2[uef_maps:delete_nested/2], link:#uef_mapstake_nested2[uef_maps:take_nested/2].
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > Map1 = #{1 => #{2 => #{3 => val3, 33 => val33}}}.
 #{1 => #{2 => #{3 => val3,33 => val33}}}
 
@@ -1136,25 +1219,27 @@ See also: [uef_maps:delete_nested/2](#uef_mapsdelete_nested2), [uef_maps:take_ne
 
 > uef_maps:remove_nested([1,2,3,4,5], Map1).
 #{1 => #{2 => #{3 => val3,33 => val33}}}  % Map1
-```
+----
 
 ---
 
-#### *uef_maps:take_nested/2*
+==== uef_maps:take_nested/2
 
-```erlang
+[source,erlang]
+----
 uef_maps:take_nested(Keys, Map1) -> {Value, Map2} | error.
-```
+----
 
 Say, `Keys` is a list of elements `Key1, Key2, ..., KeyN` and `Map1` has internal structure `#{Key1 => #{Key2 => #{... => #{KeyN => Value}}}}`. The function removes key `KeyN`, if it exists, and its associated value `Value` from the corresponding internal map and updates the entire structure of map `Map1` returning tuple `{Value, Map2}`. If some keys from list `Keys` are not in the structure of map `Map1` the function returns `error`.
 
 The call fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-See also: [uef_maps:delete_nested/2](#uef_mapsdelete_nested2), [uef_maps:remove_nested/2](#uef_mapsremove_nested2).
+See also: link:#uef_mapsdelete_nested2[uef_maps:delete_nested/2], link:#uef_mapsremove_nested2[uef_maps:remove_nested/2].
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > Map1 = #{1 => #{2 => #{3 => val3, 33 => val33}}}.
 #{1 => #{2 => #{3 => val3,33 => val33}}}
 
@@ -1184,23 +1269,25 @@ error
 
 > uef_maps:take_nested([1,2,3,4,5], Map1).
 error
-```
+----
 
 ---
 
-#### *uef_maps:update_nested/3*
+==== uef_maps:update_nested/3
 
-```erlang
+[source,erlang]
+----
 uef_maps:update_nested(Keys, Value, Map1) -> Map2.
-```
+----
 
-Works similar to [uef_maps:put_nested/3](#uef_mapsput_nested3) with the difference that it fails with a `{badkey,SomeKey}` exception if `SomeKey` does not exist in the structure of map `Map1`, where `SomeKey` is one of the elements of list `Keys`.
+Works similar to link:#uef_mapsput_nested3[uef_maps:put_nested/3] with the difference that it fails with a `{badkey,SomeKey}` exception if `SomeKey` does not exist in the structure of map `Map1`, where `SomeKey` is one of the elements of list `Keys`.
 
 The call also fails with a `{badmap,Map1}` exception if `Map1` is not a map, or with a `{badlist,Keys}` exception if `Keys` is not a list.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > Map1 = #{1 => #{2 => #{3 => val3}}}.
 #{1 => #{2 => #{3 => val3}}} % Map1
 
@@ -1233,27 +1320,29 @@ The call also fails with a `{badmap,Map1}` exception if `Map1` is not a map, or 
 
 > uef_maps:update_nested([1,2,3,-4], new_value, Map1).
 ** exception error: {badkey,-4}
-```
+----
 
 ---
 
-### Module `uef_num`
+=== Module `uef_num`
 
 ---
 
-#### *uef_num:ctz/1*
+==== uef_num:ctz/1
 
-```erlang
+[source,erlang]
+----
 uef_num:ctz(Integer) -> TrailingZeros.
-```
+----
 
-Counts [trailing zeros](https://en.wikipedia.org/wiki/Find_first_set) in the binary representation of a positive integer. Returns the number of zero bits following the least significant one bit.
+Counts https://en.wikipedia.org/wiki/Find_first_set[trailing zeros] in the binary representation of a positive integer. Returns the number of zero bits following the least significant one bit.
 
 The call fails with a `{badarg,Integer}` exception if `Integer` is not a positive integer.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_num:ctz(2#10001000).
 3
 
@@ -1271,23 +1360,25 @@ The call fails with a `{badarg,Integer}` exception if `Integer` is not a positiv
 
 > uef_num:ctz(16#FFFFFFFFFFFFFFFF).
 0
-```
+----
 
 ---
 
-#### *uef_num:lsb_pos/1*
+==== uef_num:lsb_pos/1
 
-```erlang
+[source,erlang]
+----
 uef_num:lsb_pos(Integer) -> Position.
-```
+----
 
-Returns the position of the [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) (**LSB**) in the binary representation of a positive integer.
+Returns the position of the https://en.wikipedia.org/wiki/Bit_numbering[least significant bit] (**LSB**) in the binary representation of a positive integer.
 
 The call fails with a `{badarg,Integer}` exception if `Integer` is not a positive integer.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_num:lsb_pos(2#10001000).
 4
 
@@ -1305,23 +1396,25 @@ The call fails with a `{badarg,Integer}` exception if `Integer` is not a positiv
 
 > uef_num:lsb_pos(16#FFFFFFFFFFFFFFFF).
 1
-```
+----
 
 ---
 
-#### *uef_num:msb_pos/1*
+==== uef_num:msb_pos/1
 
-```erlang
+[source,erlang]
+----
 uef_num:msb_pos(Integer) -> Position.
-```
+----
 
-Returns the position of the [most significant bit](https://en.wikipedia.org/wiki/Bit_numbering) (**MSB**) in the binary representation of a positive integer.
+Returns the position of the https://en.wikipedia.org/wiki/Bit_numbering[most significant bit] (**MSB**) in the binary representation of a positive integer.
 
 The call fails with a `{badarg,Integer}` exception if `Integer` is not a positive integer.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_num:msb_pos(2#111).
 3
 
@@ -1339,25 +1432,27 @@ The call fails with a `{badarg,Integer}` exception if `Integer` is not a positiv
 
 > uef_num:msb_pos(16#FFFFFFFFFFFFFFFF).
 64
-```
+----
 
 ---
 
-#### *uef_num:popcount/1*
+==== uef_num:popcount/1
 
-```erlang
+[source,erlang]
+----
 uef_num:popcount(Integer) -> OneBits.
-```
+----
 
-Returns the number of 1's (ones or one-bits) in the [binary representation](https://en.wikipedia.org/wiki/Binary_number#Representation) of a non-negative integer.
+Returns the number of 1's (ones or one-bits) in the https://en.wikipedia.org/wiki/Binary_number#Representation[binary representation] of a non-negative integer.
 Also known as population count, pop count, popcount, sideways sum, bit summation,
-or [Hamming weight](https://en.wikipedia.org/wiki/Hamming_weight).
+or https://en.wikipedia.org/wiki/Hamming_weight[Hamming weight].
 
 The call fails with a `{badarg,Integer}` exception if `Integer` is not a non-negative integer.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_num:popcount(7).
 3
 
@@ -1375,80 +1470,88 @@ The call fails with a `{badarg,Integer}` exception if `Integer` is not a non-neg
 
 > uef_num:popcount(16#FFFFFFFFFFFFFFFF).
 64
-```
+----
 
 ---
 
-#### *uef_num:round_number/2*
+==== uef_num:round_number/2
 
-```erlang
+[source,erlang]
+----
 uef_num:round_number(Number, Precision) -> Float.
-```
+----
 
 Rounds the number to the specified precision.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_num:round_number(10, 2).
 10.0
 
 > uef_num:round_number(123.786, 2).
 123.79
-```
+----
 
 ---
 
-#### *uef_num:round_price/1*
+==== uef_num:round_price/1
 
-```erlang
+[source,erlang]
+----
 uef_num:round_price(Number) -> Float.
-```
+----
 
 Rounds the number to the precision of **2**. The same as `uef_num:round_number(Number, 2)`.
 
 ---
 
-### Module `uef_time`
+=== Module `uef_time`
 
 ---
 
-#### *uef_time:add_seconds/1*
+==== uef_time:add_seconds/1
 
-```erlang
+[source,erlang]
+----
 uef_time:add_seconds(Seconds) -> NewDateTime.
-```
+----
 
-Same as `uef_time:add_seconds(erlang:localtime(), Seconds)`. See docs of [uef_time:add_seconds/2](#uef_timeadd_seconds2).
+Same as `uef_time:add_seconds(erlang:localtime(), Seconds)`. See docs of link:#uef_timeadd_seconds2[uef_time:add_seconds/2].
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Seconds :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
 ---
 
-#### *uef_time:add_seconds/2*
+==== uef_time:add_seconds/2
 
-```erlang
+[source,erlang]
+----
 uef_time:add_seconds(DateOrDatetime, Seconds) -> NewDateTime.
-```
+----
 
 Adds the number of seconds `Seconds` to `DateOrDatetime` and returns a new datetime value.
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 DateOrDatetime :: calendar:date() | calendar:datetime().
 Seconds :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:add_seconds({2019, 1, 1}, 10).
 {{2019,1,1},{0,0,10}}
 
@@ -1460,46 +1563,51 @@ NewDateTime :: calendar:datetime().
 
 > uef_time:add_seconds({{2019, 1, 1}, {23, 59, 0}}, -10).
 {{2019,1,1},{23,58,50}}
-```
+----
 
 ---
 
-#### *uef_time:add_minutes/1*
+==== uef_time:add_minutes/1
 
-```erlang
+[source,erlang]
+----
 uef_time:add_minutes(Minutes) -> NewDateTime.
-```
+----
 
-Same as `uef_time:add_seconds(Minutes * 60)`. See docs of [uef_time:add_seconds/1](#uef_timeadd_seconds1).
+Same as `uef_time:add_seconds(Minutes * 60)`. See docs of link:#uef_timeadd_seconds1[uef_time:add_seconds/1].
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Minutes :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
 ---
 
-#### *uef_time:add_minutes/2*
+==== uef_time:add_minutes/2
 
-```erlang
+[source,erlang]
+----
 uef_time:add_minutes(DateOrDatetime, Minutes) -> NewDateTime.
-```
+----
 
 Adds the number of minutes `Minutes` to `DateOrDatetime` and returns a new datetime value.
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 DateOrDatetime :: calendar:date() | calendar:datetime().
 Minutes :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:add_minutes({2019, 1, 1}, 10).
 {{2019,1,1},{0,10,0}}
 
@@ -1511,46 +1619,51 @@ NewDateTime :: calendar:datetime().
 
 > uef_time:add_minutes({{2019, 1, 1}, {0, 1, 0}}, -10).
 {{2018,12,31},{23,51,0}}
-```
+----
 
 ---
 
-#### *uef_time:add_hours/1*
+==== uef_time:add_hours/1
 
-```erlang
+[source,erlang]
+----
 uef_time:add_hours(Hours) -> NewDateTime.
-```
+----
 
-Same as `uef_time:add_seconds(Hours * 3600)`. See docs of [uef_time:add_seconds/1](#uef_timeadd_seconds1).
+Same as `uef_time:add_seconds(Hours * 3600)`. See docs of link:#uef_timeadd_seconds1[uef_time:add_seconds/1].
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Hours :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
 ---
 
-#### *uef_time:add_hours/2*
+==== uef_time:add_hours/2
 
-```erlang
+[source,erlang]
+----
 uef_time:add_hours(DateOrDatetime, Hours) -> NewDateTime.
-```
+----
 
 Adds the number of hours `Hours` to `DateOrDatetime` and returns a new datetime value.
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 DateOrDatetime :: calendar:date() | calendar:datetime().
 Hours :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:add_hours({2019, 1, 1}, 10).
 {{2019,1,1},{10,0,0}}
 
@@ -1562,46 +1675,51 @@ NewDateTime :: calendar:datetime().
 
 > uef_time:add_hours({{2019, 1, 1}, {0, 1, 0}}, -10).
 {{2018,12,31},{14,1,0}}
-```
+----
 
 ---
 
-#### *uef_time:add_days/1*
+==== uef_time:add_days/1
 
-```erlang
+[source,erlang]
+----
 uef_time:add_days(Days) -> NewDateTime.
-```
+----
 
-Same as `uef_time:add_seconds(Days * 86400)`. See docs of [uef_time:add_seconds/1](#uef_timeadd_seconds1).
+Same as `uef_time:add_seconds(Days * 86400)`. See docs of link:#uef_timeadd_seconds1[uef_time:add_seconds/1].
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Days :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
 ---
 
-#### *uef_time:add_days/2*
+==== uef_time:add_days/2
 
-```erlang
+[source,erlang]
+----
 uef_time:add_days(DateOrDatetime, Days) -> NewDateOrDateTime.
-```
+----
 
 Adds the number of days `Days` to `DateOrDatetime` and returns a new *date or datetime* value. The type of `NewDateOrDateTime` is the same as the type of `DateOrDatetime`.
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 DateOrDatetime :: calendar:date() | calendar:datetime().
 Days :: integer().
 NewDateOrDateTime :: calendar:date() | calendar:datetime().
-```
+----
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:add_days({2019, 1, 1}, 10).
 {2019,1,11}
 
@@ -1613,46 +1731,51 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
 > uef_time:add_days({{2019, 1, 1}, {0, 1, 0}}, -10).
 {{2018,12,22},{0,1,0}}
-```
+----
 
 ---
 
-#### *uef_time:add_weeks/1*
+==== uef_time:add_weeks/1
 
-```erlang
+[source,erlang]
+----
 uef_time:add_weeks(Weeks) -> NewDateTime.
-```
+----
 
-Same as `uef_time:add_seconds(Weeks * 604800)`. See docs of [uef_time:add_seconds/1](#uef_timeadd_seconds1).
+Same as `uef_time:add_seconds(Weeks * 604800)`. See docs of link:#uef_timeadd_seconds1[uef_time:add_seconds/1].
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Weeks :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
 ---
 
-#### *uef_time:add_weeks/2*
+==== uef_time:add_weeks/2
 
-```erlang
+[source,erlang]
+----
 uef_time:add_weeks(DateOrDatetime, Weeks) -> NewDateOrDateTime.
-```
+----
 
 Adds the number of weeks `Weeks` to `DateOrDatetime` and returns a new *date or datetime* value. The type of `NewDateOrDateTime` is the same as the type of `DateOrDatetime`.
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 DateOrDatetime :: calendar:date() | calendar:datetime().
 Weeks :: integer().
 NewDateOrDateTime :: calendar:date() | calendar:datetime().
-```
+----
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:add_weeks({2019, 1, 1}, 4).
 {2019,1,29}
 
@@ -1664,46 +1787,51 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
 > uef_time:add_weeks({{2019, 1, 1}, {0, 1, 0}}, -4).
 {{2018,12,4},{0,1,0}}
-```
+----
 
 ---
 
-#### *uef_time:add_months/1*
+==== uef_time:add_months/1
 
-```erlang
+[source,erlang]
+----
 uef_time:add_months(Months) -> NewDateTime.
-```
+----
 
-Same as `uef_time:add_months(erlang:localtime(), Months)`. See docs of [uef_time:add_months/2](#uef_timeadd_months2).
+Same as `uef_time:add_months(erlang:localtime(), Months)`. See docs of link:#uef_timeadd_months2[uef_time:add_months/2].
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Months :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
 ---
 
-#### *uef_time:add_months/2*
+==== uef_time:add_months/2
 
-```erlang
+[source,erlang]
+----
 uef_time:add_months(DateOrDatetime, Months) -> NewDateOrDateTime.
-```
+----
 
 Adds the number of months `Months` to `DateOrDatetime` and returns a new *date or datetime* value. The type of `NewDateOrDateTime` is the same as the type of `DateOrDatetime`.
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 DateOrDatetime :: calendar:date() | calendar:datetime().
 Months :: integer().
 NewDateOrDateTime :: calendar:date() | calendar:datetime().
-```
+----
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:add_months({2019, 1, 31}, 1).
 {2019,2,28}
 
@@ -1718,46 +1846,51 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
 > uef_time:add_months({{2019, 1, 1}, {0, 1, 0}}, -1).
 {{2018,12,1},{0,1,0}}
-```
+----
 
 ---
 
-#### *uef_time:add_years/1*
+==== uef_time:add_years/1
 
-```erlang
+[source,erlang]
+----
 uef_time:add_years(Years) -> NewDateTime.
-```
+----
 
-Same as `uef_time:add_years(erlang:localtime(), Years)`. See docs of [uef_time:add_years/2](#uef_timeadd_years2).
+Same as `uef_time:add_years(erlang:localtime(), Years)`. See docs of link:#uef_timeadd_years2[uef_time:add_years/2].
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 Years :: integer().
 NewDateTime :: calendar:datetime().
-```
+----
 
 ---
 
-#### *uef_time:add_years/2*
+==== uef_time:add_years/2
 
-```erlang
+[source,erlang]
+----
 uef_time:add_years(DateOrDatetime, Years) -> NewDateOrDateTime.
-```
+----
 
 Adds the number of years `Years` to `DateOrDatetime` and returns a new *date or datetime* value. The type of `NewDateOrDateTime` is the same as the type of `DateOrDatetime`.
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 DateOrDatetime :: calendar:date() | calendar:datetime().
 Years :: integer().
 NewDateOrDateTime :: calendar:date() | calendar:datetime().
-```
+----
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:add_years({2019, 1, 31}, 1).
 {2020,1,31}
 
@@ -1769,31 +1902,34 @@ NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
 > uef_time:add_years({{2019, 1, 1}, {0, 1, 0}}, -1).
 {{2018,1,1},{0,1,0}}
-```
+----
 
 ---
 
-#### *uef_time:add_time/1*
+==== uef_time:add_time/1
 
-```erlang
+[source,erlang]
+----
 uef_time:add_time(Periods) -> NewDateTime.
-```
+----
 
-Same as `uef_time:add_time(erlang:localtime(), Periods)`. See docs of [uef_time:add_time/2](#uef_timeadd_time2). `NewDateTime` is of type `calendar:datetime()`. See types for `Periods` in *Types* section of function `uef_time:add_time/2`.
+Same as `uef_time:add_time(erlang:localtime(), Periods)`. See docs of link:#uef_timeadd_time2[uef_time:add_time/2]. `NewDateTime` is of type `calendar:datetime()`. See types for `Periods` in *Types* section of function `uef_time:add_time/2`.
 
 ---
 
-#### *uef_time:add_time/2*
+==== uef_time:add_time/2
 
-```erlang
+[source,erlang]
+----
 uef_time:add_time(DateOrDatetime, Periods) -> NewDateOrDateTime.
-```
+----
 
 Adds one or more periods of time to `DateOrDatetime` and returns a new *date or datetime* value. This is a universal function based on functions `uef_time:add_seconds/2`, `uef_time:add_minutes/2`, `uef_time:add_hours/2`, `uef_time:add_days/2`, `uef_time:add_weeks/2`, `uef_time:add_months/2` and `uef_time:add_years/2`. The type of `NewDateOrDateTime` depends on the type of `DateOrDatetime` and `Periods` (see *Examples*).
 
 **Types:**
 
-```erlang
+[source,erlang]
+----
 DateOrDatetime :: calendar:date() | calendar:datetime().
 NewDateOrDateTime :: calendar:date() | calendar:datetime().
 
@@ -1807,11 +1943,12 @@ ptype() :: psecond() | pminute() | phour() | pday() | pmonth() | pyear().
 
 period() :: {integer(), ptype()} | {ptype(), integer()}.
 periods() :: [period()].
-```
+----
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:add_time({2000, 1, 1}, [{1, year}, {1, month}, {1, week}, {1, day}, {1, hour}, {1, minute}, {1, second}]).
 {{2001,2,9},{1,1,1}}   % type calendar:datetime()
 
@@ -1838,203 +1975,228 @@ true
 
 > uef_time:add_time({2000, 1, 1}, [{1, month}]) =:= uef_time:add_months({2000, 1, 1}, 1).
 true
-```
+----
 
 ---
 
-#### *uef_time:today/0*
+==== uef_time:today/0
 
-```erlang
+[source,erlang]
+----
 uef_time:today() -> CurrentDate.
-```
+----
 
-Returns the current date as *{Year, Month, Day}*. Same as [erlang:date()](http://erlang.org/doc/man/erlang.html#date-0). `CurrentDate` is of type `calendar:date()`.
+Returns the current date as *{Year, Month, Day}*. Same as http://erlang.org/doc/man/erlang.html#date-0[erlang:date()]. `CurrentDate` is of type `calendar:date()`.
 
 ---
 
-#### *uef_time:tomorrow/0*
+==== uef_time:tomorrow/0
 
-```erlang
+[source,erlang]
+----
 uef_time:tomorrow() -> TomorrowDate.
-```
+----
 
 Returns tomorrow's date as *{Year, Month, Day}*. `TomorrowDate` is of type `calendar:date()`.
 
 ---
 
-#### *uef_time:yesterday/0*
+==== uef_time:yesterday/0
 
-```erlang
+[source,erlang]
+----
 uef_time:yesterday() -> YesterdayDate.
-```
+----
 
 Returns yesterday's date as *{Year, Month, Day}*. `YesterdayDate` is of type `calendar:date()`.
 
 ---
 
-#### *uef_time:unix_time/0*
+==== uef_time:unix_time/0
 
-```erlang
+[source,erlang]
+----
 uef_time:unix_time() -> Seconds.
-```
+----
 
 Returns the current number of seconds since 00:00:00 (UTC), 1 January 1970. It also known as *Unix time* or *POSIX time* or *UNIX Epoch time*.
 
-**Example:**
+*Example:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:unix_time().
 1557670215
-```
+----
 
 ---
 
-#### *uef_time:unix_time/1*
+==== uef_time:unix_time/1
 
-```erlang
+[source,erlang]
+----
 uef_time:unix_time(Datetime) -> Seconds.
-```
+----
 
 Returns the number of seconds elapsed between *00:00:00 (UTC), 1 January 1970* and `Datetime`. `Datetime` must be of type `calenadr:datetime()`.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:unix_time({{1970,1,1}, {0,0,0}}).
 0
 
 > uef_time:unix_time({{2000,1,1}, {23,59,59}}).
 946771199
-```
+----
 
 ---
 
-#### *uef_time:days_diff/1*
+==== uef_time:days_diff/1
 
-```erlang
+[source,erlang]
+----
 uef_time:days_diff(Date) -> Days.
-```
+----
 
-Returns the difference ***in days*** between `Date` and the current local date provided by function [erlang:date()](http://erlang.org/doc/man/erlang.html#date-0). `Date` must be of type `calendar:date()` (`{Year, Month, Day}`). `Days` is a positive value if `Date` is after `erlang:date()` or a negative value otherwise.
+Returns the difference ***in days*** between `Date` and the current local date provided by function http://erlang.org/doc/man/erlang.html#date-0[erlang:date()]. `Date` must be of type `calendar:date()` (`{Year, Month, Day}`). `Days` is a positive value if `Date` is after `erlang:date()` or a negative value otherwise.
 
 ---
 
-#### *uef_time:days_diff/2*
+==== uef_time:days_diff/2
 
-```erlang
+[source,erlang]
+----
 uef_time:days_diff(Date1, Date2) -> Days.
-```
+----
 
 Returns the difference ***in days*** between `Date2` and `Date1`. `Date1` and `Date2` must be of type `calendar:date()` (`{Year, Month, Day}`). `Days` is a positive value if `Date2` is after `Date1` or a negative value otherwise.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:days_diff({1999, 1, 31}, {2019, 12, 31}).
 7639
 
 > uef_time:days_diff({2019, 12, 31}, {1999, 1, 31}).
 -7639
-```
+----
 
 ---
 
-#### *uef_time:seconds_diff/1*
+==== uef_time:seconds_diff/1
 
-```erlang
+[source,erlang]
+----
 uef_time:seconds_diff(DateTime) -> Seconds.
-```
+----
 
-Returns the difference ***in seconds*** between `Date` and the current local time provided by function [erlang:localtime()](http://erlang.org/doc/man/erlang.html#localtime-0). `DateTime` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`). `Seconds` is a positive value if `DateTime` is after `erlang:localtime()` or a negative value otherwise.
+Returns the difference ***in seconds*** between `Date` and the current local time provided by function http://erlang.org/doc/man/erlang.html#localtime-0[erlang:localtime()]. `DateTime` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`). `Seconds` is a positive value if `DateTime` is after `erlang:localtime()` or a negative value otherwise.
 
 ---
 
-#### *uef_time:seconds_diff/2*
+==== uef_time:seconds_diff/2
 
-```erlang
+[source,erlang]
+----
 uef_time:seconds_diff(DateTime1, DateTime2) -> Seconds.
-```
+----
 
 Returns the difference ***in seconds*** between `DateTime2` and `DateTime1`.  `DateTime1` and `DateTime2` must be of type `calendar:datetime()` (`{{Year, Month, Day}, {Hour, Minute, Second}}`). `Seconds` is a positive value if `DateTime2` is after `DateTime1` or a negative value otherwise.
 
-**Examples:**
+*Examples:*
 
-```erlang
+[source,erlang]
+----
 > uef_time:seconds_diff({{1999, 1, 31}, {0, 0, 0}}, {{2019, 12, 31}, {0, 0, 0}}).
 660009600
 
 > uef_time:seconds_diff({{2019, 12, 31}, {0, 0, 0}}, {{1999, 1, 31}, {0, 0, 0}}).
 -660009600
-```
+----
 
 ---
 
-## Build
+== Build
 
-### Build with GNU `make`
+=== Build with GNU `make`
 
-```bash
+[source,bash]
+----
 make
-```
+----
 
-### Build with `rebar3`
+=== Build with `rebar3`
 
-```bash
+[source,bash]
+----
 rebar3 compile
-```
+----
 
-## Test and dialyze
+== Test and dialyze
 
-### Test/dialyze with GNU `make`
+=== Test/dialyze with GNU `make`
 
-```bash
+[source,bash]
+----
 make test
-```
+----
 
-```bash
+[source,bash]
+----
 make dialyzer
-```
+----
 
-```bash
+[source,bash]
+----
 make xref
-```
+----
 
-```bash
+[source,bash]
+----
 make cover
-```
+----
 
-### Test/dialyze with `rebar3`
+=== Test/dialyze with `rebar3`
 
-```bash
+[source,bash]
+----
 rebar3 eunit
-```
+----
 
-```bash
+[source,bash]
+----
 rebar3 dialyzer
-```
+----
 
-```bash
+[source,bash]
+----
 rebar3 xref
-```
+----
 
-```bash
+[source,bash]
+----
 rebar3 do eunit, cover
-```
+----
 
-## Build documentation
+== Build documentation
 
-### Build docs with GNU `make`
+=== Build docs with GNU `make`
 
-```bash
+[source,bash]
+----
 make docs
-```
+----
 
-### Build docs with `rebar3`
+=== Build docs with `rebar3`
 
-```bash
+[source,bash]
+----
 rebar3 edoc
-```
+----
 
-## Contributing
+== Contributing
 
 You are welcome :)
