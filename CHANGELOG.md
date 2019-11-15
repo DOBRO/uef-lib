@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+- License changed to Apache 2.0.
+- README converted to asciidoc format.
+
 ## [2.5.1] - 2019-09-26
 
 - Some binary optimizations in `uef_bin` and `uef_format` modules.
