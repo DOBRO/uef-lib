@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.5.2] - 2019-11-15
 
 - License changed to Apache 2.0.
 - README converted to asciidoc format.
