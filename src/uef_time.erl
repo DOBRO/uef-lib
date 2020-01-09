@@ -449,8 +449,8 @@ add_months_test_() ->
 	Date1 = erlang:date(),
 	{Year1, _, _} = Date1,
 	[
-	?_assertEqual({Year1, 2, 28}, add_months({Year1, 1, 31}, 1)),
-	?_assertEqual({2016, 2, 29}, add_months({2016, 1, 31}, 1)),
+	?_assertEqual({2016, 2, 29}, add_months({2016, 1, 31}, 1)), % leap year
+	?_assertEqual({2017, 2, 28}, add_months({2017, 1, 31}, 1)), % non-leap year
 	?_assertEqual({Year1 - 1, 12, 31}, add_months({Year1, 1, 31}, -1)),
 	?_assertEqual({Year1 + 1, 1, 31}, add_months({Year1, 1, 31}, 12)),
 	?_assertEqual({Year1 - 1, 1, 31}, add_months({Year1, 1, 31}, -12)),
