@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.3] - 2020-01-09
+
+- Fixed: test of function `uef_time:add_months/2` not passed for leap year.
+
 ## [2.5.2] - 2019-11-15
 
 - License changed to Apache 2.0.
