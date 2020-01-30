@@ -7,7 +7,7 @@ image:https://travis-ci.com/DOBRO/uef-lib.svg?branch=master["Build Status", link
 image:https://img.shields.io/badge/license-Apache%202.0-blue.svg["License", link="LICENSE"]
 
 
-*uef-lib* is a **U**seful **E**rlang **F**unctions **Lib**rary that provides utilities for manipulating lists, binaries, maps, numbers, date and time.
+*uef-lib* is a **U**seful **E**rlang **F**unctions **Lib**rary that provides modules for manipulating lists, binaries, maps, numbers, date and time.
 It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
 
 Erlang/OTP 19 or higher is required.
