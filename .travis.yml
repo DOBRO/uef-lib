@@ -2,7 +2,7 @@ language: erlang
 
 otp_release:
   - 22.0
-  - 21.3
+  - 21.1
   - 20.3
   - 19.0
 before_script: kerl list installations
@@ -15,3 +15,4 @@ branches:
 cache:
   directories:
     - _build
+    - "$HOME/.cache/rebar3"
