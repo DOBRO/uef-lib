@@ -5,5 +5,5 @@
 @title The uef application
 @reference See <a href="https://github.com/DOBRO/uef-lib" target="_blank">uef-lib page on github</a> for more information and examples.
 
-@doc `uef-lib' is a Useful Erlang Functions Library.
+@doc <strong>uef-lib</strong> is a <strong>U</strong>seful <strong>E</strong>rlang <strong>F</strong>unctions <strong>Lib</strong>rary that provides modules for manipulating lists, binaries, maps, numbers, date and time.
 It can be used in OTP applications and contains some functions optimized for performance in specific cases (e.g. for file I/O operations or binary transformations).
