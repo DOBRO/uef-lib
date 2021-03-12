@@ -1,0 +1,130 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - devel
+  pull_request:
+    branches:
+      - master
+      - devel
+
+jobs:
+  linux:
+    name: Build (${{ matrix.os }}, OTP-${{ matrix.otp_version }})
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      matrix:
+        otp_version: [20, 21, 22, 23]
+        os: [ubuntu-latest]
+
+    container:
+      image: erlang:${{ matrix.otp_version }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Extract branch name
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - name: Cache Dialyzer PLTs
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/rebar3/rebar3_*_plt
+          _build/default/rebar3_*_plt
+        key: ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-otp-${{ matrix.otp_version }}-plt-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.config')) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-otp-${{ matrix.otp_version }}-plt-
+    - name: Cache Hex packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/rebar3/hex/hexpm/packages
+        key: ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-otp-${{ matrix.otp_version }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-otp-${{ matrix.otp_version }}-hex-
+    - name: Compile
+      run: rebar3 compile
+    - name: EUnit tests
+      run: rebar3 eunit
+    - name: Dialyzer
+      run: rebar3 dialyzer
+    - name: Code coverage
+      run: rebar3 cover
+    - name: Generate coverage report
+      run: rebar3 covertool generate
+    - name: Upload coverage to Codecov
+      run: bash <(curl -s https://codecov.io/bash) -f _build/test/covertool/uef.covertool.xml
+
+
+  macos:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Extract branch name
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - name: Install Erlang
+      run: brew install erlang
+    - name: Install rebar3
+      run: brew install rebar3
+    - name: Cache Hex packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/rebar3/hex/hexpm/packages
+        key: ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-hex-
+    - name: Compile
+      run: rebar3 compile
+    - name: EUnit tests
+      run: rebar3 eunit
+    - name: Code coverage
+      run: rebar3 cover
+
+
+  windows:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: powershell
+
+    strategy:
+      matrix:
+        os: [windows-latest]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install Erlang
+      run: choco install erlang -y
+    - name: Install rebar3
+      run: choco install rebar3 -y
+    - name: Cache Hex packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/rebar3/hex/hexpm/packages
+        key: ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-hex-
+    - name: Compile
+      run: rebar3 compile
+    - name: EUnit tests
+      run: rebar3 eunit
+    - name: Code coverage
+      run: rebar3 cover
