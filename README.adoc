@@ -3,7 +3,8 @@
 :toclevels: 4
 
 image:https://img.shields.io/hexpm/v/uef.svg?color=yellow["uef-lib on Hex.pm", link="https://hex.pm/packages/uef"]
-image:https://travis-ci.com/DOBRO/uef-lib.svg?branch=master["Build Status", link="https://travis-ci.com/DOBRO/uef-lib"]
+image:https://github.com/DOBRO/uef-lib/workflows/Build/badge.svg?branch=master["Build Status", link="https://github.com/DOBRO/uef-lib/actions/workflows/main.yml?query=branch%3Amaster"]
+image:https://codecov.io/gh/DOBRO/uef-lib/branch/master/graph/badge.svg["Code coverage", link="https://app.codecov.io/gh/DOBRO/uef-lib"]
 image:https://img.shields.io/badge/license-Apache%202.0-blue.svg["License", link="LICENSE"]
 
 
