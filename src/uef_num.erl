@@ -99,10 +99,12 @@ popcount(N, Cnt) -> popcount(N band (N - 1), Cnt + 1).
 
 
 %% lsb_pos/2
+-spec lsb_pos(pos_integer(), pos_integer()) -> pos_integer().
 lsb_pos(N, Cnt) when ((N band 1) =:= 1) -> Cnt;
 lsb_pos(N, Cnt) -> lsb_pos(N bsr 1, Cnt + 1).
 
 %% msb_pos/2
+-spec msb_pos(non_neg_integer(), non_neg_integer()) -> pos_integer().
 msb_pos(0, Cnt) -> Cnt;
 msb_pos(N, Cnt) -> msb_pos(N bsr 1, Cnt + 1).
 

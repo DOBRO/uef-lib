@@ -65,10 +65,12 @@ win_to_utf8(Bin) ->
 %%%------------------------------------------------------------------------------
 
 %% html_encode/2
+-spec html_encode_list(iodata(), [binary()]) -> [binary()].
 html_encode_list([], Acc) -> lists:reverse(Acc);
 html_encode_list([H|T], Acc) -> html_encode_list(T, [html_encode_char(H)|Acc]).
 
 %% html_encode_char/1
+-spec html_encode_char(pos_integer()) -> binary().
 html_encode_char($\n) -> <<"<br/>">>;
 html_encode_char($\r) -> <<>>;
 html_encode_char($\t) -> <<" ">>;
@@ -143,6 +145,7 @@ html_encode_char($¼) -> <<"&frac14;">>;
 html_encode_char(C) -> C.
 
 %% win_to_utf8/2
+-spec win_to_utf8(binary(), binary()) -> binary().
 win_to_utf8(<<C:8, Rest/binary>>, Acc) ->
 	U = case C of
 		16#00 -> 16#0000; %% NULL
