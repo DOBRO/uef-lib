@@ -21,6 +21,32 @@ toc::[]
 
 '''
 
+== Installation
+
+=== For Erlang projects
+
+Add `uef-lib` as a dependency to your `rebar.config` file:
+
+[source,erlang]
+----
+{deps, [
+  {uef, "2.5.3"}
+]}.
+----
+
+=== For Elixir projects
+
+Add `uef-lib` as a dependency to your `mix.exs` file:
+
+[source,elixir]
+----
+defp deps do
+  [
+    {:uef, "~> 2.5.3"}
+  ]
+end
+----
+
 == Modules
 
 * *link:#module-uef_bin[uef_bin]* - for binaries.
