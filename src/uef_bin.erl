@@ -1,4 +1,4 @@
-%% Copyright (c) 2019-2020, Sergei Semichev <chessvegas@chessvegas.com>. All Rights Reserved.
+%% Copyright (c) 2019-2021, Sergei Semichev <chessvegas@chessvegas.com>. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -20,11 +20,6 @@
 -export([replace/3, replace_chars/3]).
 -export([random_latin_binary/2, random_binary_from_chars/2]).
 -export([numeric_prefix/1]).
-
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--endif.
-
 
 -type split_option() :: undefined | trim_all.
 
@@ -230,90 +225,3 @@ numeric_prefix(<< $7, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $7
 numeric_prefix(<< $8, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $8 >>);
 numeric_prefix(<< $9, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $9 >>);
 numeric_prefix(_, Acc) -> Acc.
-
-
-
-%%%------------------------------------------------------------------------------
-%%%   Test functions
-%%%------------------------------------------------------------------------------
-
--ifdef(TEST).
-
-numeric_prefix_test_() ->
-	[
-	?_assertEqual(<<>>, numeric_prefix(<<"a234234">>)),
-	?_assertEqual(<<"123">>, numeric_prefix(<<"123a456">>))
-	].
-
-binary_join_test_() ->
-	[
-	?_assertEqual(<<"www.example.com">>, binary_join([<<"www">>, <<"example">>, <<"com">>], <<".">>)),
-	?_assertEqual(<<"www">>, binary_join([<<"www">>], <<".">>))
-	].
-
-split_test_() ->
-	[
-	?_assertEqual([<<>>,<<"www">>,<<"example">>,<<"com">>,<<>>], split(<<".www.example.com.">>, <<".">>)),
-	?_assertEqual([<<"www">>,<<"example">>,<<"com">>], split(<<"www.example.com">>, <<".">>)),
-	?_assertEqual([<<"www.example.com">>], split(<<"www.example.com">>, <<"A">>)),
-	?_assertEqual([<<"www">>,<<"example">>,<<"com">>], split(<<".....www.example.com....">>, <<".">>, trim_all))
-	].
-
-repeat_test_() ->
-	[
-	?_assertEqual(<<"0">>, repeat(<<"0">>, 1)),
-	?_assertEqual(<<"aaaaa">>, repeat(<<"a">>, 5)),
-	?_assertEqual(<<0>>, repeat(<<0>>, 1)),
-	?_assertEqual(<<0,0,0>>, repeat(<<0>>, 3)),
-	?_assertEqual(<<1,1,1,1>>, repeat(<<1,1>>, 2)),
-	?_assertEqual(<<1,0,1,0>>, repeat(<<1,0>>, 2)),
-	?_assertEqual(<<"abcabcabc">>, repeat(<<"abc">>, 3)),
-	?_assertEqual(<<"ЖЖЖ"/utf8>>, repeat(<<"Ж"/utf8>>, 3))
-	].
-
-replace_test_() ->
-	[
-	?_assertEqual(<<"aZZdefgZZ">>, replace(<<"abcdefgbc">>, <<"bc">>, <<"ZZ">>)),
-	?_assertEqual(<<"abcZZefgbc">>, replace(<<"abcdefgbc">>, <<"d">>, <<"ZZ">>))
-	].
-
-replace_chars_test_() ->
-	[
-	?_assertEqual(<<"wwwexamplecom">>, replace_chars(<<"..www.example.com.">>, [<<".">>], <<>>)),
-	?_assertEqual(<<"examplecom">>, replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>))
-	].
-
-reverse_test_() ->
-	[
-	?_assertEqual(<<5,4,3,2,1>>, reverse(<<1,2,3,4,5>>)),
-	?_assertEqual(<<"HGFEDCBA">>, reverse(<<"ABCDEFGH">>)),
-	?_assertEqual(<<>>, reverse(<<>>)),
-	?_assertEqual(<<0>>, reverse(<<0>>)),
-	?_assertEqual(<<"0">>, reverse(<<"0">>)),
-	?_assertEqual(<<1>>, reverse(<<1>>)),
-	?_assertEqual(<<"1">>, reverse(<<"1">>)),
-	?_assertEqual(<<0, 0, 0>>, reverse(<<0, 0, 0>>)),
-	?_assertEqual(<<"ВБА">>, reverse(<<"АБВ">>))
-	].
-
-reverse_utf8_test_() ->
-	[
-	?_assertEqual(<<5,4,3,2,1>>, reverse_utf8(<<1,2,3,4,5>>)),
-	?_assertEqual(<<"HGFEDCBA">>, reverse_utf8(<<"ABCDEFGH">>)),
-	?_assertEqual(<<>>, reverse_utf8(<<>>)),
-	?_assertEqual(<<0>>, reverse_utf8(<<0>>)),
-	?_assertEqual(<<"0">>, reverse_utf8(<<"0">>)),
-	?_assertEqual(<<1>>, reverse_utf8(<<1>>)),
-	?_assertEqual(<<"1">>, reverse_utf8(<<"1">>)),
-	?_assertEqual(<<0, 0, 0>>, reverse_utf8(<<0, 0, 0>>)),
-	?_assertEqual(<<"ВБА">>, reverse_utf8(<<"АБВ">>)),
-	?_assertEqual(<<"ЖЁЕДГВБА"/utf8>>, reverse_utf8(<<"АБВГДЕЁЖ"/utf8>>)),
-	?_assertEqual(<<7, 6, 5, 4, "ЖЁЕДГВБА"/utf8, 3, 2, 1>>, reverse_utf8(<<1, 2, 3, "АБВГДЕЁЖ"/utf8, 4, 5, 6, 7>>)),
-	?_assertEqual(<<"eßartS eid"/utf8>>, reverse_utf8(<<"die Straße"/utf8>>)),
-	?_assertEqual(<<"街條這"/utf8>>, reverse_utf8(<<"這條街"/utf8>>)),
-	?_assertEqual(<<"好你"/utf8>>, reverse_utf8(<<"你好"/utf8>>)),
-	?_assertEqual(<<"り通"/utf8>>, reverse_utf8(<<"通り"/utf8>>)),
-	?_assertEqual(<<"はちにんこ"/utf8>>, reverse_utf8(<<"こんにちは"/utf8>>))
-	].
-
--endif. % end of tests
