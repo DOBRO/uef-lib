@@ -19,14 +19,6 @@
 -export([format_bytes/1, format_bytes/2]).
 
 %%%------------------------------------------------------------------------------
-%%%   EUnit
-%%%------------------------------------------------------------------------------
-
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
--endif.
-
-%%%------------------------------------------------------------------------------
 %%%   Macros
 %%%------------------------------------------------------------------------------
 
@@ -328,67 +320,3 @@ validate_byte_opts([sep|Tail], Opts0, Acc) -> % separator
 		{ok, Sep} ->
 			{error, {invalid_separator, Sep}}
 	end.
-
-
-%%%------------------------------------------------------------------------------
-%%%   Tests
-%%%------------------------------------------------------------------------------
-
--ifdef(TEST).
-
-format_number_test_() ->
-	[
-	?_assertEqual(<<"1.00">>, format_number(1, 2, 2, #{})),
-	?_assertEqual(<<"1.99">>, format_number(1.99, 2, 2, #{})),
-	?_assertEqual(<<"2.00">>, format_number(1.99, 1, 2, #{})),
-	?_assertEqual(<<"1 000 999.00">>, format_number(1000999, 2, 2, #{thousands_sep => <<" ">>})),
-	?_assertEqual(<<"2,000,000.00">>, format_number(2000000, 2, 2, #{thousands_sep => <<",">>})),
-	?_assertEqual(<<"9 999 999 999.00">>, format_number(9999999999, 2, 2, #{thousands_sep => <<" ">>})),
-	?_assertEqual(<<"99 999 999 999.99">>, format_price(99999999999.99, 2, #{thousands_sep => <<" ">>})),
-	?_assertEqual(<<"999 999 999 999.99">>, format_price(999999999999.99, 2, #{thousands_sep => <<" ">>})),
-	?_assertEqual(<<"999,999,999,999.99">>, format_price(999999999999.99,  2, #{thousands_sep => <<",">>})),
-	?_assertEqual(<<"USD 1,234,567,890==4600">>, uef_format:format_number(1234567890.4567, 2, 4, #{thousands_sep => ",", decimal_point => "==", cur_symbol => "USD", cur_sep => " ", cur_pos => left})),
-	?_assertEqual(<<"$1000.88">>, format_price(1000.8767, 4, "$")),
-	?_assertEqual(<<"1000.88 руб."/utf8>>, format_price(1000.8767, 4, #{cur_symbol => <<"руб."/utf8>>, cur_sep => " ", cur_pos => right})),
-	?_assertEqual(<<"1000.88 руб."/utf8>>, format_price(1000.8767, 4, #{cur_symbol => "руб.", cur_sep => " ", cur_pos => right})),
-	?_assertEqual(<<"€€1000.00"/utf8>>, format_price(1000, 4, #{cur_symbol => "€", cur_sep => "€", cur_pos => left})),
-	?_assertEqual(format_number(100, 2, 3), format_number(100, 2, 3, #{})),
-	?_assertEqual(format_price(1000), format_price(1000, 2)),
-	?_assertEqual(format_price(1000), format_price(1000, 2, <<>>)),
-	?_assertEqual(format_price(1000), format_number(1000, 2, 2, #{}))
-	].
-
-
-format_bytes_test_() ->
-	KB10_1000 = 10 * 1000,
-	KB10_1024 = 10 * 1024,
-	MB10_1000 = 10 * 1000 * 1000,
-	MB10_1024 = 10 * 1024 * 1024,
-	[
-	?_assertEqual(<<"0KB">>, format_bytes(1023)),
-	?_assertEqual(<<"1KB">>, format_bytes(1024)),
-	?_assertEqual(<<"0KB">>, format_bytes(999, #{base => 10})),
-	?_assertEqual(<<"1KB">>, format_bytes(1023, #{base => 10})),
-	?_assertEqual(<<"9KB">>, format_bytes(KB10_1000)),
-	?_assertEqual(<<"10KB">>, format_bytes(KB10_1024)),
-	?_assertEqual(<<"10 KB">>, format_bytes(KB10_1024, #{sep => <<" ">>})),
-	?_assertEqual(<<"10|KB">>, format_bytes(KB10_1024, #{sep => <<"|">>})),
-	?_assertEqual(format_bytes(KB10_1000), format_bytes(KB10_1000, #{})),
-	?_assertEqual(format_bytes(MB10_1000), format_bytes(MB10_1000, #{})),
-	?_assertEqual(format_bytes(KB10_1024), format_bytes(KB10_1024, #{})),
-	?_assertEqual(format_bytes(MB10_1024), format_bytes(MB10_1024, #{})),
-	?_assertEqual(format_bytes(10000), format_bytes(10000, #{base => 2, units => auto})),
-	?_assertEqual(format_bytes(10000), format_bytes(10000, #{base => 2, units => auto, to_type => bin})),
-	?_assertEqual(format_bytes(10000), format_bytes(10000, #{base => 2, units => auto, to_type => bin, sep => <<>>})),
-	?_assertEqual({9, 'KB'}, format_bytes(10000, #{to_type => int})),
-	?_assertEqual(9, format_bytes(KB10_1000, #{to_type => int, units => 'KB'})),
-	?_assertEqual(9, format_bytes(MB10_1000, #{to_type => int, units => 'MB'})),
-	?_assertEqual({9, 'MB'}, format_bytes(MB10_1000, #{to_type => int, units => auto})),
-	?_assertEqual(10, format_bytes(MB10_1024, #{to_type => int, units => 'MB'})),
-	?_assertEqual({10, 'MB'}, format_bytes(MB10_1024, #{to_type => int})),
-	?_assertEqual(<<"0MB">>, format_bytes(1000, #{units => 'MB'})),
-	?_assertError({badarg, bad_int}, format_bytes(bad_int)),
-	?_assertError({badarg, bad_opts}, format_bytes(1, bad_opts))
-	].
-
--endif. % end of tests
