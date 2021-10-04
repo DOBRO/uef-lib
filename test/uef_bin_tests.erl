@@ -28,12 +28,17 @@ numeric_prefix_test_() ->
 
 binary_join_test_() ->
 	[
+	?_assertEqual(<<>>, uef_bin:binary_join([], <<"any">>)),
+	?_assertEqual(<<>>, uef_bin:binary_join([], <<>>)),
 	?_assertEqual(<<"www.example.com">>, uef_bin:binary_join([<<"www">>, <<"example">>, <<"com">>], <<".">>)),
 	?_assertEqual(<<"www">>, uef_bin:binary_join([<<"www">>], <<".">>))
 	].
 
 split_test_() ->
 	[
+	?_assertEqual([], uef_bin:split(<<>>, <<".">>)),
+	?_assertEqual([], uef_bin:split(<<>>, <<>>)),
+	?_assertEqual([<<".www.example.com.">>], uef_bin:split(<<".www.example.com.">>, <<>>, trim_all)),
 	?_assertEqual([<<>>,<<"www">>,<<"example">>,<<"com">>,<<>>], uef_bin:split(<<".www.example.com.">>, <<".">>)),
 	?_assertEqual([<<"www">>,<<"example">>,<<"com">>], uef_bin:split(<<"www.example.com">>, <<".">>)),
 	?_assertEqual([<<"www.example.com">>], uef_bin:split(<<"www.example.com">>, <<"A">>)),
@@ -54,6 +59,8 @@ repeat_test_() ->
 
 replace_test_() ->
 	[
+	?_assertEqual(<<>>, uef_bin:replace(<<>>, <<"aa">>, <<"bb">>)),
+	?_assertEqual(<<"bbb">>, uef_bin:replace(<<"bbb">>, <<>>, <<"b">>)),
 	?_assertEqual(<<"aZZdefgZZ">>, uef_bin:replace(<<"abcdefgbc">>, <<"bc">>, <<"ZZ">>)),
 	?_assertEqual(<<"abcZZefgbc">>, uef_bin:replace(<<"abcdefgbc">>, <<"d">>, <<"ZZ">>))
 	].
