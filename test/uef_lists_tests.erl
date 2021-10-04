@@ -20,8 +20,6 @@
 %%%   Tests
 %%%------------------------------------------------------------------------------
 
--ifdef(TEST).
-
 split_list_into_chunks_test_() ->
 	[
 	?_assertEqual([[1],[2],[3],[4],[5],[6],[7],[8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 1)),
@@ -57,5 +55,3 @@ lists_to_list_of_tuples_3_test_() ->
 	[
 	?_assertEqual(Tuples1, uef_lists:lists_to_list_of_tuples([a1,b1], [a2,b2,c2], [a3,b3]))
 	].
-
--endif. % end of tests

@@ -20,8 +20,6 @@
 %%%   Tests
 %%%------------------------------------------------------------------------------
 
--ifdef(TEST).
-
 html_encode_bin_test_() ->
 	[
 	?_assertEqual(<<"&lt;&gt;&amp;&copy;<br/>&trade;">>, uef_encode:html_encode_bin("<>&©\n™")),
@@ -33,5 +31,3 @@ html_encode_list_test_() ->
 	?_assertEqual([<<"&lt;">>,<<"&gt;">>,<<"&amp;">>,<<"&copy;">>,<<"<br/>">>,<<"&trade;">>], uef_encode:html_encode_list("<>&©\n™")),
 	?_assertEqual([<<"&#9830;">>,<<"&plusmn;">>,<<"&Sigma;">>], uef_encode:html_encode_list("♦±Σ"))
 	].
-
--endif.

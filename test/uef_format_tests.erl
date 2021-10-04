@@ -20,8 +20,6 @@
 %%%   Tests
 %%%------------------------------------------------------------------------------
 
--ifdef(TEST).
-
 format_number_test_() ->
 	[
 	?_assertEqual(<<"1.00">>, uef_format:format_number(1, 2, 2, #{})),
@@ -76,5 +74,3 @@ format_bytes_test_() ->
 	?_assertError({badarg, bad_int}, uef_format:format_bytes(bad_int)),
 	?_assertError({badarg, bad_opts}, uef_format:format_bytes(1, bad_opts))
 	].
-
--endif. % end of tests
