@@ -187,9 +187,7 @@ replace(B, C1, C1BitSize, C2, Acc) ->
 -spec reverse_utf8(binary(), binary()) -> binary().
 reverse_utf8(<<>>, Acc) -> Acc;
 reverse_utf8(<<U/utf8, Rest/bits>>, Acc) ->
- 	reverse_utf8(Rest, <<U/utf8, Acc/bits>>);
-reverse_utf8(<<C, Rest/bits>>, Acc) ->
-	reverse_utf8(Rest, <<C, Acc/bits>>).
+ 	reverse_utf8(Rest, <<U/utf8, Acc/bits>>).
 
 
 %% do_split/3
