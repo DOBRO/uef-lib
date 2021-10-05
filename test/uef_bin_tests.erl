@@ -23,7 +23,18 @@
 numeric_prefix_test_() ->
 	[
 	?_assertEqual(<<>>, uef_bin:numeric_prefix(<<"a234234">>)),
-	?_assertEqual(<<"123">>, uef_bin:numeric_prefix(<<"123a456">>))
+	?_assertEqual(<<"123">>, uef_bin:numeric_prefix(<<"123a456">>)),
+	?_assertEqual(<<"123">>, uef_bin:numeric_prefix(<<"123">>)),
+	?_assertEqual(<<"0">>, uef_bin:numeric_prefix(<<"0test">>)),
+	?_assertEqual(<<"1">>, uef_bin:numeric_prefix(<<"1test">>)),
+	?_assertEqual(<<"2">>, uef_bin:numeric_prefix(<<"2test">>)),
+	?_assertEqual(<<"3">>, uef_bin:numeric_prefix(<<"3test">>)),
+	?_assertEqual(<<"4">>, uef_bin:numeric_prefix(<<"4test">>)),
+	?_assertEqual(<<"5">>, uef_bin:numeric_prefix(<<"5test">>)),
+	?_assertEqual(<<"6">>, uef_bin:numeric_prefix(<<"6test">>)),
+	?_assertEqual(<<"7">>, uef_bin:numeric_prefix(<<"7test">>)),
+	?_assertEqual(<<"8">>, uef_bin:numeric_prefix(<<"8test">>)),
+	?_assertEqual(<<"9">>, uef_bin:numeric_prefix(<<"9test">>))
 	].
 
 binary_join_test_() ->
@@ -67,6 +78,7 @@ replace_test_() ->
 
 replace_chars_test_() ->
 	[
+	?_assertEqual(<<"bbb">>, uef_bin:replace_chars(<<"bbb">>, [], <<>>)),
 	?_assertEqual(<<"wwwexamplecom">>, uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>], <<>>)),
 	?_assertEqual(<<"examplecom">>, uef_bin:replace_chars(<<"..www.example.com.">>, [<<".">>, <<"w">>], <<>>))
 	].
@@ -86,7 +98,8 @@ reverse_test_() ->
 
 reverse_utf8_test_() ->
 	[
-	?_assertEqual(<<5,4,3,2,1>>, uef_bin:reverse_utf8(<<1,2,3,4,5>>)),
+	?_assertEqual(<<5,4,3,2,1,0>>, uef_bin:reverse_utf8(<<0,1,2,3,4,5>>)),
+	?_assertEqual(<<"543210">>, uef_bin:reverse_utf8(<<"012345">>)),
 	?_assertEqual(<<"HGFEDCBA">>, uef_bin:reverse_utf8(<<"ABCDEFGH">>)),
 	?_assertEqual(<<>>, uef_bin:reverse_utf8(<<>>)),
 	?_assertEqual(<<0>>, uef_bin:reverse_utf8(<<0>>)),
@@ -103,3 +116,46 @@ reverse_utf8_test_() ->
 	?_assertEqual(<<"り通"/utf8>>, uef_bin:reverse_utf8(<<"通り"/utf8>>)),
 	?_assertEqual(<<"はちにんこ"/utf8>>, uef_bin:reverse_utf8(<<"こんにちは"/utf8>>))
 	].
+
+random_latin_binary_test_() ->
+	Length = 11,
+	RandomLower = uef_bin:random_latin_binary(Length, lower),
+	RandomUpper = uef_bin:random_latin_binary(Length, upper),
+	RandomAny = uef_bin:random_latin_binary(Length, any),
+	[
+	?_assert(erlang:is_integer(Length) andalso Length > 0),
+	?_assertEqual(Length, erlang:byte_size(RandomLower)),
+	?_assertEqual(Length, erlang:byte_size(RandomUpper)),
+	?_assertEqual(Length, erlang:byte_size(RandomAny)),
+	?_assertEqual(ok, validate_random_latin_binary(RandomLower, lower)),
+	?_assertEqual(ok, validate_random_latin_binary(RandomUpper, upper)),
+	?_assertEqual(ok, validate_random_latin_binary(RandomAny, any))
+	].
+
+
+%%%------------------------------------------------------------------------------
+%%%   Internal functions
+%%%------------------------------------------------------------------------------
+validate_random_latin_binary(Bin, CaseFlag) ->
+	case Bin of
+		<<>> ->
+			ok;
+		<<C, Rest/bits>> ->
+			IsInRange = case CaseFlag of
+				lower ->
+					(C >= $0 andalso C =< $9) orelse (C >= $a andalso C =< $z);
+				upper ->
+					(C >= $0 andalso C =< $9) orelse (C >= $A andalso C =< $Z);
+				any   ->
+					(C >= $0 andalso C =< $9) orelse (C >= $a andalso C =< $z) orelse (C >= $A andalso C =< $Z)
+			end,
+			case IsInRange of
+				true  ->
+					validate_random_latin_binary(Rest, CaseFlag);
+				false ->
+					{error, {invalid_char, C}}
+			end;
+
+		_ ->
+			{error, other}
+	end.
