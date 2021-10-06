@@ -55,3 +55,13 @@ lists_to_list_of_tuples_3_test_() ->
 	[
 	?_assertEqual(Tuples1, uef_lists:lists_to_list_of_tuples([a1,b1], [a2,b2,c2], [a3,b3]))
 	].
+
+
+lists_search_test_() ->
+	List = [0,1,2,3,4,5,6,7,8,9,10,11],
+	TrueFun = fun(X) -> X =:= 9 end,
+	FalseFun = fun(X) -> X =:= 100 end,
+	[
+		?_assertEqual({value, 9}, uef_lists:search(TrueFun, List)),
+		?_assertEqual(false, uef_lists:search(FalseFun, List))
+	].
