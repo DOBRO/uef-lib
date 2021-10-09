@@ -133,6 +133,28 @@ random_latin_binary_test_() ->
 	].
 
 
+strip_left_test_() ->
+	[
+	?_assertEqual(<<>>, uef_bin:strip_left(<<>>, <<"any">>)),
+	?_assertEqual(<<"test">>, uef_bin:strip_left(<<"test">>, <<>>)),
+	?_assertEqual(<<"est">>, uef_bin:strip_left(<<"ttest">>, <<"t">>)),
+	?_assertEqual(<<"est">>, uef_bin:strip_left(<<"ttest">>, <<"tt">>)),
+	?_assertEqual(<<"test">>, uef_bin:strip_left(<<"tttest">>, <<"tt">>)),
+	?_assertEqual(<<"est">>, uef_bin:strip_left(<<"ttest">>, $t)),
+	?_assertEqual(<<"est">>, uef_bin:strip_left(<<"tttest">>, $t)),
+
+	?_assertEqual(<<"st">>, uef_bin:strip_left(<<"test">>, <<"te">>)),
+	?_assertEqual(<<"st">>, uef_bin:strip_left(<<"tetest">>, <<"te">>)),
+
+	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_left(<<1,1,1,2,3,4,5>>, <<1>>)),
+	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_left(<<1,1,1,2,3,4,5>>, 1)),
+
+	?_assertEqual(<<"ривет"/utf8>>, uef_bin:strip_left(<<"привет"/utf8>>, <<"п"/utf8>>)),
+	?_assertEqual(<<"ривет"/utf8>>, uef_bin:strip_left(<<"пппривет"/utf8>>, <<"п"/utf8>>)),
+	?_assertEqual(<<"ивет"/utf8>>, uef_bin:strip_left(<<"привет"/utf8>>, <<"пр"/utf8>>))
+	].
+
+
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
 %%%------------------------------------------------------------------------------

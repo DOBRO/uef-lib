@@ -162,9 +162,11 @@ numeric_prefix(B) -> numeric_prefix(B, <<>>).
 
 %% strip_left/2
 -spec strip_left(Bin :: binary(), Chars :: binary() | integer()) -> binary().
-strip_left(Bin, Chars) when is_binary(Chars) ->
+strip_left(Bin, <<>>) when is_binary(Bin) ->
+	Bin;
+strip_left(Bin, Chars) when is_binary(Bin), is_binary(Chars) ->
 	do_strip_left(Bin, Chars, erlang:byte_size(Chars));
-strip_left(Bin, Chars) when is_integer(Chars) ->
+strip_left(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
 	strip_left(Bin, << Chars >>).
 
 %%%------------------------------------------------------------------------------
