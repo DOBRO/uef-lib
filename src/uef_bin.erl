@@ -239,7 +239,8 @@ numeric_prefix(<< $9, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $9
 numeric_prefix(_, Acc) -> Acc.
 
 
-%% do_strip_left/2
+%% do_strip_left/3
+-spec do_strip_left(binary(), binary(), pos_integer()) -> binary().
 do_strip_left(<<>>, _, _) ->
 	<<>>;
 do_strip_left(Bin, Chars, CharsByteSize) ->
