@@ -20,6 +20,7 @@
 -export([replace/3, replace_chars/3]).
 -export([random_latin_binary/2, random_binary_from_chars/2]).
 -export([numeric_prefix/1]).
+-export([strip_left/2]).
 
 -type split_option() :: undefined | trim_all.
 
@@ -158,6 +159,14 @@ random_binary_from_chars(Length, Chars) ->
 %% @end
 numeric_prefix(B) -> numeric_prefix(B, <<>>).
 
+
+%% strip_left/2
+-spec strip_left(Bin :: binary(), Chars :: binary() | integer()) -> binary().
+strip_left(Bin, Chars) when is_binary(Chars) ->
+	do_strip_left(Bin, Chars, erlang:byte_size(Chars));
+strip_left(Bin, Chars) when is_integer(Chars) ->
+	strip_left(Bin, << Chars >>).
+
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
@@ -223,3 +232,14 @@ numeric_prefix(<< $7, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $7
 numeric_prefix(<< $8, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $8 >>);
 numeric_prefix(<< $9, Rest/bits >>, Acc) -> numeric_prefix(Rest, << Acc/bits, $9 >>);
 numeric_prefix(_, Acc) -> Acc.
+
+
+%% do_strip_left/2
+do_strip_left(<<>>, _, _) ->
+	<<>>;
+do_strip_left(Bin, Chars, CharsByteSize) ->
+	case Bin of
+		<< Chars:CharsByteSize/bytes, Rest/bits >> ->
+			do_strip_left(Rest, Chars, CharsByteSize);
+		_ -> Bin
+	end.
