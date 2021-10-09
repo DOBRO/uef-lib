@@ -162,7 +162,10 @@ add_time_test_() ->
 	?_assertEqual(uef_time:add_months(Date1, 1), uef_time:add_time(Date1, [{1, months}])),
 	?_assertEqual(uef_time:add_months(DateTime1, 1), uef_time:add_time(DateTime1, [{1, months}])),
 	?_assertEqual(uef_time:add_years(Date1, 1), uef_time:add_time(Date1, [{1, years}])),
-	?_assertEqual(uef_time:add_years(DateTime1, 1), uef_time:add_time(DateTime1, [{1, years}]))
+	?_assertEqual(uef_time:add_years(DateTime1, 1), uef_time:add_time(DateTime1, [{1, years}])),
+
+	?_assertException(error, {badarg, some_period}, uef_time:add_time(DateTime1, [{1, some_period}])),
+	?_assertException(error, {badarg, {1.0, year}}, uef_time:add_time(DateTime1, [{1.0, year}]))
 	].
 
 today_test_() ->
@@ -183,6 +186,12 @@ yesterday_test_() ->
 	?_assertMatch({_,_,_}, uef_time:yesterday())
 	].
 
+days_diff_1_test_() ->
+	Date = {2021, 12, 31},
+	[
+	?_assertEqual(uef_time:days_diff(Date), uef_time:days_diff(erlang:date(), Date))
+	].
+
 days_diff_2_test_() ->
 	[
 	?_assertEqual(1, uef_time:days_diff({2018, 12, 31}, {2019, 1, 1})),
@@ -190,6 +199,11 @@ days_diff_2_test_() ->
 	?_assertEqual(0, uef_time:days_diff({2019, 4, 23}, {2019, 4, 23}))
 	].
 
+seconds_diff_1_test_() ->
+	DateTime = {{2021, 12, 31}, {0, 0, 0}},
+	[
+	?_assertEqual(uef_time:seconds_diff(DateTime), uef_time:seconds_diff(erlang:localtime(), DateTime))
+	].
 
 seconds_diff_2_test_() ->
 	Date = erlang:date(),
