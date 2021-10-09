@@ -162,6 +162,9 @@ numeric_prefix(B) -> numeric_prefix(B, <<>>).
 
 %% strip_left/2
 -spec strip_left(Bin :: binary(), Chars :: binary() | integer()) -> binary().
+%% @doc
+%% Removes leading Chars from binary Bin and returns new binary.
+%% @end
 strip_left(Bin, <<>>) when is_binary(Bin) ->
 	Bin;
 strip_left(Bin, Chars) when is_binary(Bin), is_binary(Chars) ->
