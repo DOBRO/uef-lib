@@ -345,6 +345,7 @@ uef_bin:strip_left(Binary1, Chars) -> Binary2.
 ----
 Binary1 :: binary().
 Chars :: binary() | integer().
+Binary2 :: binary().
 ----
 
 Removes leading `Chars` from `Binary1` and returns `Binary2`.
@@ -366,6 +367,45 @@ Removes leading `Chars` from `Binary1` and returns `Binary2`.
 true
 
 > uef_bin:strip_left(<<"這條街"/utf8>>, <<"這"/utf8>>) =:= <<"條街"/utf8>>.
+true
+----
+
+'''
+
+==== uef_bin:strip_right/2
+
+[source,erlang]
+----
+uef_bin:strip_right(Binary1, Chars) -> Binary2.
+----
+
+**Types:**
+[source,erlang]
+----
+Binary1 :: binary().
+Chars :: binary() | integer().
+Binary2 :: binary().
+----
+
+Removes trailing `Chars` from `Binary1` and returns `Binary2`.
+
+*Examples:*
+
+[source,erlang]
+----
+> uef_bin:strip_right(<<"example.comwww">>, <<"w">>).
+<<"example.com">>
+
+> uef_bin:strip_right(<<"example.comwww">>, <<"ww">>).
+<<"example.comw">>
+
+> uef_bin:strip_right(<<1, 2, 3, 4, 5, 5, 5>>, 5).
+<<1,2,3,4>>
+
+> uef_bin:strip_right(<<"АБВГДЕЁЖЖЖЖ"/utf8>>, <<"Ж"/utf8>>) =:= <<"АБВГДЕЁ"/utf8>>.
+true
+
+> uef_bin:strip_right(<<"這條街街街街"/utf8>>, <<"街"/utf8>>) =:= <<"這條"/utf8>>.
 true
 ----
 
