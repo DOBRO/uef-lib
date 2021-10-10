@@ -366,7 +366,7 @@ Removes leading `Chars` from `Binary1` and returns `Binary2`.
 > uef_bin:strip_left(<<"ААААБВГДЕЁЖ"/utf8>>, <<"А"/utf8>>) =:= <<"БВГДЕЁЖ"/utf8>>.
 true
 
-> uef_bin:strip_left(<<"這條街"/utf8>>, <<"這"/utf8>>) =:= <<"條街"/utf8>>.
+> uef_bin:strip_left(<<"這這這這條街"/utf8>>, <<"這"/utf8>>) =:= <<"條街"/utf8>>.
 true
 ----
 
