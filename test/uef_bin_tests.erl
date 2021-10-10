@@ -162,6 +162,35 @@ strip_left_test_() ->
 	].
 
 
+strip_right_test_() ->
+	[
+	?_assertEqual(<<>>, uef_bin:strip_right(<<>>, <<"any">>)),
+	?_assertEqual(<<"test">>, uef_bin:strip_right(<<"test">>, <<>>)),
+	?_assertEqual(<<"tes">>, uef_bin:strip_right(<<"testtt">>, <<"t">>)),
+	?_assertEqual(<<"test">>, uef_bin:strip_right(<<"testtt">>, <<"tt">>)),
+	?_assertEqual(<<"test">>, uef_bin:strip_right(<<"testtttt">>, <<"tt">>)),
+	?_assertEqual(<<"tes">>, uef_bin:strip_right(<<"testtt">>, $t)),
+
+	?_assertEqual(<<"aa">>, uef_bin:strip_right(<<"aa">>, <<"aaa">>)),
+
+	?_assertEqual(<<>>, uef_bin:strip_right(<<"aaaaaa">>, $a)),
+	?_assertEqual(<<>>, uef_bin:strip_right(<<"aaaaaa">>, <<"a">>)),
+
+	?_assertEqual(<<"te">>, uef_bin:strip_right(<<"test">>, <<"st">>)),
+	?_assertEqual(<<"t">>, uef_bin:strip_right(<<"test">>, <<"est">>)),
+	?_assertEqual(<<>>, uef_bin:strip_right(<<"test">>, <<"test">>)),
+
+	?_assertEqual(<<1,2,3,4>>, uef_bin:strip_right(<<1,2,3,4,5,5,5>>, <<5>>)),
+	?_assertEqual(<<1,2,3,4>>, uef_bin:strip_right(<<1,2,3,4,5,5,5>>, 5)),
+	?_assertEqual(<<>>, uef_bin:strip_right(<<10, 10, 10, 10>>, 10)),
+	?_assertEqual(<<>>, uef_bin:strip_right(<<10, 10, 10, 10>>, <<10>>)),
+
+	?_assertEqual(<<"приве"/utf8>>, uef_bin:strip_right(<<"привет"/utf8>>, <<"т"/utf8>>)),
+	?_assertEqual(<<"приве"/utf8>>, uef_bin:strip_right(<<"приветттт"/utf8>>, <<"т"/utf8>>)),
+	?_assertEqual(<<"привет"/utf8>>, uef_bin:strip_right(<<"приветтттт"/utf8>>, <<"тт"/utf8>>))
+	].
+
+
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
