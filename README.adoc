@@ -333,6 +333,44 @@ Returns new binary `DigitsOnlyBinary` which consists of digits [0-9] wich are at
 
 '''
 
+==== uef_bin:strip_left/2
+
+[source,erlang]
+----
+uef_bin:strip_left(Binary1, Chars) -> Binary2.
+----
+
+**Types:**
+[source,erlang]
+----
+Binary1 :: binary().
+Chars :: binary() | integer().
+----
+
+Removes leading `Chars` from `Binary1` and returns `Binary2`.
+
+*Examples:*
+
+[source,erlang]
+----
+> uef_bin:strip_left(<<"www.example.com">>, <<"w">>).
+<<".example.com">>
+
+> uef_bin:strip_left(<<"www.example.com">>, <<"ww">>).
+<<"w.example.com">>
+
+> uef_bin:strip_left(<<11, 11, 11, 12, 13, 14>>, 11).
+<<12,13,14>>
+
+> uef_bin:strip_left(<<"ААААБВГДЕЁЖ"/utf8>>, <<"А"/utf8>>) =:= <<"БВГДЕЁЖ"/utf8>>.
+true
+
+> uef_bin:strip_left(<<"這條街"/utf8>>, <<"這"/utf8>>) =:= <<"條街"/utf8>>.
+true
+----
+
+'''
+
 === Module `uef_crypt`
 
 '''
