@@ -143,11 +143,18 @@ strip_left_test_() ->
 	?_assertEqual(<<"est">>, uef_bin:strip_left(<<"ttest">>, $t)),
 	?_assertEqual(<<"est">>, uef_bin:strip_left(<<"tttest">>, $t)),
 
+	?_assertEqual(<<"aa">>, uef_bin:strip_left(<<"aa">>, <<"aaa">>)),
+
+	?_assertEqual(<<>>, uef_bin:strip_left(<<"aaaaaa">>, $a)),
+	?_assertEqual(<<>>, uef_bin:strip_left(<<"aaaaaa">>, <<"a">>)),
+
 	?_assertEqual(<<"st">>, uef_bin:strip_left(<<"test">>, <<"te">>)),
 	?_assertEqual(<<"st">>, uef_bin:strip_left(<<"tetest">>, <<"te">>)),
 
 	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_left(<<1,1,1,2,3,4,5>>, <<1>>)),
 	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_left(<<1,1,1,2,3,4,5>>, 1)),
+	?_assertEqual(<<>>, uef_bin:strip_left(<<10, 10, 10, 10>>, 10)),
+	?_assertEqual(<<>>, uef_bin:strip_left(<<10, 10, 10, 10>>, <<10>>)),
 
 	?_assertEqual(<<"ривет"/utf8>>, uef_bin:strip_left(<<"привет"/utf8>>, <<"п"/utf8>>)),
 	?_assertEqual(<<"ривет"/utf8>>, uef_bin:strip_left(<<"пппривет"/utf8>>, <<"п"/utf8>>)),
