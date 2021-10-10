@@ -20,7 +20,7 @@
 -export([replace/3, replace_chars/3]).
 -export([random_latin_binary/2, random_binary_from_chars/2]).
 -export([numeric_prefix/1]).
--export([strip_left/2, strip_right/2]).
+-export([strip_left/2, strip_right/2, strip_both/2]).
 
 -type split_option() :: undefined | trim_all.
 
@@ -183,6 +183,15 @@ strip_right(Bin, Chars) when is_binary(Bin), is_binary(Chars) ->
 	do_strip_right(Bin, Chars, erlang:byte_size(Chars));
 strip_right(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
 	strip_right(Bin, << Chars >>).
+
+
+%% strip_both/2
+-spec strip_both(Bin :: binary(), Chars :: binary() | integer()) -> binary().
+%% @doc
+%% Removes leading and trailing Chars from binary Bin and returns new binary.
+%% @end
+strip_both(Bin, Chars) ->
+	strip_right(strip_left(Bin, Chars), Chars).
 
 
 %%%------------------------------------------------------------------------------
