@@ -20,7 +20,7 @@
 -export([replace/3, replace_chars/3]).
 -export([random_latin_binary/2, random_binary_from_chars/2]).
 -export([numeric_prefix/1]).
--export([strip_left/2]).
+-export([strip_left/2, strip_right/2]).
 
 -type split_option() :: undefined | trim_all.
 
@@ -172,6 +172,19 @@ strip_left(Bin, Chars) when is_binary(Bin), is_binary(Chars) ->
 strip_left(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
 	strip_left(Bin, << Chars >>).
 
+%% strip_right/2
+-spec strip_right(Bin :: binary(), Chars :: binary() | integer()) -> binary().
+%% @doc
+%% Removes trailing Chars from binary Bin and returns new binary.
+%% @end
+strip_right(Bin, <<>>) when is_binary(Bin) ->
+	Bin;
+strip_right(Bin, Chars) when is_binary(Bin), is_binary(Chars) ->
+	do_strip_right(Bin, Chars, erlang:byte_size(Chars));
+strip_right(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
+	strip_right(Bin, << Chars >>).
+
+
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
@@ -247,5 +260,18 @@ do_strip_left(Bin, Chars, CharsByteSize) ->
 	case Bin of
 		<< Chars:CharsByteSize/bytes, Rest/bits >> ->
 			do_strip_left(Rest, Chars, CharsByteSize);
+		_ -> Bin
+	end.
+
+
+%% do_strip_right/3
+-spec do_strip_right(binary(), binary(), pos_integer()) -> binary().
+do_strip_right(<<>>, _, _) ->
+	<<>>;
+do_strip_right(Bin, Chars, CharsByteSize) ->
+	BinByteSize = erlang:byte_size(Bin),
+	case Bin of
+		<< Head:(BinByteSize - CharsByteSize)/bytes, Chars/bits >> ->
+			do_strip_right(Head, Chars, CharsByteSize);
 		_ -> Bin
 	end.
