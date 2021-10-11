@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+- New function `uef_bin:strip_left/2`.
+- New function `uef_bin:strip_right/2`.
+- New function `uef_bin:strip_both/2`.
+
 ## [2.5.3] - 2020-01-09
 
 - Fixed: test of function `uef_time:add_months/2` not passed for leap year.
