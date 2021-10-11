@@ -153,6 +153,8 @@ strip_left_test_() ->
 
 	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_left(<<1,1,1,2,3,4,5>>, <<1>>)),
 	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_left(<<1,1,1,2,3,4,5>>, 1)),
+	?_assertEqual(<<1,2,3,4,5>>, uef_bin:strip_left(<<1,1,1,2,3,4,5>>, <<1,1>>)),
+
 	?_assertEqual(<<>>, uef_bin:strip_left(<<10, 10, 10, 10>>, 10)),
 	?_assertEqual(<<>>, uef_bin:strip_left(<<10, 10, 10, 10>>, <<10>>)),
 
@@ -182,6 +184,8 @@ strip_right_test_() ->
 
 	?_assertEqual(<<1,2,3,4>>, uef_bin:strip_right(<<1,2,3,4,5,5,5>>, <<5>>)),
 	?_assertEqual(<<1,2,3,4>>, uef_bin:strip_right(<<1,2,3,4,5,5,5>>, 5)),
+	?_assertEqual(<<1,2,3,4,5>>, uef_bin:strip_right(<<1,2,3,4,5,5,5>>, <<5,5>>)),
+
 	?_assertEqual(<<>>, uef_bin:strip_right(<<10, 10, 10, 10>>, 10)),
 	?_assertEqual(<<>>, uef_bin:strip_right(<<10, 10, 10, 10>>, <<10>>)),
 
@@ -190,6 +194,58 @@ strip_right_test_() ->
 	?_assertEqual(<<"привет"/utf8>>, uef_bin:strip_right(<<"приветтттт"/utf8>>, <<"тт"/utf8>>))
 	].
 
+
+strip_both_test_() ->
+	[
+	?_assertEqual(<<>>, uef_bin:strip_both(<<>>, <<"any">>)),
+	?_assertEqual(<<"test">>, uef_bin:strip_both(<<"test">>, <<>>)),
+
+	?_assertEqual(<<"es">>, uef_bin:strip_both(<<"tttest">>, <<"t">>)),
+	?_assertEqual(<<"est">>, uef_bin:strip_both(<<"ttest">>, <<"tt">>)),
+	?_assertEqual(<<"test">>, uef_bin:strip_both(<<"tttest">>, <<"tt">>)),
+	?_assertEqual(<<"test">>, uef_bin:strip_both(<<"tttesttt">>, <<"tt">>)),
+	?_assertEqual(<<"es">>, uef_bin:strip_both(<<"ttest">>, $t)),
+	?_assertEqual(<<"es">>, uef_bin:strip_both(<<"tttesttt">>, $t)),
+
+	?_assertEqual(<<"aa">>, uef_bin:strip_both(<<"aa">>, <<"aaa">>)),
+
+	?_assertEqual(<<>>, uef_bin:strip_both(<<"aaaaaa">>, $a)),
+	?_assertEqual(<<>>, uef_bin:strip_both(<<"aaaaaa">>, <<"a">>)),
+
+	?_assertEqual(<<"st">>, uef_bin:strip_both(<<"test">>, <<"te">>)),
+	?_assertEqual(<<"st">>, uef_bin:strip_both(<<"tetest">>, <<"te">>)),
+
+	?_assertEqual(<<"te">>, uef_bin:strip_both(<<"test">>, <<"st">>)),
+	?_assertEqual(<<"te">>, uef_bin:strip_both(<<"testst">>, <<"st">>)),
+
+	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_both(<<1,1,1,2,3,4,5>>, <<1>>)),
+	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_both(<<1,1,1,2,3,4,5>>, 1)),
+	?_assertEqual(<<1,2,3,4,5>>, uef_bin:strip_both(<<1,1,1,2,3,4,5>>, <<1,1>>)),
+
+	?_assertEqual(<<>>, uef_bin:strip_both(<<10, 10, 10, 10>>, 10)),
+	?_assertEqual(<<>>, uef_bin:strip_both(<<10, 10, 10, 10>>, <<10>>)),
+
+	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_both(<<1,1,1,2,3,4,5,1,1,1>>, <<1>>)),
+	?_assertEqual(<<2,3,4,5>>, uef_bin:strip_both(<<1,1,1,2,3,4,5,1,1,1>>, 1)),
+
+	?_assertEqual(<<1,2,3,4>>, uef_bin:strip_both(<<1,2,3,4,5,5,5>>, <<5>>)),
+	?_assertEqual(<<1,2,3,4>>, uef_bin:strip_both(<<1,2,3,4,5,5,5>>, 5)),
+	?_assertEqual(<<1,2,3,4,5>>, uef_bin:strip_both(<<1,2,3,4,5,5,5>>, <<5,5>>)),
+
+	?_assertEqual(<<>>, uef_bin:strip_both(<<10, 10, 10, 10>>, 10)),
+	?_assertEqual(<<>>, uef_bin:strip_both(<<10, 10, 10, 10>>, <<10>>)),
+
+	?_assertEqual(<<"ривет"/utf8>>, uef_bin:strip_both(<<"привет"/utf8>>, <<"п"/utf8>>)),
+	?_assertEqual(<<"ривет"/utf8>>, uef_bin:strip_both(<<"пппривет"/utf8>>, <<"п"/utf8>>)),
+	?_assertEqual(<<"ивет"/utf8>>, uef_bin:strip_both(<<"привет"/utf8>>, <<"пр"/utf8>>)),
+
+	?_assertEqual(<<"приве"/utf8>>, uef_bin:strip_both(<<"привет"/utf8>>, <<"т"/utf8>>)),
+	?_assertEqual(<<"приве"/utf8>>, uef_bin:strip_both(<<"приветттт"/utf8>>, <<"т"/utf8>>)),
+	?_assertEqual(<<"привет"/utf8>>, uef_bin:strip_both(<<"приветтттт"/utf8>>, <<"тт"/utf8>>)),
+
+	?_assertEqual(<<"привет"/utf8>>, uef_bin:strip_both(<<"жжжжжприветжжжжж"/utf8>>, <<"ж"/utf8>>)),
+	?_assertEqual(<<"жприветж"/utf8>>, uef_bin:strip_both(<<"жжжжжприветжжжжж"/utf8>>, <<"жж"/utf8>>))
+	].
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
