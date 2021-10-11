@@ -411,6 +411,45 @@ true
 
 '''
 
+==== uef_bin:strip_both/2
+
+[source,erlang]
+----
+uef_bin:strip_both(Binary1, Chars) -> Binary2.
+----
+
+**Types:**
+[source,erlang]
+----
+Binary1 :: binary().
+Chars :: binary() | integer().
+Binary2 :: binary().
+----
+
+Removes leading and trailing `Chars` from `Binary1` and returns `Binary2`.
+
+*Examples:*
+
+[source,erlang]
+----
+> uef_bin:strip_both(<<"www.example.www">>, <<"w">>).
+<<".example.">>
+
+> uef_bin:strip_both(<<"com.example.com">>, <<"com">>).
+<<".example.">>
+
+> uef_bin:strip_both(<<5,5,5, 1,2,3,4, 5,5,5>>, 5).
+<<1,2,3,4>>
+
+> uef_bin:strip_both(<<"ЖЖЖЖАБВГДЕЁЖЖЖЖ"/utf8>>, <<"Ж"/utf8>>) =:= <<"АБВГДЕЁ"/utf8>>.
+true
+
+> uef_bin:strip_both(<<"街街街街這條街街街街"/utf8>>, <<"街"/utf8>>) =:= <<"這條"/utf8>>.
+true
+----
+
+'''
+
 === Module `uef_crypt`
 
 '''

@@ -242,6 +242,7 @@ strip_both_test_() ->
 	?_assertEqual(<<"приве"/utf8>>, uef_bin:strip_both(<<"привет"/utf8>>, <<"т"/utf8>>)),
 	?_assertEqual(<<"приве"/utf8>>, uef_bin:strip_both(<<"приветттт"/utf8>>, <<"т"/utf8>>)),
 	?_assertEqual(<<"привет"/utf8>>, uef_bin:strip_both(<<"приветтттт"/utf8>>, <<"тт"/utf8>>)),
+	?_assertEqual(<<"привет"/utf8>>, uef_bin:strip_both(<<"абабабприветабабаб"/utf8>>, <<"аб"/utf8>>)),
 
 	?_assertEqual(<<"привет"/utf8>>, uef_bin:strip_both(<<"жжжжжприветжжжжж"/utf8>>, <<"ж"/utf8>>)),
 	?_assertEqual(<<"жприветж"/utf8>>, uef_bin:strip_both(<<"жжжжжприветжжжжж"/utf8>>, <<"жж"/utf8>>))
