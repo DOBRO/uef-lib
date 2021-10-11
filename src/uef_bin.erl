@@ -278,9 +278,9 @@ do_strip_left(Bin, Chars, CharsByteSize) ->
 do_strip_right(<<>>, _, _) ->
 	<<>>;
 do_strip_right(Bin, Chars, CharsByteSize) ->
-	BinByteSize = erlang:byte_size(Bin),
+	HeadByteSize = erlang:byte_size(Bin) - CharsByteSize,
 	case Bin of
-		<< Head:(BinByteSize - CharsByteSize)/bytes, Chars/bits >> ->
+		<< Head:HeadByteSize/bytes, Chars/bits >> ->
 			do_strip_right(Head, Chars, CharsByteSize);
 		_ -> Bin
 	end.
