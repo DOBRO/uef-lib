@@ -21,6 +21,7 @@
 -export([random_latin_binary/2, random_binary_from_chars/2]).
 -export([numeric_prefix/1]).
 -export([strip_left/2, strip_right/2, strip_both/2]).
+-export([chomp/1]).
 
 -type split_option() :: undefined | trim_all.
 
@@ -193,6 +194,18 @@ strip_right(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
 strip_both(Bin, Chars) ->
 	strip_right(strip_left(Bin, Chars), Chars).
 
+
+%% chomp/1
+-spec chomp(binary()) -> binary().
+chomp(<<>>) ->
+	<<>>;
+chomp(Bin) ->
+	HeadSize = erlang:byte_size(Bin) - 1,
+	case Bin of
+		<< Head:HeadSize/bytes, C >> when C =:= $\n orelse C =:= $\r ->
+			chomp(Head);
+		_ -> Bin
+	end.
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
