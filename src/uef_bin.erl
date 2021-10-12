@@ -197,6 +197,9 @@ strip_both(Bin, Chars) ->
 
 %% chomp/1
 -spec chomp(binary()) -> binary().
+%% @doc
+%% Removes all trailing \n and \r characters from binary.
+%% @end
 chomp(<<>>) ->
 	<<>>;
 chomp(Bin) ->
@@ -204,7 +207,8 @@ chomp(Bin) ->
 	case Bin of
 		<< Head:HeadSize/bytes, C >> when C =:= $\n orelse C =:= $\r ->
 			chomp(Head);
-		_ -> Bin
+		_ ->
+			Bin
 	end.
 
 %%%------------------------------------------------------------------------------

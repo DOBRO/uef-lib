@@ -65,6 +65,34 @@ end
 
 '''
 
+==== uef_bin:chomp/1
+
+[source,erlang]
+----
+uef_bin:chomp(Binary1 :: binary()) -> Binary2 :: binary().
+----
+
+Removes all trailing `\n` and `\r` characters from `Binary1`.
+
+*Examples:*
+
+[source,erlang]
+----
+> uef_bin:chomp(<<"string\r\n">>).
+<<"string">>
+
+> uef_bin:chomp(<<"string\r\n\r\n">>).
+<<"string">>
+
+> uef_bin:chomp(<<"string\n\n\n\n">>).
+<<"string">>
+
+> uef_bin:chomp(<<"string\r\r\r\r">>).
+<<"string">>
+----
+
+'''
+
 ==== uef_bin:binary_join/2
 
 [source,erlang]
