@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- New function `uef_bin:chomp/1`.
 - New function `uef_bin:strip_left/2`.
 - New function `uef_bin:strip_right/2`.
 - New function `uef_bin:strip_both/2`.
