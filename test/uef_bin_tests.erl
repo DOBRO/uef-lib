@@ -248,6 +248,34 @@ strip_both_test_() ->
 	?_assertEqual(<<"жприветж"/utf8>>, uef_bin:strip_both(<<"жжжжжприветжжжжж"/utf8>>, <<"жж"/utf8>>))
 	].
 
+
+chomp_test_() ->
+	[
+	?_assertEqual(<<>>, uef_bin:chomp(<<>>)),
+	?_assertEqual(<<>>, uef_bin:chomp(<<"\n">>)),
+	?_assertEqual(<<>>, uef_bin:chomp(<<"\r">>)),
+	?_assertEqual(<<>>, uef_bin:chomp(<<"\n\n">>)),
+	?_assertEqual(<<>>, uef_bin:chomp(<<"\r\r">>)),
+	?_assertEqual(<<>>, uef_bin:chomp(<<"\r\n\r\n">>)),
+
+	?_assertEqual(<<"aaa">>, uef_bin:chomp(<<"aaa\n">>)),
+	?_assertEqual(<<"aaa">>, uef_bin:chomp(<<"aaa\r">>)),
+	?_assertEqual(<<"aaa">>, uef_bin:chomp(<<"aaa\n\n\n">>)),
+	?_assertEqual(<<"aaa">>, uef_bin:chomp(<<"aaa\r\r\r">>)),
+	?_assertEqual(<<"aaa">>, uef_bin:chomp(<<"aaa\r\n\r">>)),
+	?_assertEqual(<<"aaa">>, uef_bin:chomp(<<"aaa\n\r\n">>)),
+	?_assertEqual(<<"aaa">>, uef_bin:chomp(<<"aaa\r\n\r\n">>)),
+
+	?_assertEqual(<<"\naaa">>, uef_bin:chomp(<<"\naaa\n">>)),
+	?_assertEqual(<<"\raaa">>, uef_bin:chomp(<<"\raaa\r">>)),
+	?_assertEqual(<<"\n\n\naaa">>, uef_bin:chomp(<<"\n\n\naaa\n\n\n">>)),
+	?_assertEqual(<<"\r\r\raaa">>, uef_bin:chomp(<<"\r\r\raaa\r\r\r">>)),
+	?_assertEqual(<<"\r\n\raaa">>, uef_bin:chomp(<<"\r\n\raaa\r\n\r">>)),
+	?_assertEqual(<<"\n\r\naaa">>, uef_bin:chomp(<<"\n\r\naaa\n\r\n">>)),
+	?_assertEqual(<<"\r\n\r\naaa">>, uef_bin:chomp(<<"\r\n\r\naaa\r\n\r\n">>))
+	].
+
+
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
 %%%------------------------------------------------------------------------------
