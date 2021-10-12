@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.6.0] - 2020-10-12
 
 - New function `uef_bin:chomp/1`.
 - New function `uef_bin:strip_left/2`.

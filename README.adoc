@@ -30,7 +30,7 @@ Add `uef-lib` as a dependency to your `rebar.config` file:
 [source,erlang]
 ----
 {deps, [
-  {uef, "2.5.3"}
+  {uef, "2.6.0"}
 ]}.
 ----
 
@@ -42,7 +42,7 @@ Add `uef-lib` as a dependency to your `mix.exs` file:
 ----
 defp deps do
   [
-    {:uef, "~> 2.5.3"}
+    {:uef, "~> 2.6.0"}
   ]
 end
 ----
