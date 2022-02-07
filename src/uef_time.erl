@@ -213,31 +213,31 @@ add_time(DT, []) ->
 add_time(DT, [{N, Ptype} | Tail]) when is_integer(N) andalso is_atom(Ptype) ->
     DT2 = case Ptype of
         % seconds
-        sec			-> add_seconds(DT, N);
-        second		-> add_seconds(DT, N);
-        seconds		-> add_seconds(DT, N);
+        sec         -> add_seconds(DT, N);
+        second      -> add_seconds(DT, N);
+        seconds     -> add_seconds(DT, N);
         % minutes
-        min			-> add_minutes(DT, N);
-        minute		-> add_minutes(DT, N);
-        minutes		-> add_minutes(DT, N);
+        min         -> add_minutes(DT, N);
+        minute      -> add_minutes(DT, N);
+        minutes     -> add_minutes(DT, N);
         % hours
-        hrs			-> add_hours(DT, N);
-        hour		-> add_hours(DT, N);
-        hours		-> add_hours(DT, N);
+        hrs         -> add_hours(DT, N);
+        hour        -> add_hours(DT, N);
+        hours       -> add_hours(DT, N);
         % days
-        day			-> add_days(DT, N);
-        days		-> add_days(DT, N);
+        day         -> add_days(DT, N);
+        days        -> add_days(DT, N);
         % weeks
-        week		-> add_weeks(DT, N);
-        weeks		-> add_weeks(DT, N);
+        week        -> add_weeks(DT, N);
+        weeks       -> add_weeks(DT, N);
         % months
-        month		-> add_months(DT, N);
-        months		-> add_months(DT, N);
+        month       -> add_months(DT, N);
+        months      -> add_months(DT, N);
         % years
-        year		-> add_years(DT, N);
-        years		-> add_years(DT, N);
+        year        -> add_years(DT, N);
+        years       -> add_years(DT, N);
         % other
-        _			-> erlang:error({badarg, Ptype})
+        _           -> erlang:error({badarg, Ptype})
     end,
     add_time(DT2, Tail);
 add_time(DT, [{Ptype, N} | Tail]) when is_atom(Ptype) andalso is_integer(N) ->
