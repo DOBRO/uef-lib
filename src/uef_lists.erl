@@ -30,10 +30,10 @@
 %% @end
 split_list_into_chunks([],_) -> [];
 split_list_into_chunks(List,Len) when Len > length(List) ->
-	[List];
+    [List];
 split_list_into_chunks(List,Len) ->
-	{Head,Tail} = lists:split(Len,List),
-	[Head | split_list_into_chunks(Tail,Len)].
+    {Head,Tail} = lists:split(Len,List),
+    [Head | split_list_into_chunks(Tail,Len)].
 
 
 %% lists_to_list_of_tuples/2
@@ -44,18 +44,18 @@ split_list_into_chunks(List,Len) ->
 %% and the second element is taken from the second list one by one.
 %% @end
 lists_to_list_of_tuples(List1, List2) ->
-	List = lists:foldl(
-		fun(Elem1, Acc1) ->
-			lists:foldl(
-				fun(Elem2, Acc2) ->
-					[{Elem1, Elem2} | Acc2]
-				end,
-				Acc1, List2
-			)
-		end,
-		[], List1
-	),
-	lists:reverse(List).
+    List = lists:foldl(
+        fun(Elem1, Acc1) ->
+            lists:foldl(
+                fun(Elem2, Acc2) ->
+                    [{Elem1, Elem2} | Acc2]
+                end,
+                Acc1, List2
+            )
+        end,
+        [], List1
+    ),
+    lists:reverse(List).
 
 %% lists_to_list_of_tuples/3
 -spec lists_to_list_of_tuples(List1 :: list(), List2 :: list(), List3 :: list()) -> List4 :: [tuple()].
@@ -66,37 +66,37 @@ lists_to_list_of_tuples(List1, List2) ->
 %% and the third element is taken from the third list one by one.
 %% @end
 lists_to_list_of_tuples(List1, List2, List3) ->
-	List = lists:foldl(
-		fun(Elem1, Acc1) ->
-			lists:foldl(
-				fun(Elem2, Acc2) ->
-					lists:foldl(
-						fun(Elem3, Acc3) ->
-							[{Elem1, Elem2, Elem3} | Acc3]
-						end,
-						Acc2, List3
-					)
-				end,
-				Acc1, List2
-			)
-		end,
-		[], List1
-	),
-	lists:reverse(List).
+    List = lists:foldl(
+        fun(Elem1, Acc1) ->
+            lists:foldl(
+                fun(Elem2, Acc2) ->
+                    lists:foldl(
+                        fun(Elem3, Acc3) ->
+                            [{Elem1, Elem2, Elem3} | Acc3]
+                        end,
+                        Acc2, List3
+                    )
+                end,
+                Acc1, List2
+            )
+        end,
+        [], List1
+    ),
+    lists:reverse(List).
 
 %% search/2
 -spec search(Pred, List) -> {value, Value} | false when
-	  Pred :: fun((T) -> boolean()),
-	  List :: [T],
-	  Value :: T.
+      Pred :: fun((T) -> boolean()),
+      List :: [T],
+      Value :: T.
 %% @doc
 %% If there is a Value in List such that Pred(Value) returns true, returns {value, Value} for the first such Value, otherwise returns false.
 %% Since OTP 21.0 use BIF lists:search/2 instead.
 %% @end
 search(Pred, [Hd|Tail]) ->
-	case Pred(Hd) of
-		true -> {value, Hd};
-		false -> search(Pred, Tail)
-	end;
+    case Pred(Hd) of
+        true -> {value, Hd};
+        false -> search(Pred, Tail)
+    end;
 search(Pred, []) when is_function(Pred, 1) ->
-	false.
+    false.

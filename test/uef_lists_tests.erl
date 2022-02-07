@@ -21,47 +21,47 @@
 %%%------------------------------------------------------------------------------
 
 split_list_into_chunks_test_() ->
-	[
-	?_assertEqual([[1],[2],[3],[4],[5],[6],[7],[8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 1)),
-	?_assertEqual([[1,2],[3,4],[5,6],[7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 2)),
-	?_assertEqual([[1,2,3],[4,5,6],[7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 3)),
-	?_assertEqual([[1,2,3,4],[5,6,7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 4)),
-	?_assertEqual([[1,2,3,4,5,6,7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 8)),
-	?_assertEqual([[1,2,3,4,5,6,7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 9)),
-	?_assertEqual([[1,2,3,4,5,6,7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 99))
-	].
+    [
+    ?_assertEqual([[1],[2],[3],[4],[5],[6],[7],[8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 1)),
+    ?_assertEqual([[1,2],[3,4],[5,6],[7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 2)),
+    ?_assertEqual([[1,2,3],[4,5,6],[7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 3)),
+    ?_assertEqual([[1,2,3,4],[5,6,7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 4)),
+    ?_assertEqual([[1,2,3,4,5,6,7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 8)),
+    ?_assertEqual([[1,2,3,4,5,6,7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 9)),
+    ?_assertEqual([[1,2,3,4,5,6,7,8]], uef_lists:split_list_into_chunks([1,2,3,4,5,6,7,8], 99))
+    ].
 
 lists_to_list_of_tuples_2_test_() ->
-	[
-	?_assertEqual([{a,1},{a,2},{b,1},{b,2},{c,1},{c,2}], uef_lists:lists_to_list_of_tuples([a,b,c], [1,2])),
-	?_assertEqual([{a,1},{a,2},{a,3},{b,1},{b,2},{b,3},{c,1},{c,2},{c,3}], uef_lists:lists_to_list_of_tuples([a,b,c], [1,2,3]))
-	].
+    [
+    ?_assertEqual([{a,1},{a,2},{b,1},{b,2},{c,1},{c,2}], uef_lists:lists_to_list_of_tuples([a,b,c], [1,2])),
+    ?_assertEqual([{a,1},{a,2},{a,3},{b,1},{b,2},{b,3},{c,1},{c,2},{c,3}], uef_lists:lists_to_list_of_tuples([a,b,c], [1,2,3]))
+    ].
 
 lists_to_list_of_tuples_3_test_() ->
-	Tuples1 = [
-		{a1,a2,a3},
-		{a1,a2,b3},
-		{a1,b2,a3},
-		{a1,b2,b3},
-		{a1,c2,a3},
-		{a1,c2,b3},
-		{b1,a2,a3},
-		{b1,a2,b3},
-		{b1,b2,a3},
-		{b1,b2,b3},
-		{b1,c2,a3},
-		{b1,c2,b3}
-	],
-	[
-	?_assertEqual(Tuples1, uef_lists:lists_to_list_of_tuples([a1,b1], [a2,b2,c2], [a3,b3]))
-	].
+    Tuples1 = [
+        {a1,a2,a3},
+        {a1,a2,b3},
+        {a1,b2,a3},
+        {a1,b2,b3},
+        {a1,c2,a3},
+        {a1,c2,b3},
+        {b1,a2,a3},
+        {b1,a2,b3},
+        {b1,b2,a3},
+        {b1,b2,b3},
+        {b1,c2,a3},
+        {b1,c2,b3}
+    ],
+    [
+    ?_assertEqual(Tuples1, uef_lists:lists_to_list_of_tuples([a1,b1], [a2,b2,c2], [a3,b3]))
+    ].
 
 
 lists_search_test_() ->
-	List = [0,1,2,3,4,5,6,7,8,9,10,11],
-	TrueFun = fun(X) -> X =:= 9 end,
-	FalseFun = fun(X) -> X =:= 100 end,
-	[
-		?_assertEqual({value, 9}, uef_lists:search(TrueFun, List)),
-		?_assertEqual(false, uef_lists:search(FalseFun, List))
-	].
+    List = [0,1,2,3,4,5,6,7,8,9,10,11],
+    TrueFun = fun(X) -> X =:= 9 end,
+    FalseFun = fun(X) -> X =:= 100 end,
+    [
+        ?_assertEqual({value, 9}, uef_lists:search(TrueFun, List)),
+        ?_assertEqual(false, uef_lists:search(FalseFun, List))
+    ].

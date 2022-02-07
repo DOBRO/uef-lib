@@ -35,8 +35,8 @@ round_price(Price) -> round_number(Price, 2).
 %% Rounds the number to the specified precision.
 %% @end
 round_number(Number, Precision) ->
-	P = math:pow(10, Precision),
-	erlang:round(Number * P) / P.
+    P = math:pow(10, Precision),
+    erlang:round(Number * P) / P.
 
 
 %% popcount/1
@@ -48,9 +48,9 @@ round_number(Number, Precision) ->
 %% The call fails with a {badarg,Integer} exception if Integer is not a non-negative integer.
 %% @end
 popcount(N) when is_integer(N) andalso (N > -1) ->
-	popcount(N, 0);
+    popcount(N, 0);
 popcount(N) ->
-	erlang:error({badarg, N}, [N]).
+    erlang:error({badarg, N}, [N]).
 
 %% lsb_pos/1
 -spec lsb_pos(Integer:: pos_integer()) -> Pos :: pos_integer().
@@ -59,9 +59,9 @@ popcount(N) ->
 %% The call fails with a {badarg,Integer} exception if Integer is not a positive integer.
 %% @end
 lsb_pos(N) when is_integer(N) andalso (N > 0) ->
-	lsb_pos(N, 1);
+    lsb_pos(N, 1);
 lsb_pos(N) ->
-	erlang:error({badarg, N}, [N]).
+    erlang:error({badarg, N}, [N]).
 
 %% msb_pos/1
 -spec msb_pos(Integer:: pos_integer()) -> Pos :: pos_integer().
@@ -70,9 +70,9 @@ lsb_pos(N) ->
 %% The call fails with a {badarg,Integer} exception if Integer is not a positive integer.
 %% @end
 msb_pos(N) when is_integer(N) andalso (N > 0) ->
-	msb_pos(N, 0);
+    msb_pos(N, 0);
 msb_pos(N) ->
-	erlang:error({badarg, N}, [N]).
+    erlang:error({badarg, N}, [N]).
 
 %% ctz/1
 -spec ctz(Integer:: pos_integer()) -> TrailingZeros :: non_neg_integer().
@@ -82,7 +82,7 @@ msb_pos(N) ->
 %% The call fails with a {badarg,Integer} exception if Integer is not a positive integer.
 %% @end
 ctz(N) ->
-	lsb_pos(N) - 1.
+    lsb_pos(N) - 1.
 
 
 %%%------------------------------------------------------------------------------

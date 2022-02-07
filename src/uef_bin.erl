@@ -37,9 +37,9 @@
 binary_join([], _Sep) -> <<>>;
 binary_join([Bin], _Sep) -> Bin;
 binary_join([Head|Tail], Sep) ->
-	lists:foldl(fun(Value, Acc) ->
-		<<Acc/binary, Sep/binary, Value/binary>>
-	end, Head, Tail).
+    lists:foldl(fun(Value, Acc) ->
+        <<Acc/binary, Sep/binary, Value/binary>>
+    end, Head, Tail).
 
 %% split/2
 -spec split(Binary :: binary(), Splitter :: binary()) -> ListOfBinaries :: [binary()].
@@ -48,7 +48,7 @@ binary_join([Head|Tail], Sep) ->
 %% Works as binary:split/2 but is more performant in simple cases.
 %% @end
 split(B, Splitter) ->
-	split(B, Splitter, undefined).
+    split(B, Splitter, undefined).
 
 
 %% split/3
@@ -61,12 +61,12 @@ split(B, Splitter) ->
 split(<<>>, _, _) -> [];
 split(B, <<>>, _) -> [B];
 split(B, Splitter, Option) ->
-	SplitterBitSize = erlang:bit_size(Splitter),
-	List = do_split(B, Splitter, SplitterBitSize, []),
-	case Option of
-		trim_all -> lists:filter(fun(<<>>) -> false; (_) -> true end, List);
-		_ -> List
-	end.
+    SplitterBitSize = erlang:bit_size(Splitter),
+    List = do_split(B, Splitter, SplitterBitSize, []),
+    case Option of
+        trim_all -> lists:filter(fun(<<>>) -> false; (_) -> true end, List);
+        _ -> List
+    end.
 
 %% repeat/2
 -spec repeat(Binary1 :: binary(), N :: pos_integer()) -> Binary2 :: binary().
@@ -74,7 +74,7 @@ split(B, Splitter, Option) ->
 %% Returns binary Binary2 consisting of Binary1 repeated N times.
 %% @end
 repeat(Bin, N) ->
-	repeat(Bin, N, <<>>).
+    repeat(Bin, N, <<>>).
 
 
 %% reverse/1
@@ -83,9 +83,9 @@ repeat(Bin, N) ->
 %% Returns a binary in reverse byte order.
 %% @end
 reverse(B) ->
-	S = erlang:bit_size(B),
-	<<R:S/integer-little>> = B,
-	<<R:S/integer-big>>.
+    S = erlang:bit_size(B),
+    <<R:S/integer-little>> = B,
+    <<R:S/integer-big>>.
 
 %% reverse_utf8/1
 -spec reverse_utf8(UTF8_Binary1 :: binary()) -> UTF8_Binary2 :: binary().
@@ -93,7 +93,7 @@ reverse(B) ->
 %% Returns a binary in reverse character order. Intended to work with UTF-8 binary strings.
 %% @end
 reverse_utf8(Bin) ->
-	reverse_utf8(Bin, <<>>).
+    reverse_utf8(Bin, <<>>).
 
 %% replace/3
 -spec replace(Binary1 :: binary(), Chars :: binary(), OtherChars :: binary()) -> Binary2 :: binary().
@@ -104,8 +104,8 @@ reverse_utf8(Bin) ->
 replace(<<>>, _, _) -> <<>>;
 replace(B, <<>>, _) -> B;
 replace(B, C1, C2) ->
-	C1BitSize = erlang:bit_size(C1),
-	replace(B, C1, C1BitSize, C2, <<>>).
+    C1BitSize = erlang:bit_size(C1),
+    replace(B, C1, C1BitSize, C2, <<>>).
 
 
 %% replace_chars/3
@@ -115,9 +115,9 @@ replace(B, C1, C2) ->
 %% @end
 replace_chars(B0, [], _) -> B0;
 replace_chars(B0, Chars, ToChar) ->
-	lists:foldl(fun(Ch, B) ->
-		replace(B, Ch, ToChar)
-	end, B0, Chars).
+    lists:foldl(fun(Ch, B) ->
+        replace(B, Ch, ToChar)
+    end, B0, Chars).
 
 
 %% random_latin_binary/2
@@ -127,12 +127,12 @@ replace_chars(B0, Chars, ToChar) ->
 %% The second argument CaseFlag corresponds to a letter case, an atom 'lower', 'upper' or 'any'.
 %% @end
 random_latin_binary(Length, CaseFlag) ->
-	Chars = case CaseFlag of
-		lower -> <<"abcdefghijklmnopqrstuvwxyz0123456789">>;
-		upper -> <<"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">>;
-		any -> <<"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">>
-	end,
-	random_binary_from_chars(Length, Chars).
+    Chars = case CaseFlag of
+        lower -> <<"abcdefghijklmnopqrstuvwxyz0123456789">>;
+        upper -> <<"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">>;
+        any -> <<"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">>
+    end,
+    random_binary_from_chars(Length, Chars).
 
 
 %% random_binary_from_chars/2
@@ -141,15 +141,15 @@ random_latin_binary(Length, CaseFlag) ->
 %% Generates and returns a binary of size Length which consists of the given characters Chars.
 %% @end
 random_binary_from_chars(Length, Chars) ->
-	Bsize = erlang:byte_size(Chars),
-	lists:foldl(
-		fun(_, Acc) ->
-			RndChar = binary:at(Chars, rand:uniform(Bsize)-1),
-			<< Acc/binary, RndChar >>
-		end,
-		<<>>,
-		lists:seq(1, Length)
-	).
+    Bsize = erlang:byte_size(Chars),
+    lists:foldl(
+        fun(_, Acc) ->
+            RndChar = binary:at(Chars, rand:uniform(Bsize)-1),
+            << Acc/binary, RndChar >>
+        end,
+        <<>>,
+        lists:seq(1, Length)
+    ).
 
 
 %% numeric_prefix/1
@@ -167,11 +167,11 @@ numeric_prefix(B) -> numeric_prefix(B, <<>>).
 %% Removes leading Chars from binary Bin and returns new binary.
 %% @end
 strip_left(Bin, <<>>) when is_binary(Bin) ->
-	Bin;
+    Bin;
 strip_left(Bin, Chars) when is_binary(Bin), is_binary(Chars) ->
-	do_strip_left(Bin, Chars, erlang:byte_size(Chars));
+    do_strip_left(Bin, Chars, erlang:byte_size(Chars));
 strip_left(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
-	strip_left(Bin, << Chars >>).
+    strip_left(Bin, << Chars >>).
 
 %% strip_right/2
 -spec strip_right(Bin :: binary(), Chars :: binary() | integer()) -> binary().
@@ -179,11 +179,11 @@ strip_left(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
 %% Removes trailing Chars from binary Bin and returns new binary.
 %% @end
 strip_right(Bin, <<>>) when is_binary(Bin) ->
-	Bin;
+    Bin;
 strip_right(Bin, Chars) when is_binary(Bin), is_binary(Chars) ->
-	do_strip_right(Bin, Chars, erlang:byte_size(Chars));
+    do_strip_right(Bin, Chars, erlang:byte_size(Chars));
 strip_right(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
-	strip_right(Bin, << Chars >>).
+    strip_right(Bin, << Chars >>).
 
 
 %% strip_both/2
@@ -192,7 +192,7 @@ strip_right(Bin, Chars) when is_binary(Bin), is_integer(Chars) ->
 %% Removes leading and trailing Chars from binary Bin and returns new binary.
 %% @end
 strip_both(Bin, Chars) ->
-	strip_right(strip_left(Bin, Chars), Chars).
+    strip_right(strip_left(Bin, Chars), Chars).
 
 
 %% chomp/1
@@ -201,15 +201,15 @@ strip_both(Bin, Chars) ->
 %% Removes all trailing \n and \r characters from binary.
 %% @end
 chomp(<<>>) ->
-	<<>>;
+    <<>>;
 chomp(Bin) ->
-	HeadSize = erlang:byte_size(Bin) - 1,
-	case Bin of
-		<< Head:HeadSize/bytes, C >> when C =:= $\n orelse C =:= $\r ->
-			chomp(Head);
-		_ ->
-			Bin
-	end.
+    HeadSize = erlang:byte_size(Bin) - 1,
+    case Bin of
+        << Head:HeadSize/bytes, C >> when C =:= $\n orelse C =:= $\r ->
+            chomp(Head);
+        _ ->
+            Bin
+    end.
 
 %%%------------------------------------------------------------------------------
 %%%   Internal functions
@@ -218,49 +218,49 @@ chomp(Bin) ->
 %% repeat/3
 -spec repeat(binary(), pos_integer(), binary()) -> binary().
 repeat(_, N, Acc) when N < 1 ->
-	Acc;
+    Acc;
 repeat(Bin, N, Acc) ->
-	repeat(Bin, N-1, <<Acc/bits, Bin/bits>>).
+    repeat(Bin, N-1, <<Acc/bits, Bin/bits>>).
 
 
 %% replace/4
 -spec replace(binary(), binary(), pos_integer(), binary(), binary()) -> binary().
 replace(B, C1, C1BitSize, C2, Acc) ->
-	case B of
-		<<>> ->
-			Acc;
-		<<C1:C1BitSize/bits, Rest/bits>> ->
-			replace(Rest, C1, C1BitSize, C2, <<Acc/bits, C2/bits>>); % replacement
-		<<C, Rest/bits>> ->
-			replace(Rest, C1, C1BitSize, C2, <<Acc/bits, C>>)
-	end.
+    case B of
+        <<>> ->
+            Acc;
+        <<C1:C1BitSize/bits, Rest/bits>> ->
+            replace(Rest, C1, C1BitSize, C2, <<Acc/bits, C2/bits>>); % replacement
+        <<C, Rest/bits>> ->
+            replace(Rest, C1, C1BitSize, C2, <<Acc/bits, C>>)
+    end.
 
 
 %% reverse_utf8/2
 -spec reverse_utf8(binary(), binary()) -> binary().
 reverse_utf8(<<>>, Acc) -> Acc;
 reverse_utf8(<<U/utf8, Rest/bits>>, Acc) ->
- 	reverse_utf8(Rest, <<U/utf8, Acc/bits>>).
+     reverse_utf8(Rest, <<U/utf8, Acc/bits>>).
 
 
 %% do_split/3
 -spec do_split(binary(), binary(), pos_integer(), [binary()]) -> [binary()].
 do_split(B, Splitter, SplitterBitSize, List) ->
-	case B of
-		<<>> ->
-			lists:reverse(List);
-		<<Splitter:SplitterBitSize/bits, Rest/bits>> ->
-			case List of
-				[_|_] -> do_split(Rest, Splitter, SplitterBitSize, [<<>> | List]);
-				[] -> do_split(Rest, Splitter, SplitterBitSize, [<<>>, <<>> | List])
-			end;
-		<<C, Rest/bits>> ->
-			List2 = case List of
-				[H|T] -> [<<H/bits, C>> | T];
-				[] -> [<< C >>]
-			end,
-			do_split(Rest, Splitter, SplitterBitSize, List2)
-	end.
+    case B of
+        <<>> ->
+            lists:reverse(List);
+        <<Splitter:SplitterBitSize/bits, Rest/bits>> ->
+            case List of
+                [_|_] -> do_split(Rest, Splitter, SplitterBitSize, [<<>> | List]);
+                [] -> do_split(Rest, Splitter, SplitterBitSize, [<<>>, <<>> | List])
+            end;
+        <<C, Rest/bits>> ->
+            List2 = case List of
+                [H|T] -> [<<H/bits, C>> | T];
+                [] -> [<< C >>]
+            end,
+            do_split(Rest, Splitter, SplitterBitSize, List2)
+    end.
 
 
 %% numeric_prefix/2
@@ -281,23 +281,23 @@ numeric_prefix(_, Acc) -> Acc.
 %% do_strip_left/3
 -spec do_strip_left(binary(), binary(), pos_integer()) -> binary().
 do_strip_left(<<>>, _, _) ->
-	<<>>;
+    <<>>;
 do_strip_left(Bin, Chars, CharsByteSize) ->
-	case Bin of
-		<< Chars:CharsByteSize/bytes, Rest/bits >> ->
-			do_strip_left(Rest, Chars, CharsByteSize);
-		_ -> Bin
-	end.
+    case Bin of
+        << Chars:CharsByteSize/bytes, Rest/bits >> ->
+            do_strip_left(Rest, Chars, CharsByteSize);
+        _ -> Bin
+    end.
 
 
 %% do_strip_right/3
 -spec do_strip_right(binary(), binary(), pos_integer()) -> binary().
 do_strip_right(<<>>, _, _) ->
-	<<>>;
+    <<>>;
 do_strip_right(Bin, Chars, CharsByteSize) ->
-	HeadByteSize = erlang:byte_size(Bin) - CharsByteSize,
-	case Bin of
-		<< Head:HeadByteSize/bytes, Chars/bits >> ->
-			do_strip_right(Head, Chars, CharsByteSize);
-		_ -> Bin
-	end.
+    HeadByteSize = erlang:byte_size(Bin) - CharsByteSize,
+    case Bin of
+        << Head:HeadByteSize/bytes, Chars/bits >> ->
+            do_strip_right(Head, Chars, CharsByteSize);
+        _ -> Bin
+    end.
