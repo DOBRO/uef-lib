@@ -28,26 +28,27 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    - name: Extract branch name
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+      uses: actions/checkout@v4
+    - name: Get branch name
+      id: branch-name
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
     - name: Cache Dialyzer PLTs
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           ~/.cache/rebar3/rebar3_*_plt
           _build/default/rebar3_*_plt
-        key: ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-otp-${{ matrix.otp_version }}-plt-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.config')) }}
+        key: ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-otp-${{ matrix.otp_version }}-plt-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.config')) }}
         restore-keys: |
-          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-otp-${{ matrix.otp_version }}-plt-
+          ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-otp-${{ matrix.otp_version }}-plt-
     - name: Cache Hex packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.cache/rebar3/hex/hexpm/packages
-        key: ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-otp-${{ matrix.otp_version }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
+        key: ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-otp-${{ matrix.otp_version }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
         restore-keys: |
-          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-otp-${{ matrix.otp_version }}-hex-
+          ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-otp-${{ matrix.otp_version }}-hex-
     - name: Compile
       run: rebar3 compile
     - name: EUnit tests
@@ -75,21 +76,31 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    - name: Extract branch name
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
+      uses: actions/checkout@v4
+    - name: Get branch name
+      id: branch-name
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
     - name: Install Erlang
       run: brew install erlang
     - name: Install rebar3
       run: brew install rebar3
+    - name: Cache Dialyzer PLTs
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/rebar3/rebar3_*_plt
+          _build/default/rebar3_*_plt
+        key: ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-plt-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.config')) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-plt-
     - name: Cache Hex packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.cache/rebar3/hex/hexpm/packages
-        key: ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
+        key: ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
         restore-keys: |
-          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-hex-
+          ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-hex-
     - name: Compile
       run: rebar3 compile
     - name: EUnit tests
@@ -110,21 +121,39 @@ jobs:
         os: [windows-latest]
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+    - name: Get branch name
+      id: branch-name
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
     - name: Install Erlang
       run: choco install erlang -y
     - name: Install rebar3
-      run: choco install rebar3 -y
+      run: |
+        mkdir ~/rebar3-dl
+        Invoke-WebRequest -Uri https://github.com/erlang/rebar3/releases/download/3.22.1/rebar3 -OutFile ~/rebar3-dl/rebar3
+        Copy-Item -Path .\test\helper-files\rebar3.cmd -Destination ~/rebar3-dl/rebar3.cmd
+    - name: Cache Dialyzer PLTs
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/rebar3/rebar3_*_plt
+          _build/default/rebar3_*_plt
+        key: ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-plt-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.config')) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-plt-
     - name: Cache Hex packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.cache/rebar3/hex/hexpm/packages
-        key: ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
+        key: ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-hex-${{ hashFiles(format('{0}{1}', github.workspace, '/rebar.lock')) }}
         restore-keys: |
-          ${{ runner.os }}-${{ steps.extract_branch.outputs.branch }}-hex-
+          ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-hex-
     - name: Compile
-      run: rebar3 compile
+      run: ~/rebar3-dl/rebar3.cmd compile
     - name: EUnit tests
-      run: rebar3 eunit
+      run: ~/rebar3-dl/rebar3.cmd eunit
+    - name: Dialyzer
+      run: ~/rebar3-dl/rebar3.cmd dialyzer
     - name: Code coverage
-      run: rebar3 cover
+      run: ~/rebar3-dl/rebar3.cmd cover
