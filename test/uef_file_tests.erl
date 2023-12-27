@@ -34,8 +34,12 @@ read_file_fast_test_() ->
     TestDataDir = get_test_data_dir(),
     ExistingFile = filename:join([TestDataDir, "uef_file_1.txt"]),
     NonExistingFile = filename:join([TestDataDir, "uef_file_nonexisting.txt"]),
+    ExpectedData = case os:type() of
+        {win32, _}  -> <<"test1\r\n">>;
+        _           -> <<"test1\n">>
+    end,
     [
-    ?_assertEqual({ok, <<"test1\n">>}, uef_file:read_file_fast(ExistingFile)),
+    ?_assertEqual({ok, ExpectedData}, uef_file:read_file_fast(ExistingFile)),
     ?_assertEqual({error, enoent}, uef_file:read_file_fast(NonExistingFile))
     ].
 
