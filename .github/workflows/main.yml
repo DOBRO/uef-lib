@@ -150,10 +150,14 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-${{ steps.branch-name.outputs.branch }}-hex-
     - name: Compile
-      run: ~/rebar3-dl/rebar3.cmd compile
+      shell: bash
+      run: ~/rebar3-dl/rebar3 compile
     - name: EUnit tests
-      run: ~/rebar3-dl/rebar3.cmd eunit
+      shell: bash
+      run: ~/rebar3-dl/rebar3 eunit
     - name: Dialyzer
-      run: ~/rebar3-dl/rebar3.cmd dialyzer
+      shell: bash
+      run: ~/rebar3-dl/rebar3 dialyzer
     - name: Code coverage
-      run: ~/rebar3-dl/rebar3.cmd cover
+      shell: bash
+      run: ~/rebar3-dl/rebar3 cover
