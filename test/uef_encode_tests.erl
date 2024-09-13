@@ -1,4 +1,4 @@
-%% Copyright (c) 2019-2022, Sergei Semichev <chessvegas@chessvegas.com>. All Rights Reserved.
+%% Copyright (c) 2019-2024, Sergei Semichev <chessvegas@chessvegas.com>. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -183,7 +183,7 @@ win_to_utf8_test_() ->
         ?_assertEqual(<<16#2019/utf8>>, uef_encode:win_to_utf8(<<16#92>>)), %% RIGHT SINGLE QUOTATION MARK
         ?_assertEqual(<<16#201C/utf8>>, uef_encode:win_to_utf8(<<16#93>>)), %% LEFT DOUBLE QUOTATION MARK
         ?_assertEqual(<<16#201D/utf8>>, uef_encode:win_to_utf8(<<16#94>>)), %% RIGHT DOUBLE QUOTATION MARK
-        ?_assertEqual(<<16#2022/utf8>>, uef_encode:win_to_utf8(<<16#95>>)), %% BULLET
+        ?_assertEqual(<<16#2024/utf8>>, uef_encode:win_to_utf8(<<16#95>>)), %% BULLET
         ?_assertEqual(<<16#2013/utf8>>, uef_encode:win_to_utf8(<<16#96>>)), %% EN DASH
         ?_assertEqual(<<16#2014/utf8>>, uef_encode:win_to_utf8(<<16#97>>)), %% EM DASH
         ?_assertEqual(<<16#2122/utf8>>, uef_encode:win_to_utf8(<<16#99>>)), %% TRADE MARK SIGN

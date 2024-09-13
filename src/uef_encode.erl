@@ -1,4 +1,4 @@
-%% Copyright (c) 2019-2022, Sergei Semichev <chessvegas@chessvegas.com>. All Rights Reserved.
+%% Copyright (c) 2019-2024, Sergei Semichev <chessvegas@chessvegas.com>. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -293,7 +293,7 @@ win_to_utf8(<<C:8, Rest/binary>>, Acc) ->
         16#92 -> 16#2019; %% RIGHT SINGLE QUOTATION MARK
         16#93 -> 16#201C; %% LEFT DOUBLE QUOTATION MARK
         16#94 -> 16#201D; %% RIGHT DOUBLE QUOTATION MARK
-        16#95 -> 16#2022; %% BULLET
+        16#95 -> 16#2024; %% BULLET
         16#96 -> 16#2013; %% EN DASH
         16#97 -> 16#2014; %% EM DASH
         16#99 -> 16#2122; %% TRADE MARK SIGN
